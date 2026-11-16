@@ -151,13 +151,32 @@
 /* Tab Navigation */
 .tab-nav {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
   background: var(--color-bg-secondary);
   padding: var(--space-1);
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
   margin-bottom: var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .tab-nav {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 3px;
+  }
+  .tab-nav__btn {
+    padding: var(--space-2) var(--space-1);
+    font-size: var(--text-xs);
+    flex-direction: column;
+    gap: 3px;
+    text-align: center;
+  }
+  .tab-nav__btn svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .tab-nav__btn {
@@ -174,6 +193,7 @@
   font-weight: var(--font-semibold);
   cursor: pointer;
   transition: all var(--duration-fast) var(--ease-default);
+  position: relative;
 }
 
 .tab-nav__btn:hover {
@@ -190,6 +210,22 @@
 
 .tab-nav__icon {
   flex-shrink: 0;
+}
+
+.tab-nav__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: var(--text-2xs);
+  font-weight: var(--font-bold);
+  line-height: 1;
+  box-shadow: 0 0 8px var(--color-accent-glow);
 }
 
 /* System Selector (Federal vs KRG) */
@@ -1020,4 +1056,846 @@ button.composite-box__header:focus-visible {
 .apply-btn--secondary {
   background: var(--color-bg-tertiary);
   color: var(--color-text-secondary);
+}
+
+.composite-box__note {
+  font-size: var(--text-2xs);
+  color: var(--color-text-tertiary);
+  line-height: var(--leading-relaxed);
+  margin: var(--space-3) 0;
+}
+
+.deadline-estimated {
+  font-size: var(--text-2xs);
+  font-weight: normal;
+  color: var(--color-text-tertiary);
+}
+
+.footer__link {
+  color: var(--color-text-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ============================================
+   Enhanced Design & UX Styles
+   ============================================ */
+
+/* Score Input Controls & Steppers */
+.score-form-group {
+  grid-column: 1 / -1;
+}
+
+.score-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.score-clear-text-btn {
+  font-size: var(--text-2xs);
+  color: var(--color-danger);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.score-clear-text-btn:hover {
+  text-decoration: underline;
+}
+
+.score-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.score-main-input {
+  width: 100%;
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  padding-inline-end: 80px;
+}
+
+.score-stepper-buttons {
+  position: absolute;
+  inset-inline-end: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+.stepper-btn {
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.stepper-btn:hover {
+  background: var(--color-accent-glow);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.quick-presets-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.quick-presets-label {
+  font-size: var(--text-2xs);
+  color: var(--color-text-tertiary);
+}
+
+.quick-presets-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.quick-preset-chip {
+  background: var(--color-surface-glass);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-size: var(--text-2xs);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.quick-preset-chip:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-hover);
+}
+
+.quick-preset-chip--active {
+  background: var(--color-accent-glow);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: var(--font-bold);
+}
+
+/* Secondary Controls (Search, Sort, Reach) */
+.checker-secondary-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 260px;
+}
+
+.search-icon {
+  position: absolute;
+  inset-inline-start: 12px;
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-4);
+  padding-inline-start: 38px;
+  padding-inline-end: 32px;
+  color: var(--color-text-primary);
+  font-size: var(--text-sm);
+  outline: none;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.search-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-glow);
+}
+
+.search-clear-btn {
+  position: absolute;
+  inset-inline-end: 10px;
+  color: var(--color-text-tertiary);
+  padding: 4px;
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.search-clear-btn:hover {
+  color: var(--color-text-primary);
+}
+
+.sort-and-reach-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.sort-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sort-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.sort-select {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-lg);
+}
+
+.reach-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  user-select: none;
+  background: var(--color-surface-glass);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.reach-toggle-label:hover {
+  border-color: var(--color-accent);
+}
+
+.reach-checkbox {
+  accent-color: var(--color-accent);
+  width: 15px;
+  height: 15px;
+}
+
+/* Bookmark Star Button */
+.result-card__score-area {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.bookmark-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-glass);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+  flex-shrink: 0;
+}
+
+.bookmark-btn:hover {
+  color: var(--color-accent);
+  background: var(--color-accent-glow);
+  border-color: var(--color-accent);
+  transform: scale(1.1);
+}
+
+.bookmark-btn--active {
+  color: var(--color-accent);
+  background: var(--color-accent-glow-strong);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent-glow);
+}
+
+/* Score Delta Badges on Result Card */
+.result-card__delta-row {
+  margin-block: var(--space-2);
+}
+
+.delta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+}
+
+.delta-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.delta-badge--safe {
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  color: var(--color-success);
+}
+.delta-badge--safe .delta-badge__dot {
+  background: var(--color-success);
+}
+
+.delta-badge--target {
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  color: var(--color-warning);
+}
+.delta-badge--target .delta-badge__dot {
+  background: var(--color-warning);
+}
+
+.delta-badge--reach {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #c084fc;
+}
+.delta-badge--reach .delta-badge__dot {
+  background: #c084fc;
+}
+
+.result-card--reach {
+  border-style: dashed;
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+/* Composite Breakdown Card & Note Banner */
+.composite-breakdown-card {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-xs);
+}
+
+.composite-breakdown-card__title {
+  display: block;
+  font-weight: var(--font-semibold);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.composite-breakdown-card__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  color: var(--color-text-primary);
+}
+
+.composite-breakdown-card__steps strong {
+  color: var(--color-accent);
+}
+
+.composite-note-banner {
+  margin-top: var(--space-3);
+  font-size: var(--text-2xs);
+  color: var(--color-text-tertiary);
+  line-height: var(--leading-relaxed);
+}
+
+/* Scholarship Card Enhancements */
+.scholarship-card__actions-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.scholarship-card__urgency-banner {
+  margin-top: calc(var(--space-2) * -1);
+}
+
+.urgency-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-3);
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius-full);
+  color: var(--color-danger);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+/* Active Filter Chips */
+.active-filter-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.active-filter-chips__label {
+  font-size: var(--text-2xs);
+  color: var(--color-text-tertiary);
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  background: var(--color-surface-glass);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-2xs);
+  color: var(--color-text-primary);
+}
+
+.filter-chip button {
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.filter-chip button:hover {
+  color: var(--color-danger);
+}
+
+.clear-filters-btn {
+  font-size: var(--text-2xs);
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+
+/* Wishlist Dashboard Styles */
+.wishlist-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.wishlist-hero {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(249, 115, 22, 0.06) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.wishlist-hero__title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+.wishlist-hero__subtitle {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.wishlist-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pill-btn--danger {
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+
+.pill-btn--danger:hover {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.wishlist-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+.wishlist-stat-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.wishlist-stat-item__label {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.wishlist-stat-item__value {
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+}
+
+.wishlist-card {
+  position: relative;
+}
+
+.wishlist-card__badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.wishlist-priority-badge {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--color-accent);
+}
+
+.wishlist-remove-btn {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.wishlist-remove-btn:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
+
+/* Floating Back-to-Top Button */
+.back-to-top-btn {
+  position: fixed;
+  inset-inline-end: 24px;
+  inset-block-end: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-gradient);
+  color: var(--color-text-on-accent);
+  box-shadow: 0 4px 16px var(--color-accent-glow-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  z-index: 50;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.back-to-top-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 22px var(--color-accent-glow-strong);
+}
+
+/* ============================================
+   Clean Print Styles for Students
+   ============================================ */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+  .header__controls,
+  .disclaimer,
+  .tab-nav,
+  .checker-form,
+  .search-bar,
+  .scholarship-filters,
+  .wishlist-actions,
+  .bookmark-btn,
+  .wishlist-remove-btn,
+  .back-to-top-btn,
+  .share-btn,
+  .footer {
+    display: none !important;
+  }
+  .app-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  .result-card,
+  .scholarship-card {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    margin-bottom: 12px !important;
+  }
+  .result-card__college,
+  .scholarship-card__title {
+    color: #111827 !important;
+  }
+  .result-card__score-val {
+    color: #d97706 !important;
+  }
+}
+
+
+/* ============================================
+   UX pass: mobile density, feedback, fixes
+   ============================================ */
+
+/* Instant "N programs found ↓" feedback right under the score field */
+.jump-to-results {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  min-height: 40px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-success-border);
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-default);
+}
+.jump-to-results:hover { background: rgba(34, 197, 94, 0.2); }
+
+.results-anchor { scroll-margin-top: var(--space-4); }
+
+.composite-breakdown-card__bestof {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-success);
+}
+
+/* Visible keyboard focus everywhere (buttons, pills, chips, links) */
+:where(button, a, select, input, [role="tab"], [role="radio"]):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Comfortable tap targets on touch screens */
+@media (pointer: coarse) {
+  .pill-btn, .quick-preset-chip, .stepper-btn, .lang-switcher__btn, .filter-chip button {
+    min-height: 40px;
+  }
+  .bookmark-btn { width: 44px; height: 44px; }
+}
+
+/* Keep long titles from pushing action buttons off-screen */
+.scholarship-card__title-group,
+.result-card__institution { min-width: 0; flex: 1 1 auto; overflow-wrap: anywhere; }
+.scholarship-card__actions-top { flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  /* System picker: compact side-by-side segmented choice instead of two tall cards */
+  .system-selector { grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-bottom: var(--space-4); }
+  .system-card { padding: var(--space-3); }
+  .system-card__desc, .system-card__badge { display: none; }
+  .system-card__title { font-size: var(--text-sm); }
+
+  /* Denser cards so more results fit on screen */
+  .result-card, .scholarship-card { padding: var(--space-4); }
+  .result-card__top { gap: var(--space-2); }
+  .result-card__score-badge { padding: var(--space-2); }
+  .result-card__score-val { font-size: var(--text-xl); }
+  .result-card__college { font-size: var(--text-base); }
+
+  /* Scholarship header: status + star move under the title */
+  .scholarship-card__header { flex-wrap: wrap; }
+
+  .disclaimer { padding: var(--space-3); }
+  .disclaimer__text { font-size: var(--text-2xs); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Score box: never let its label squeeze the program name */
+.result-card__score-label { text-transform: none; text-align: center; line-height: var(--leading-tight); }
+.result-card__score-badge { max-width: 8.5rem; }
+@media (max-width: 640px) {
+  .result-card__score-badge { max-width: 6.5rem; }
+  .result-card__score-area { gap: var(--space-2); }
+  .bookmark-btn { width: 40px; height: 40px; }
+}
+
+/* ---------- Disclaimer: collapsible to one line ---------- */
+.disclaimer { align-items: center; }
+.disclaimer__text { flex: 1; }
+.disclaimer--collapsed { padding-block: var(--space-2); }
+.disclaimer__toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  background: transparent;
+  color: var(--color-text-accent);
+  cursor: pointer;
+}
+.disclaimer__toggle:hover { background: rgba(245, 158, 11, 0.12); }
+
+/* ---------- Empty state actions ---------- */
+.empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.empty-state__actions:empty { display: none; }
+
+/* ---------- Phones: app-style bottom tab bar within thumb reach ---------- */
+@media (max-width: 640px) {
+  .tab-nav {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 60;
+    margin: 0;
+    border-radius: 0;
+    border-inline: 0;
+    border-bottom: 0;
+    padding: var(--space-1) var(--space-2) calc(var(--space-1) + env(safe-area-inset-bottom));
+    background: var(--bg-sticky-bar);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+  }
+  .tab-nav__btn {
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-2) var(--space-1);
+    min-height: 56px;
+    font-size: var(--text-2xs);
+    line-height: var(--leading-tight);
+    text-align: center;
+  }
+  .tab-nav__btn--active { background: var(--color-accent-glow); border-color: transparent; box-shadow: none; }
+  .tab-nav__badge { position: absolute; top: 4px; inset-inline-end: 18%; min-width: 18px; height: 18px; }
+
+  /* Leave room for the bar so the footer and last card aren't hidden behind it */
+  .app-container { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .back-to-top-btn { inset-block-end: calc(84px + env(safe-area-inset-bottom)); inset-inline-end: 16px; }
+}
+
+@media print {
+  .tab-nav { position: static; }
+}
+
+/* Long localized placeholders must fit inside the large score field */
+.score-main-input::placeholder {
+  font-size: var(--text-sm);
+  font-weight: var(--font-normal);
+}
+.score-main-input { min-width: 0; text-overflow: ellipsis; }
+
+
+/* ============================================
+   Theme toggle (header)
+   ============================================ */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  min-height: 32px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+.theme-toggle:hover { color: var(--color-text-primary); border-color: var(--color-border-hover); }
+.theme-toggle__icon { display: inline-flex; }
+
+/* Gender / level pills: short labels, stay on one row on phones */
+.pill-group--compact .pill-btn { padding-inline: var(--space-3); }
+
+/* Result card extras: campus line, total marks, single-sex and institute tags */
+.result-card__campus {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+.result-card__score-sub {
+  display: block;
+  font-size: var(--text-2xs);
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+.tag--female { background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.35); color: #db2777; }
+.tag--male { background: rgba(14, 165, 233, 0.12); border-color: rgba(14, 165, 233, 0.35); color: #0284c7; }
+:root[data-theme="dark"] .tag--female, :root:not([data-theme="light"]) .tag--female { color: #f472b6; }
+:root[data-theme="dark"] .tag--male, :root:not([data-theme="light"]) .tag--male { color: #38bdf8; }
+.tag--institute { background: var(--color-info-bg); border-color: var(--color-info-border); color: var(--color-info); }
+.tag--year { background: var(--color-surface-glass); color: var(--color-text-tertiary); }
+
+/* Data-year note under the system selector */
+.data-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+  background: var(--color-info-bg);
+  border: 1px solid var(--color-info-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
+}
+.data-note a { color: var(--color-info); text-decoration: underline; }
+.data-note--warning { background: var(--color-warning-bg); border-color: var(--color-warning-border); }
+
+/* Light theme: print-like photo of inputs */
+:root[data-theme="light"] .header__logo { filter: none; }
+:root[data-theme="light"] .text-gradient { background: var(--color-accent-gradient); -webkit-background-clip: text; }
+
+.form-hint {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  line-height: var(--leading-normal);
 }

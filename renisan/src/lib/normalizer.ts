@@ -45,10 +45,20 @@ export function isConvertibleScore(input: string): boolean {
 }
 
 /**
- * Validates a score is within the valid Iraqi baccalaureate range (0-100).
+ * Highest competitive average the Federal system can produce. Since 2025-2026 the
+ * ministry adds 8% of the foreign-language mark to the total, so top averages
+ * exceed 100 (Baghdad Medicine 2026-2027: 101.29).
  */
-export function validateScore(score: number): boolean {
-  return !isNaN(score) && score >= 0 && score <= 100;
+export const MAX_SCORE_FEDERAL = 110;
+/** Zankoline composite scores are plain percentages. */
+export const MAX_SCORE_KRG = 100;
+
+/**
+ * Validates a score is a finite number within [0, max]. `max` defaults to the
+ * Federal ceiling so official rows above 100 are accepted.
+ */
+export function validateScore(score: number, max: number = MAX_SCORE_FEDERAL): boolean {
+  return Number.isFinite(score) && score >= 0 && score <= max;
 }
 
 /**

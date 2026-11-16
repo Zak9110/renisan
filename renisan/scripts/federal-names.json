@@ -1,0 +1,1017 @@
+{
+  "_comment": "Name maps used by import-federal-cutoffs.py. Keys are Arabic names as printed in the MOHESR PDF (hamza-folded, single-spaced). Add a row here when the import reports an unknown name.",
+  "universities": {
+    "الجامعة التقنية الجنوبية": {
+      "en": "Southern Technical University",
+      "ku": "زانکۆی تەکنیکی باشوور",
+      "governorate": "البصرة"
+    },
+    "الجامعة التقنية الشمالية": {
+      "en": "Northern Technical University",
+      "ku": "زانکۆی تەکنیکی باکوور",
+      "governorate": "نينوى"
+    },
+    "الجامعة التقنية الوسطى": {
+      "en": "Middle Technical University",
+      "ku": "زانکۆی تەکنیکی ناوەڕاست",
+      "governorate": "بغداد"
+    },
+    "الجامعة التكنولوجية": {
+      "en": "University of Technology",
+      "ku": "زانکۆی تەکنەلۆژیا",
+      "governorate": "بغداد"
+    },
+    "الجامعة العراقية": {
+      "en": "Iraqi University",
+      "ku": "زانکۆی عێراقی",
+      "governorate": "بغداد"
+    },
+    "الجامعة المستنصرية": {
+      "en": "Mustansiriyah University",
+      "ku": "زانکۆی موستەنسریە",
+      "governorate": "بغداد"
+    },
+    "جامعة ابن سينا للعلوم الطبية والصيدلانية": {
+      "en": "Ibn Sina University of Medical and Pharmaceutical Sciences",
+      "ku": "زانکۆی ئیبن سینا بۆ زانستە پزیشکی و دەرمانسازییەکان",
+      "governorate": "بغداد"
+    },
+    "جامعة الانبار": {
+      "en": "University of Anbar",
+      "ku": "زانکۆی ئەنبار",
+      "governorate": "الأنبار"
+    },
+    "جامعة البصرة": {
+      "en": "University of Basrah",
+      "ku": "زانکۆی بەسرە",
+      "governorate": "البصرة"
+    },
+    "جامعة البصرة للنفط والغاز": {
+      "en": "Basrah University for Oil and Gas",
+      "ku": "زانکۆی بەسرە بۆ نەوت و گاز",
+      "governorate": "البصرة"
+    },
+    "جامعة الحمدانية": {
+      "en": "University of Al-Hamdaniya",
+      "ku": "زانکۆی حەمدانیە",
+      "governorate": "نينوى"
+    },
+    "جامعة الشطرة": {
+      "en": "University of Shatrah",
+      "ku": "زانکۆی شەترە",
+      "governorate": "ذي قار"
+    },
+    "جامعة الفرات الاوسط التقنية": {
+      "en": "Al-Furat Al-Awsat Technical University",
+      "ku": "زانکۆی تەکنیکی فوراتی ناوەڕاست",
+      "governorate": "النجف"
+    },
+    "جامعة الفلوجة": {
+      "en": "University of Fallujah",
+      "ku": "زانکۆی فەلووجە",
+      "governorate": "الأنبار"
+    },
+    "جامعة القادسية": {
+      "en": "University of Al-Qadisiyah",
+      "ku": "زانکۆی قادسیە",
+      "governorate": "القادسية"
+    },
+    "جامعة القاسم الخضراء": {
+      "en": "Al-Qasim Green University",
+      "ku": "زانکۆی قاسمی سەوز",
+      "governorate": "بابل"
+    },
+    "جامعة الكرخ للعلوم": {
+      "en": "Al-Karkh University of Science",
+      "ku": "زانکۆی کەرخ بۆ زانست",
+      "governorate": "بغداد"
+    },
+    "جامعة الكوفة": {
+      "en": "University of Kufa",
+      "ku": "زانکۆی کووفە",
+      "governorate": "النجف"
+    },
+    "جامعة المثنى": {
+      "en": "Al-Muthanna University",
+      "ku": "زانکۆی موسەننا",
+      "governorate": "المثنى"
+    },
+    "جامعة الموصل": {
+      "en": "University of Mosul",
+      "ku": "زانکۆی مووسڵ",
+      "governorate": "نينوى"
+    },
+    "جامعة النهرين": {
+      "en": "Al-Nahrain University",
+      "ku": "زانکۆی نەهرەین",
+      "governorate": "بغداد"
+    },
+    "جامعة بابل": {
+      "en": "University of Babylon",
+      "ku": "زانکۆی بابل",
+      "governorate": "بابل"
+    },
+    "جامعة بغداد": {
+      "en": "University of Baghdad",
+      "ku": "زانکۆی بەغدا",
+      "governorate": "بغداد"
+    },
+    "جامعة تكريت": {
+      "en": "Tikrit University",
+      "ku": "زانکۆی تکریت",
+      "governorate": "صلاح الدين"
+    },
+    "جامعة تكنولوجيا المعلومات والاتصالات": {
+      "en": "University of Information Technology and Communications",
+      "ku": "زانکۆی تەکنەلۆژیای زانیاری و پەیوەندییەکان",
+      "governorate": "بغداد"
+    },
+    "جامعة تلعفر": {
+      "en": "University of Telafer",
+      "ku": "زانکۆی تەلەعفەر",
+      "governorate": "نينوى"
+    },
+    "جامعة جابر بن حيان للعلوم الطبية والصيدلانية": {
+      "en": "Jabir Ibn Hayyan University for Medical and Pharmaceutical Sciences",
+      "ku": "زانکۆی جابر بن حەییان بۆ زانستە پزیشکی و دەرمانسازییەکان",
+      "governorate": "النجف"
+    },
+    "جامعة ديالى": {
+      "en": "University of Diyala",
+      "ku": "زانکۆی دیالە",
+      "governorate": "ديالى"
+    },
+    "جامعة ذي قار": {
+      "en": "University of Thi-Qar",
+      "ku": "زانکۆی زیقار",
+      "governorate": "ذي قار"
+    },
+    "جامعة سامراء": {
+      "en": "University of Samarra",
+      "ku": "زانکۆی سامەڕا",
+      "governorate": "صلاح الدين"
+    },
+    "جامعة سومر": {
+      "en": "University of Sumer",
+      "ku": "زانکۆی سومەر",
+      "governorate": "ذي قار"
+    },
+    "جامعة كربلاء": {
+      "en": "University of Kerbala",
+      "ku": "زانکۆی کەربەلا",
+      "governorate": "كربلاء"
+    },
+    "جامعة كركوك": {
+      "en": "University of Kirkuk",
+      "ku": "زانکۆی کەرکووک",
+      "governorate": "كركوك"
+    },
+    "جامعة ميسان": {
+      "en": "University of Misan",
+      "ku": "زانکۆی مەیسان",
+      "governorate": "ميسان"
+    },
+    "جامعة نينوى": {
+      "en": "Ninevah University",
+      "ku": "زانکۆی نەینەوا",
+      "governorate": "نينوى"
+    },
+    "جامعة واسط": {
+      "en": "University of Wasit",
+      "ku": "زانکۆی واست",
+      "governorate": "واسط"
+    }
+  },
+  "campus_governorates": {
+    "_comment": "Keywords found in a college or campus segment that place a programme in a governorate other than the university's main one (technical universities have branches everywhere). Longest match wins.",
+    "بغداد": "بغداد",
+    "الرصافة": "بغداد",
+    "المنصور": "بغداد",
+    "باب المعظم": "بغداد",
+    "الطارمية": "بغداد",
+    "البصرة": "البصرة",
+    "القرنة": "البصرة",
+    "الموصل": "نينوى",
+    "نينوى": "نينوى",
+    "النمرود": "نينوى",
+    "كركوك": "كركوك",
+    "الحويجة": "كركوك",
+    "الكوت": "واسط",
+    "الصويرة": "واسط",
+    "العزيزية": "واسط",
+    "الحي": "واسط",
+    "بعقوبة": "ديالى",
+    "المقدادية": "ديالى",
+    "بلد": "صلاح الدين",
+    "الدور": "صلاح الدين",
+    "الشرقاط": "صلاح الدين",
+    "طوزخورماتو": "صلاح الدين",
+    "النجف": "النجف",
+    "الكوفة": "النجف",
+    "المسيب": "بابل",
+    "بابل": "بابل",
+    "كربلاء": "كربلاء",
+    "القادسية": "القادسية",
+    "الرميثة": "المثنى",
+    "السماوة": "المثنى",
+    "الناصرية": "ذي قار",
+    "الشطرة": "ذي قار",
+    "ذي قار": "ذي قار",
+    "الدواية": "ذي قار",
+    "سوق الشيوخ": "ذي قار",
+    "العمارة": "ميسان",
+    "ميسان": "ميسان",
+    "الانبار": "الأنبار",
+    "هيت": "الأنبار",
+    "القائم": "الأنبار",
+    "حديثة": "الأنبار"
+  },
+  "colleges": {
+    "الكلية التقنية الادارية": {
+      "en": "Technical College of Management",
+      "ku": "کۆلێژی تەکنیکی کارگێڕی"
+    },
+    "الكلية التقنية الاقسام الادارية": {
+      "en": "Technical College – Administrative Departments",
+      "ku": "کۆلێژی تەکنیکی – بەشە کارگێڕییەکان"
+    },
+    "الكلية التقنية الاقسام الزراعية": {
+      "en": "Technical College – Agricultural Departments",
+      "ku": "کۆلێژی تەکنیکی – بەشە کشتوکاڵییەکان"
+    },
+    "الكلية التقنية الاقسام الطبية": {
+      "en": "Technical College – Medical Departments",
+      "ku": "کۆلێژی تەکنیکی – بەشە پزیشکییەکان"
+    },
+    "الكلية التقنية الاقسام الهندسية": {
+      "en": "Technical College – Engineering Departments",
+      "ku": "کۆلێژی تەکنیکی – بەشە ئەندازیارییەکان"
+    },
+    "الكلية التقنية الحويجة": {
+      "en": "Technical College – Hawija",
+      "ku": "کۆلێژی تەکنیکی حەویجە"
+    },
+    "الكلية التقنية الزراعية": {
+      "en": "Technical College of Agriculture",
+      "ku": "کۆلێژی تەکنیکی کشتوکاڵ"
+    },
+    "الكلية التقنية الشطرة": {
+      "en": "Technical College – Shatrah",
+      "ku": "کۆلێژی تەکنیکی شەترە"
+    },
+    "الكلية التقنية الصحية والطبية": {
+      "en": "Technical College of Health and Medical Technologies",
+      "ku": "کۆلێژی تەکنیکی تەندروستی و پزیشکی"
+    },
+    "الكلية التقنية الصويرة": {
+      "en": "Technical College – Suwaira",
+      "ku": "کۆلێژی تەکنیکی سوەیرە"
+    },
+    "الكلية التقنية الكوت": {
+      "en": "Technical College – Kut",
+      "ku": "کۆلێژی تەکنیکی کووت"
+    },
+    "الكلية التقنية الهندسية": {
+      "en": "Engineering Technical College",
+      "ku": "کۆلێژی تەکنیکی ئەندازیاری"
+    },
+    "الكلية التقنية الهندسية الكهربائية": {
+      "en": "Electrical Engineering Technical College",
+      "ku": "کۆلێژی تەکنیکی ئەندازیاری کارەبا"
+    },
+    "الكلية التقنية الهندسية للحاسوب والذكاء الاصطناعي": {
+      "en": "Technical College of Computer and AI Engineering",
+      "ku": "کۆلێژی تەکنیکی ئەندازیاری کۆمپیوتەر و زیرەکی دەستکرد"
+    },
+    "الكلية التقنية الهندسية للذكاء الاصطناعي": {
+      "en": "Technical College of AI Engineering",
+      "ku": "کۆلێژی تەکنیکی ئەندازیاری زیرەکی دەستکرد"
+    },
+    "الكلية التقنية الهندسية للنفط والطاقة": {
+      "en": "Technical College of Oil and Energy Engineering",
+      "ku": "کۆلێژی تەکنیکی ئەندازیاری نەوت و وزە"
+    },
+    "الكلية التقنية بعقوبة": {
+      "en": "Technical College – Baqubah",
+      "ku": "کۆلێژی تەکنیکی بەعقووبە"
+    },
+    "الكلية التقنية لهندسة البناء والعمارة": {
+      "en": "Technical College of Building and Architectural Engineering",
+      "ku": "کۆلێژی تەکنیکی ئەندازیاری بیناسازی و تەلارسازی"
+    },
+    "المعهد التقني الانبار": {
+      "en": "Technical Institute – Anbar",
+      "ku": "پەیمانگای تەکنیکی ئەنبار"
+    },
+    "المعهد التقني الصويرة": {
+      "en": "Technical Institute – Suwaira",
+      "ku": "پەیمانگای تەکنیکی سوەیرە"
+    },
+    "المعهد التقني الطبي": {
+      "en": "Medical Technical Institute",
+      "ku": "پەیمانگای تەکنیکی پزیشکی"
+    },
+    "المعهد التقني الكوت": {
+      "en": "Technical Institute – Kut",
+      "ku": "پەیمانگای تەکنیکی کووت"
+    },
+    "المعهد التقني النمرود": {
+      "en": "Technical Institute – Nimrud",
+      "ku": "پەیمانگای تەکنیکی نەمرود"
+    },
+    "المعهد التقني بعقوبة": {
+      "en": "Technical Institute – Baqubah",
+      "ku": "پەیمانگای تەکنیکی بەعقووبە"
+    },
+    "المعهد التقني بلد": {
+      "en": "Technical Institute – Balad",
+      "ku": "پەیمانگای تەکنیکی بەلەد"
+    },
+    "المعهد الطبي التقني": {
+      "en": "Medical Technical Institute",
+      "ku": "پەیمانگای تەکنیکی پزیشکی"
+    },
+    "النباتات الطبية والصناعية": {
+      "en": "Medicinal and Industrial Plants",
+      "ku": "ڕووەکە پزیشکی و پیشەسازییەکان"
+    },
+    "علوم الهندسة الزراعية": {
+      "en": "College of Agricultural Engineering Sciences",
+      "ku": "کۆلێژی زانستە ئەندازیارییە کشتوکاڵییەکان"
+    },
+    "كلية اقتصاديات الاعمال": {
+      "en": "College of Business Economics",
+      "ku": "کۆلێژی ئابووری بازرگانی"
+    },
+    "كلية الاداب": {
+      "en": "College of Arts",
+      "ku": "کۆلێژی ئاداب"
+    },
+    "كلية الاثار": {
+      "en": "College of Archaeology",
+      "ku": "کۆلێژی شوێنەوارناسی"
+    },
+    "كلية الادارة الصناعية للنفط والغاز": {
+      "en": "College of Industrial Management for Oil and Gas",
+      "ku": "کۆلێژی کارگێڕی پیشەسازی نەوت و گاز"
+    },
+    "كلية الادارة والاقتصاد": {
+      "en": "College of Administration and Economics",
+      "ku": "کۆلێژی کارگێڕی و ئابووری"
+    },
+    "كلية الاعلام": {
+      "en": "College of Media",
+      "ku": "کۆلێژی ڕاگەیاندن"
+    },
+    "كلية الاعلام الرقمي": {
+      "en": "College of Digital Media",
+      "ku": "کۆلێژی ڕاگەیاندنی دیجیتاڵ"
+    },
+    "كلية البوليتكنك الدور(صلاح الدين)": {
+      "en": "Polytechnic College – Al-Dour (Salah al-Din)",
+      "ku": "کۆلێژی پۆلیتەکنیک – دەور (سەڵاحەدین)"
+    },
+    "كلية البوليتكنك الادارية": {
+      "en": "Administrative Polytechnic College",
+      "ku": "کۆلێژی پۆلیتەکنیکی کارگێڕی"
+    },
+    "كلية البوليتكنك الحويجة": {
+      "en": "Polytechnic College – Hawija",
+      "ku": "کۆلێژی پۆلیتەکنیک – حەویجە"
+    },
+    "كلية البوليتكنك الرميثة": {
+      "en": "Polytechnic College – Rumaitha",
+      "ku": "کۆلێژی پۆلیتەکنیک – ڕومەیسە"
+    },
+    "كلية البوليتكنك السماوة": {
+      "en": "Polytechnic College – Samawah",
+      "ku": "کۆلێژی پۆلیتەکنیک – سەماوە"
+    },
+    "كلية البوليتكنك الشطرة": {
+      "en": "Polytechnic College – Shatrah",
+      "ku": "کۆلێژی پۆلیتەکنیک – شەترە"
+    },
+    "كلية البوليتكنك العمارة": {
+      "en": "Polytechnic College – Amarah",
+      "ku": "کۆلێژی پۆلیتەکنیک – عەمارە"
+    },
+    "كلية البوليتكنك القادسية": {
+      "en": "Polytechnic College – Qadisiyah",
+      "ku": "کۆلێژی پۆلیتەکنیک – قادسیە"
+    },
+    "كلية البوليتكنك الكوفة": {
+      "en": "Polytechnic College – Kufa",
+      "ku": "کۆلێژی پۆلیتەکنیک – کووفە"
+    },
+    "كلية البوليتكنك المسيب": {
+      "en": "Polytechnic College – Musayyib",
+      "ku": "کۆلێژی پۆلیتەکنیک – موسەییب"
+    },
+    "كلية البوليتكنك الموصل": {
+      "en": "Polytechnic College – Mosul",
+      "ku": "کۆلێژی پۆلیتەکنیک – مووسڵ"
+    },
+    "كلية البوليتكنك الناصرية": {
+      "en": "Polytechnic College – Nasiriyah",
+      "ku": "کۆلێژی پۆلیتەکنیک – ناسریە"
+    },
+    "كلية البوليتكنك النجف": {
+      "en": "Polytechnic College – Najaf",
+      "ku": "کۆلێژی پۆلیتەکنیک – نەجەف"
+    },
+    "كلية البوليتكنك الهندسية": {
+      "en": "Engineering Polytechnic College",
+      "ku": "کۆلێژی پۆلیتەکنیکی ئەندازیاری"
+    },
+    "كلية البوليتكنك بابل": {
+      "en": "Polytechnic College – Babylon",
+      "ku": "کۆلێژی پۆلیتەکنیک – بابل"
+    },
+    "كلية البوليتكنك كربلاء": {
+      "en": "Polytechnic College – Kerbala",
+      "ku": "کۆلێژی پۆلیتەکنیک – کەربەلا"
+    },
+    "كلية البوليتكنك كركوك": {
+      "en": "Polytechnic College – Kirkuk",
+      "ku": "کۆلێژی پۆلیتەکنیک – کەرکووک"
+    },
+    "كلية البوليتكنك لاعداد المدربين التقنيين": {
+      "en": "Polytechnic College for Technical Trainers",
+      "ku": "کۆلێژی پۆلیتەکنیک بۆ ئامادەکردنی ڕاهێنەرانی تەکنیکی"
+    },
+    "كلية البوليتكنك للفنون التطبيقية": {
+      "en": "Polytechnic College of Applied Arts",
+      "ku": "کۆلێژی پۆلیتەکنیکی هونەرە پراکتیکییەکان"
+    },
+    "كلية التحسس النائي والجيوفيزياء": {
+      "en": "College of Remote Sensing and Geophysics",
+      "ku": "کۆلێژی هەستکردنی دوور و جیۆفیزیا"
+    },
+    "كلية التخطيط العمراني": {
+      "en": "College of Urban Planning",
+      "ku": "کۆلێژی پلاندانانی شارستانی"
+    },
+    "كلية التربية": {
+      "en": "College of Education",
+      "ku": "کۆلێژی پەروەردە"
+    },
+    "كلية التربية ابن رشد للعلوم الانسانية": {
+      "en": "College of Education (Ibn Rushd) for Human Sciences",
+      "ku": "کۆلێژی پەروەردەی ئیبن ڕوشد بۆ زانستە مرۆییەکان"
+    },
+    "كلية التربية الاساسية": {
+      "en": "College of Basic Education",
+      "ku": "کۆلێژی پەروەردەی بنەڕەتی"
+    },
+    "كلية التربية المقداد": {
+      "en": "College of Education – Al-Miqdad",
+      "ku": "کۆلێژی پەروەردەی میقداد"
+    },
+    "كلية التربية للبنات": {
+      "en": "College of Education for Women",
+      "ku": "کۆلێژی پەروەردە بۆ کچان"
+    },
+    "كلية التربية للعلوم الانسانية": {
+      "en": "College of Education for Human Sciences",
+      "ku": "کۆلێژی پەروەردە بۆ زانستە مرۆییەکان"
+    },
+    "كلية التربية للعلوم الصرفة": {
+      "en": "College of Education for Pure Sciences",
+      "ku": "کۆلێژی پەروەردە بۆ زانستە پەتییەکان"
+    },
+    "كلية التقانات الاحيائية": {
+      "en": "College of Biotechnology",
+      "ku": "کۆلێژی بایۆتەکنەلۆژیا"
+    },
+    "كلية التقنيات الاحيائية": {
+      "en": "College of Biotechnology",
+      "ku": "کۆلێژی بایۆتەکنەلۆژیا"
+    },
+    "كلية التقنيات الصحية والطبية": {
+      "en": "College of Health and Medical Technologies",
+      "ku": "کۆلێژی تەکنیکە تەندروستی و پزیشکییەکان"
+    },
+    "كلية التقنيات الصحية والطبية للتاهيل الطبي": {
+      "en": "College of Health and Medical Technologies for Medical Rehabilitation",
+      "ku": "کۆلێژی تەکنیکە تەندروستییەکان بۆ چاکسازیی پزیشکی"
+    },
+    "كلية التمريض": {
+      "en": "College of Nursing",
+      "ku": "کۆلێژی پەرستاری"
+    },
+    "كلية الحاسبات والمعلوماتية": {
+      "en": "College of Computers and Informatics",
+      "ku": "کۆلێژی کۆمپیوتەر و زانیاریناسی"
+    },
+    "كلية الحقوق": {
+      "en": "College of Law",
+      "ku": "کۆلێژی یاسا"
+    },
+    "كلية الزراعة": {
+      "en": "College of Agriculture",
+      "ku": "کۆلێژی کشتوکاڵ"
+    },
+    "كلية الزراعة والاهوار": {
+      "en": "College of Agriculture and Marshes",
+      "ku": "کۆلێژی کشتوکاڵ و هۆڕەکان"
+    },
+    "كلية الزراعة والغابات": {
+      "en": "College of Agriculture and Forestry",
+      "ku": "کۆلێژی کشتوکاڵ و دارستان"
+    },
+    "كلية الصيدلة": {
+      "en": "College of Pharmacy",
+      "ku": "کۆلێژی دەرمانسازی"
+    },
+    "كلية الطب": {
+      "en": "College of Medicine",
+      "ku": "کۆلێژی پزیشکی"
+    },
+    "كلية الطب البيطري": {
+      "en": "College of Veterinary Medicine",
+      "ku": "کۆلێژی پزیشکی ڤێتێرنەری"
+    },
+    "كلية العلوم": {
+      "en": "College of Science",
+      "ku": "کۆلێژی زانست"
+    },
+    "كلية العلوم الاسلامية": {
+      "en": "College of Islamic Sciences",
+      "ku": "کۆلێژی زانستە ئیسلامییەکان"
+    },
+    "كلية العلوم البيئية": {
+      "en": "College of Environmental Sciences",
+      "ku": "کۆلێژی زانستە ژینگەییەکان"
+    },
+    "كلية العلوم التطبيقية": {
+      "en": "College of Applied Sciences",
+      "ku": "کۆلێژی زانستە پراکتیکییەکان"
+    },
+    "كلية العلوم السياحية": {
+      "en": "College of Tourism Sciences",
+      "ku": "کۆلێژی زانستە گەشتیارییەکان"
+    },
+    "كلية العلوم السياسية": {
+      "en": "College of Political Science",
+      "ku": "کۆلێژی زانستە سیاسییەکان"
+    },
+    "كلية العلوم الطبية": {
+      "en": "College of Medical Sciences",
+      "ku": "کۆلێژی زانستە پزیشکییەکان"
+    },
+    "كلية العلوم الطبية التطبيقية": {
+      "en": "College of Applied Medical Sciences",
+      "ku": "کۆلێژی زانستە پزیشکییە پراکتیکییەکان"
+    },
+    "كلية العلوم للبنات": {
+      "en": "College of Science for Women",
+      "ku": "کۆلێژی زانست بۆ کچان"
+    },
+    "كلية الفقه": {
+      "en": "College of Jurisprudence",
+      "ku": "کۆلێژی فیقه"
+    },
+    "كلية الفنون التطبيقية": {
+      "en": "College of Applied Arts",
+      "ku": "کۆلێژی هونەرە پراکتیکییەکان"
+    },
+    "كلية الفنون الجميلة": {
+      "en": "College of Fine Arts",
+      "ku": "کۆلێژی هونەرە جوانەکان"
+    },
+    "كلية القانون": {
+      "en": "College of Law",
+      "ku": "کۆلێژی یاسا"
+    },
+    "كلية القانون والعلوم السياسية": {
+      "en": "College of Law and Political Science",
+      "ku": "کۆلێژی یاسا و زانستە سیاسییەکان"
+    },
+    "كلية اللغات": {
+      "en": "College of Languages",
+      "ku": "کۆلێژی زمانەکان"
+    },
+    "كلية المعلوماتية الطبية الحيوية": {
+      "en": "College of Biomedical Informatics",
+      "ku": "کۆلێژی زانیاریناسی بایۆپزیشکی"
+    },
+    "كلية الهندسة": {
+      "en": "College of Engineering",
+      "ku": "کۆلێژی ئەندازیاری"
+    },
+    "كلية الهندسة الكهربائية": {
+      "en": "College of Electrical Engineering",
+      "ku": "کۆلێژی ئەندازیاری کارەبا"
+    },
+    "كلية الهندسة الكيمياوية": {
+      "en": "College of Chemical Engineering",
+      "ku": "کۆلێژی ئەندازیاری کیمیایی"
+    },
+    "كلية الهندسة المدنية": {
+      "en": "College of Civil Engineering",
+      "ku": "کۆلێژی ئەندازیاری شارستانی"
+    },
+    "كلية الهندسة الميكانيكية": {
+      "en": "College of Mechanical Engineering",
+      "ku": "کۆلێژی ئەندازیاری میکانیک"
+    },
+    "كلية الهندسة-الخوارزمي": {
+      "en": "Al-Khwarizmi College of Engineering",
+      "ku": "کۆلێژی ئەندازیاری خوارزمی"
+    },
+    "كلية تكنولوجيا المعلومات": {
+      "en": "College of Information Technology",
+      "ku": "کۆلێژی تەکنەلۆژیای زانیاری"
+    },
+    "كلية طب الاسنان": {
+      "en": "College of Dentistry",
+      "ku": "کۆلێژی پزیشکی ددان"
+    },
+    "كلية طب البتول": {
+      "en": "Al-Batool College of Medicine",
+      "ku": "کۆلێژی پزیشکی بەتوول"
+    },
+    "كلية طب الزهراء": {
+      "en": "Al-Zahraa College of Medicine",
+      "ku": "کۆلێژی پزیشکی زەهرا"
+    },
+    "كلية طب الكندي": {
+      "en": "Al-Kindy College of Medicine",
+      "ku": "کۆلێژی پزیشکی کندی"
+    },
+    "كلية طب الموصل": {
+      "en": "Mosul College of Medicine",
+      "ku": "کۆلێژی پزیشکی مووسڵ"
+    },
+    "كلية طب حمورابي": {
+      "en": "Hammurabi College of Medicine",
+      "ku": "کۆلێژی پزیشکی حەمورابی"
+    },
+    "كلية علوم الاغذية": {
+      "en": "College of Food Sciences",
+      "ku": "کۆلێژی زانستی خۆراک"
+    },
+    "كلية علوم البحار": {
+      "en": "College of Marine Sciences",
+      "ku": "کۆلێژی زانستی دەریا"
+    },
+    "كلية علوم البيئة": {
+      "en": "College of Environmental Science",
+      "ku": "کۆلێژی زانستی ژینگە"
+    },
+    "كلية علوم الحاسوب": {
+      "en": "College of Computer Science",
+      "ku": "کۆلێژی زانستی کۆمپیوتەر"
+    },
+    "كلية علوم الحاسوب والرياضيات": {
+      "en": "College of Computer Science and Mathematics",
+      "ku": "کۆلێژی زانستی کۆمپیوتەر و ماتماتیک"
+    },
+    "كلية علوم الحاسوب وتكنولوجيا المعلومات": {
+      "en": "College of Computer Science and Information Technology",
+      "ku": "کۆلێژی زانستی کۆمپیوتەر و تەکنەلۆژیای زانیاری"
+    },
+    "كلية علوم الطاقة والبيئة": {
+      "en": "College of Energy and Environmental Sciences",
+      "ku": "کۆلێژی زانستی وزە و ژینگە"
+    },
+    "كلية معلوماتية الاعمال": {
+      "en": "College of Business Informatics",
+      "ku": "کۆلێژی زانیاریناسی بازرگانی"
+    },
+    "كلية هندسة الاتصالات": {
+      "en": "College of Communications Engineering",
+      "ku": "کۆلێژی ئەندازیاری پەیوەندییەکان"
+    },
+    "كلية هندسة الالكترونيات": {
+      "en": "College of Electronics Engineering",
+      "ku": "کۆلێژی ئەندازیاری ئەلیکترۆنیک"
+    },
+    "كلية هندسة الانتاج والمعادن": {
+      "en": "College of Production and Metallurgy Engineering",
+      "ku": "کۆلێژی ئەندازیاری بەرهەمهێنان و کانزا"
+    },
+    "كلية هندسة الحاسوب": {
+      "en": "College of Computer Engineering",
+      "ku": "کۆلێژی ئەندازیاری کۆمپیوتەر"
+    },
+    "كلية هندسة الذكاء الاصطناعي": {
+      "en": "College of Artificial Intelligence Engineering",
+      "ku": "کۆلێژی ئەندازیاری زیرەکی دەستکرد"
+    },
+    "كلية هندسة الذكاء الاصطناعي والامن السيبراني": {
+      "en": "College of AI and Cybersecurity Engineering",
+      "ku": "کۆلێژی ئەندازیاری زیرەکی دەستکرد و ئاسایشی سایبەری"
+    },
+    "كلية هندسة الطب الحياتي": {
+      "en": "College of Biomedical Engineering",
+      "ku": "کۆلێژی ئەندازیاری بایۆپزیشکی"
+    },
+    "كلية هندسة العمارة": {
+      "en": "College of Architectural Engineering",
+      "ku": "کۆلێژی ئەندازیاری تەلارسازی"
+    },
+    "كلية هندسة العمليات النفطية": {
+      "en": "College of Petroleum Processes Engineering",
+      "ku": "کۆلێژی ئەندازیاری پرۆسەکانی نەوت"
+    },
+    "كلية هندسة الكهروميكانيك": {
+      "en": "College of Electromechanical Engineering",
+      "ku": "کۆلێژی ئەندازیاری ئەلیکترۆمیکانیک"
+    },
+    "كلية هندسة الليزر والالكترونيات البصرية": {
+      "en": "College of Laser and Optoelectronics Engineering",
+      "ku": "کۆلێژی ئەندازیاری لەیزەر و ئەلیکترۆنیکی بینایی"
+    },
+    "كلية هندسة المعلومات": {
+      "en": "College of Information Engineering",
+      "ku": "کۆلێژی ئەندازیاری زانیاری"
+    },
+    "كلية هندسة المواد": {
+      "en": "College of Materials Engineering",
+      "ku": "کۆلێژی ئەندازیاری مادەکان"
+    },
+    "كلية هندسة النفط والتعدين": {
+      "en": "College of Petroleum and Mining Engineering",
+      "ku": "کۆلێژی ئەندازیاری نەوت و کانزا"
+    },
+    "كلية هندسة النفط والغاز": {
+      "en": "College of Oil and Gas Engineering",
+      "ku": "کۆلێژی ئەندازیاری نەوت و گاز"
+    },
+    "كلية هندسة تقنيات النفط والغاز": {
+      "en": "College of Oil and Gas Technology Engineering",
+      "ku": "کۆلێژی ئەندازیاری تەکنیکی نەوت و گاز"
+    },
+    "كلية هندسة تكنولوجيا الذكاء الاصطناعي": {
+      "en": "College of AI Technology Engineering",
+      "ku": "کۆلێژی ئەندازیاری تەکنەلۆژیای زیرەکی دەستکرد"
+    },
+    "هندسة المواد": {
+      "en": "Materials Engineering",
+      "ku": "ئەندازیاری مادەکان"
+    }
+  },
+  "departments": {
+    "قسم اللغة الانكليزية": "Department of English",
+    "قسم اللغة العربية": "Department of Arabic",
+    "قسم الهندسة المدنية": "Department of Civil Engineering",
+    "قسم الهندسة الميكانيكية": "Department of Mechanical Engineering",
+    "قسم هندسة العمارة": "Department of Architectural Engineering",
+    "قسم الهندسة الكهربائية": "Department of Electrical Engineering",
+    "قسم الهندسة الكيمياوية": "Department of Chemical Engineering",
+    "قسم هندسة الطب الحياتي": "Department of Biomedical Engineering",
+    "قسم علم النفس": "Department of Psychology",
+    "قسم هندسة المواد": "Department of Materials Engineering",
+    "قسم هندسة الحاسوب": "Department of Computer Engineering",
+    "قسم هندسة البيئة": "Department of Environmental Engineering",
+    "قسم الهندسة البيئية": "Department of Environmental Engineering",
+    "قسم الرياضيات": "Department of Mathematics",
+    "قسم القانون": "Department of Law",
+    "قسم العلوم السياسية": "Department of Political Science",
+    "قسم الترجمة": "Department of Translation",
+    "قسم هندسة النفط": "Department of Petroleum Engineering",
+    "قسم هندسة النفط والغاز": "Department of Oil and Gas Engineering",
+    "قسم هندسة الامن السيبراني": "Department of Cybersecurity Engineering",
+    "قسم هندسة الميكاترونكس": "Department of Mechatronics Engineering",
+    "قسم هندسة الالكترونيك والاتصالات": "Department of Electronics and Communications Engineering",
+    "قسم الهندسة الالكترونية": "Department of Electronic Engineering",
+    "قسم هندسة الاتصالات": "Department of Communications Engineering",
+    "قسم معلم الصفوف الاولى": "Department of Primary-Grade Teaching",
+    "قسم هندسة الليزر": "Department of Laser Engineering",
+    "قسم هندسة الاطراف والمساند الصناعية": "Department of Prosthetics and Orthotics Engineering",
+    "قسم هندسة الشبكات والامن السيبراني": "Department of Networks and Cybersecurity Engineering",
+    "قسم هندسة الذكاء الاصطناعي والانسان الالي": "Department of AI and Robotics Engineering",
+    "قسم هندسة الحاسوب والذكاء الاصطناعي": "Department of Computer and AI Engineering",
+    "قسم هندسة المعلومات والاتصالات": "Department of Information and Communications Engineering",
+    "قسم هندسة معدات النفط والغاز": "Department of Oil and Gas Equipment Engineering",
+    "قسم هندسة الذكاء الاصطناعي": "Department of Artificial Intelligence Engineering",
+    "قسم هندسة الطائرات": "Department of Aeronautical Engineering",
+    "قسم هندسة الطيران": "Department of Aviation Engineering",
+    "قسم هندسة الطاقة والطاقات المتجددة": "Department of Energy and Renewable Energies Engineering",
+    "قسم هندسة الموارد المائية": "Department of Water Resources Engineering",
+    "قسم هندسة المعادن": "Department of Metallurgical Engineering",
+    "قسم الهندسة الكهروميكانيكية": "Department of Electromechanical Engineering",
+    "قسم هندسة السيراميك ومواد البناء": "Department of Ceramics and Building Materials Engineering",
+    "قسم هندسة الطاقة المستدامة": "Department of Sustainable Energy Engineering",
+    "قسم هندسة السدود والموارد المائية": "Department of Dams and Water Resources Engineering",
+    "قسم هندسة السدود وموارد المياه": "Department of Dams and Water Resources Engineering",
+    "قسم الرياضيات وتطبيقات الحاسوب": "Department of Mathematics and Computer Applications",
+    "قسم العلوم التربوية والنفسية": "Department of Educational and Psychological Sciences",
+    "قسم الفلسفة": "Department of Philosophy",
+    "قسم المعلومات وتقنيات المعرفة": "Department of Information and Knowledge Technologies",
+    "قسم الاعلام": "Department of Media",
+    "قسم الاجتماع": "Department of Sociology",
+    "قسم التربية الخاصة": "Department of Special Education",
+    "قسم اقتصاديات النفط والغاز": "Department of Oil and Gas Economics",
+    "قسم ادارة المشاريع النفطية": "Department of Petroleum Project Management",
+    "قسم ادارة وتسويق النفط والغاز": "Department of Oil and Gas Management and Marketing",
+    "قسم المحاسبة النفطية": "Department of Petroleum Accounting",
+    "قسم تقنيات المختبرات الطبية": "Department of Medical Laboratory Technologies",
+    "قسم تقنيات صحة المجتمع": "Department of Community Health Technologies",
+    "قسم تقنيات المحاسبة": "Department of Accounting Technologies",
+    "قسم التقنيات المالية والمصرفية": "Department of Financial and Banking Technologies",
+    "قسم تقنيات الادارة الصحية": "Department of Health Administration Technologies",
+    "قسم تقنيات الادارة القانونية": "Department of Legal Administration Technologies",
+    "قسم تقنيات ادارة المكتب": "Department of Office Management Technologies",
+    "قسم تقنيات ادارة المواد": "Department of Materials Management Technologies",
+    "قسم تقنيات التصميم الداخلي": "Department of Interior Design Technologies",
+    "قسم تقنيات العلاج الطبيعي": "Department of Physiotherapy Technologies",
+    "قسم تقنيات الصيدلة": "Department of Pharmacy Technologies",
+    "قسم تقنيات التخدير": "Department of Anaesthesia Technologies",
+    "قسم تقنيات الاشعة": "Department of Radiology Technologies",
+    "قسم تقنيات فحص البصر": "Department of Optometry Technologies",
+    "قسم تقنيات البصريات": "Department of Optics Technologies",
+    "قسم التقنيات البصرية": "Department of Optical Technologies",
+    "قسم تقنيات صناعة الاسنان": "Department of Dental Prosthetics Technologies",
+    "قسم تقنيات وقاية الاسنان": "Department of Dental Hygiene Technologies",
+    "قسم تقنيات الكلية الصناعية": "Department of Renal Dialysis Technologies",
+    "قسم تقنيات غسيل الكلى": "Department of Renal Dialysis Technologies",
+    "قسم تقنيات التغذية العلاجية": "Department of Therapeutic Nutrition Technologies",
+    "قسم تقنيات التغذية الصحية": "Department of Health Nutrition Technologies",
+    "قسم تقنيات طب الطوارئ والاسعافات الاولية": "Department of Emergency Medicine and First Aid Technologies",
+    "قسم تقنيات طب الطوارئ والاسعاف الفوري": "Department of Emergency Medicine and First Aid Technologies",
+    "قسم تقنيات الادلة الجنائية والعدلية": "Department of Forensic Evidence Technologies",
+    "قسم تقنيات الادلة الجنائية": "Department of Forensic Evidence Technologies",
+    "قسم تقنيات السلامة المهنية والطب المهني": "Department of Occupational Safety and Medicine Technologies",
+    "قسم تقنيات التاهيل الطبي والعلاج الطبيعي": "Department of Medical Rehabilitation and Physiotherapy Technologies",
+    "قسم تقنيات الاطراف والمساند": "Department of Prosthetics and Orthotics Technologies",
+    "قسم الاطراف الصناعية": "Department of Prosthetics",
+    "قسم تقنيات العلاج الوظيفي": "Department of Occupational Therapy Technologies",
+    "قسم تقنيات السمع والنطق": "Department of Hearing and Speech Technologies",
+    "قسم هندسة تقنيات الاجهزة الطبية": "Department of Medical Instrumentation Technology Engineering",
+    "قسم هندسة تقنيات الوقود والطاقة": "Department of Fuel and Energy Technology Engineering",
+    "قسم هندسة التقنيات الكهربائية": "Department of Electrical Technology Engineering",
+    "قسم هندسة التقنيات الكهروميكانيكية": "Department of Electromechanical Technology Engineering",
+    "قسم هندسة تقنيات الامن السيبراني": "Department of Cybersecurity Technology Engineering",
+    "قسم هندسة تقنيات الذكاء الاصطناعي": "Department of AI Technology Engineering",
+    "قسم هندسة تقنيات الحاسوب": "Department of Computer Technology Engineering",
+    "قسم هندسة تقنيات البناء والانشاءات": "Department of Building and Construction Technology Engineering",
+    "قسم هندسة تقنيات الميكاترونكس": "Department of Mechatronics Technology Engineering",
+    "قسم هندسة تقنيات ميكانيك القوى": "Department of Power Mechanics Technology Engineering",
+    "قسم هندسة تقنيات ميكانيك القدرة": "Department of Power Mechanics Technology Engineering",
+    "قسم هندسة تقنيات المساحة": "Department of Surveying Technology Engineering",
+    "قسم هندسة تقنيات العمارة": "Department of Architecture Technology Engineering",
+    "قسم هندسة تقنيات العمارة الحديثة": "Department of Modern Architecture Technology Engineering",
+    "قسم هندسة تقنيات العمارة والبناء": "Department of Architecture and Building Technology Engineering",
+    "قسم هندسة تقنيات البيئة والتلوث": "Department of Environment and Pollution Technology Engineering",
+    "قسم هندسة تقنيات النفط والغاز": "Department of Oil and Gas Technology Engineering",
+    "قسم هندسة تقنيات الحفر وانتاج النفط والغاز": "Department of Drilling and Oil & Gas Production Technology Engineering",
+    "قسم هندسة تقنيات الطيران": "Department of Aviation Technology Engineering",
+    "قسم هندسة تقنيات الكترونيات الطيران": "Department of Avionics Technology Engineering",
+    "قسم هندسة تقنيات الاتصالات": "Department of Communications Technology Engineering",
+    "قسم هندسة تقنيات الطائرات المسيرة": "Department of Drone Technology Engineering",
+    "قسم هندسة تقنيات الفضاء والطائرات المسيرة": "Department of Space and Drone Technology Engineering",
+    "قسم هندسة تقنيات السيطرة والروبوتات الذكية": "Department of Control and Smart Robotics Technology Engineering",
+    "قسم هندسة تقنيات السيطرة والاتمتة": "Department of Control and Automation Technology Engineering",
+    "قسم هندسة تقنيات ميكانيك الحراريات": "Department of Thermal Mechanics Technology Engineering",
+    "قسم هندسة التقنيات المدنية": "Department of Civil Technology Engineering",
+    "قسم هندسة التقنيات الكيميائية والبتروكيميائية": "Department of Chemical and Petrochemical Technology Engineering",
+    "قسم هندسة التقنيات الكيمياوية والصناعات النفطية": "Department of Chemical Technology and Petroleum Industries Engineering",
+    "قسم هندسة تقنيات الليزر والالكترونيات البصرية": "Department of Laser and Optoelectronics Technology Engineering",
+    "قسم هندسة تقنيات الفيزياء الصحية والعلاج الاشعاعي": "Department of Health Physics and Radiotherapy Technology Engineering",
+    "قسم هندسة تقنيات النظم الكهروميكانيكية": "Department of Electromechanical Systems Technology Engineering",
+    "قسم هندسة تقنيات المعلوماتية الطبية الحيوية": "Department of Biomedical Informatics Technology Engineering",
+    "قسم هندسة تقنيات المعلومات وشبكات الحاسوب": "Department of Information and Computer Networks Technology Engineering",
+    "قسم هندسة تقنيات الحوسبة السحابية وانترنيت الاشياء": "Department of Cloud Computing and IoT Technology Engineering",
+    "قسم هندسة تقنيات الميكانيك التطبيقي": "Department of Applied Mechanics Technology Engineering",
+    "قسم هندسة تقنيات الجيوماتكس": "Department of Geomatics Technology Engineering",
+    "قسم هندسة تقنيات المكائن والمعدات": "Department of Machinery and Equipment Technology Engineering",
+    "قسم هندسة تقنيات الالكترونيك والسيطرة": "Department of Electronics and Control Technology Engineering",
+    "قسم هندسة تقنيات الطاقة المتجددة": "Department of Renewable Energy Technology Engineering",
+    "قسم هندسة تقنية المواد": "Department of Materials Technology Engineering",
+    "قسم تقنيات الانتاج النباتي": "Department of Plant Production Technologies",
+    "قسم تقنيات الاحيائية الزراعية": "Department of Agricultural Biotechnology",
+    "قسم تقنيات استصلاح الاراضي والري الحديث": "Department of Land Reclamation and Modern Irrigation Technologies",
+    "قسم تقنيات الزراعة المستدامة وانظمتها البيئية": "Department of Sustainable Agriculture and Ecosystems Technologies",
+    "قسم الحاسوب": "Department of Computer Science",
+    "قسم تكنولوجيا المعلومات": "Department of Information Technology",
+    "قسم الفلك والفضاء": "Department of Astronomy and Space",
+    "قسم علوم التجميل": "Department of Cosmetic Sciences",
+    "قسم تقانات البيئة": "Department of Environmental Technologies",
+    "قسم علوم البيئة": "Department of Environmental Sciences",
+    "قسم الصحة البيئية": "Department of Environmental Health",
+    "قسم التغيرات المناخية": "Department of Climate Change",
+    "قسم هندسة التصميم المعماري": "Department of Architectural Design Engineering",
+    "قسم هندسة التصميم الحضري": "Department of Urban Design Engineering",
+    "قسم الهندسة الكيميائية وتكرير النفط": "Department of Chemical Engineering and Oil Refining",
+    "قسم هندسة عمليات الغاز والبتروكيمياويات": "Department of Gas and Petrochemical Processes Engineering",
+    "قسم هندسة الاتمتة والذكاء الاصطناعي": "Department of Automation and AI Engineering",
+    "قسم هندسة الاجهزة الطبية الحيوية": "Department of Biomedical Instrumentation Engineering",
+    "قسم هندسة تكرير النفط والغاز": "Department of Oil and Gas Refining Engineering",
+    "قسم الهندسة الانشائية": "Department of Structural Engineering",
+    "قسم هندسة الغاز الطبيعي": "Department of Natural Gas Engineering",
+    "قسم هندسة تكرير النفط وتكنولوجيا الغاز": "Department of Oil Refining and Gas Technology Engineering",
+    "قسم هندسة البناء وادارة المشاريع الانشائية": "Department of Building and Construction Project Management Engineering",
+    "قسم هندسة النفط والتكرير": "Department of Petroleum and Refining Engineering",
+    "قسم هندسة انظمة الحوسبة الذكية والامن السيبراني": "Department of Smart Computing Systems and Cybersecurity Engineering",
+    "قسم هندسة الحاسبات": "Department of Computer Engineering",
+    "قسم هندسة الانسان الالي الذكي": "Department of Intelligent Robotics Engineering",
+    "قسم هندسة الكهرباء والالكترونيك": "Department of Electrical and Electronic Engineering",
+    "قسم الهندسة الكهربائية والالكترونية": "Department of Electrical and Electronic Engineering",
+    "قسم هندسة الميكانيك الحيوي": "Department of Biomechanical Engineering",
+    "قسم هندسة السيطرة الذكية": "Department of Intelligent Control Engineering",
+    "قسم هندسة الطرق والجيوتكنك": "Department of Highways and Geotechnical Engineering",
+    "قسم هندسة سيطرة المنظومات النفطية": "Department of Petroleum Systems Control Engineering",
+    "قسم هندسة الانظمة الادراكية": "Department of Cognitive Systems Engineering",
+    "قسم هندسة المكامن النفطية": "Department of Petroleum Reservoir Engineering",
+    "قسم هندسة الالكترونيات البصرية": "Department of Optoelectronics Engineering",
+    "قسم هندسة شبكات الحاسوب": "Department of Computer Networks Engineering",
+    "قسم الهندسة الكيميائية الاحيائية": "Department of Biochemical Engineering",
+    "قسم هندسة الطاقة": "Department of Energy Engineering",
+    "قسم الهندسة الالكترونية والاتصالات": "Department of Electronics and Communications Engineering",
+    "قسم هندسة التعدين": "Department of Mining Engineering",
+    "قسم هندسة التعدين واستخلاص المعادن": "Department of Mining and Metal Extraction Engineering",
+    "قسم هندسة الطائرات المسيرة": "Department of Drone Engineering",
+    "قسم هندسة نظم الطائرات بدون طيار": "Department of Unmanned Aircraft Systems Engineering",
+    "قسم هندسة المساحة": "Department of Surveying Engineering",
+    "قسم هندسة الجيوماتيك": "Department of Geomatics Engineering",
+    "قسم هندسة المساحة والجيوماتيك": "Department of Surveying and Geomatics Engineering",
+    "قسم الهندسة الكيمياوية والتلوث النفطي": "Department of Chemical Engineering and Oil Pollution",
+    "قسم الهندسة الكيميائية والبتروكيميائية": "Department of Chemical and Petrochemical Engineering",
+    "قسم هندسة العمليات الكيمياوية": "Department of Chemical Process Engineering",
+    "قسم هندسة المنشات الهيدروليكية والموارد المائية": "Department of Hydraulic Structures and Water Resources Engineering",
+    "قسم هندسة المنشات والموارد المائية": "Department of Structures and Water Resources Engineering",
+    "قسم هندسة نظم الاتصالات اللاسلكية": "Department of Wireless Communication Systems Engineering",
+    "قسم هندسة نظم الاتصالات الضوئية": "Department of Optical Communication Systems Engineering",
+    "قسم هندسة البتروكيمياويات": "Department of Petrochemical Engineering",
+    "قسم هندسة الميكانيك العام": "Department of General Mechanical Engineering",
+    "قسم هندسة التصنيع المؤتمت": "Department of Automated Manufacturing Engineering",
+    "قسم هندسة التصنيع الذكي": "Department of Smart Manufacturing Engineering",
+    "قسم هندسة الرادار والاقمار الصناعية": "Department of Radar and Satellite Engineering",
+    "قسم هندسة الطرق": "Department of Highway Engineering",
+    "قسم هندسة الطرق والنقل": "Department of Highway and Transportation Engineering",
+    "قسم هندسة الطرق والمطارات": "Department of Highway and Airport Engineering",
+    "قسم هندسة الاتصالات والحوسبة المتنقلة": "Department of Communications and Mobile Computing Engineering",
+    "قسم هندسة الاتصالات والالكترونيك": "Department of Communications and Electronics Engineering",
+    "قسم هندسة تكنولوجيا الاعلام والاتصالات": "Department of Media and Communications Technology Engineering",
+    "قسم هندسة الاتصالات والانظمة الرقمية الذكية": "Department of Communications and Smart Digital Systems Engineering",
+    "قسم هندسة محطات القدرة": "Department of Power Plant Engineering",
+    "قسم هندسة النظم والاتمتة": "Department of Systems and Automation Engineering",
+    "قسم هندسة النظم والسيطرة": "Department of Systems and Control Engineering",
+    "قسم هندسة التكييف والتجميد": "Department of Air Conditioning and Refrigeration Engineering",
+    "قسم هندسة تكييف الهواء والتجميد": "Department of Air Conditioning and Refrigeration Engineering",
+    "قسم هندسة السيارات والتنقل المستدام": "Department of Automotive and Sustainable Mobility Engineering",
+    "قسم هندسة السيارات": "Department of Automotive Engineering",
+    "قسم هندسة المواد الاحيائية والتعويضات الاصطناعية": "Department of Biomaterials and Prosthetics Engineering",
+    "قسم هندسة القدرة والمكائن الكهربائية": "Department of Power and Electrical Machines Engineering",
+    "قسم هندسة المواد البوليمرية والبتروكيمياوية": "Department of Polymer and Petrochemical Materials Engineering",
+    "قسم هندسة البوليمرات والصناعات البتروكيمياوية": "Department of Polymers and Petrochemical Industries Engineering",
+    "قسم هندسة الملاحة والتوجيه": "Department of Navigation and Guidance Engineering",
+    "قسم هندسة التصميم والتصنيع المعان بالحاسوب": "Department of Computer-Aided Design and Manufacturing Engineering",
+    "قسم هندسة الحاسوب والمعلوماتية": "Department of Computer and Informatics Engineering",
+    "قسم الهندسة الصناعية والنظم": "Department of Industrial and Systems Engineering",
+    "قسم هندسة السلامة المهنية والحرائق": "Department of Occupational Safety and Fire Engineering",
+    "قسم هندسة ادارة الموارد المائية": "Department of Water Resources Management Engineering",
+    "قسم تقنيات التمريض": "Department of Nursing Technologies",
+    "قسم رياض الاطفال": "Department of Kindergarten",
+    "قسم رياض الاطفال للبنات": "Department of Kindergarten (Women)",
+    "قسم تقنيات تمريض العناية القلبية": "Department of Cardiac Care Nursing Technologies",
+    "قسم رياض الاطفال والتربية الخاصة": "Department of Kindergarten and Special Education",
+    "قسم هندسة تقنيات ميكانيك الطائرات والطائرات المسيرة": "Department of Aircraft and Drone Mechanics Technology Engineering",
+    "قسم الاسعاف الفوري": "Department of Emergency First Aid"
+  },
+  "tracks": {
+    "_comment": "Non-department segments that describe a campus, branch or a programme track. EN strings are shown to Kurmanji readers.",
+    "التخصصات الادارية": "Administrative specialisations",
+    "التخصصات الهندسية": "Engineering specialisations",
+    "التخصصات الطبية": "Medical specialisations",
+    "التخصصات الزراعية": "Agricultural specialisations",
+    "التخصصات الصحية والطبية": "Health and medical specialisations",
+    "تخصصات الفنون التطبيقية": "Applied arts specialisations",
+    "الاقسام الطبية": "Medical departments",
+    "الاقسام الهندسية": "Engineering departments",
+    "الاقسام الزراعية": "Agricultural departments",
+    "ابن الهيثم": "Ibn Al-Haitham",
+    "بغداد": "Baghdad",
+    "بغداد-الرصافة": "Baghdad – Rusafa",
+    "الرصافة": "Rusafa",
+    "بغداد المنصور": "Baghdad – Mansour",
+    "بغداد باب المعظم": "Baghdad – Bab Al-Muadham",
+    "البصرة": "Basrah",
+    "القرنة": "Qurna",
+    "الموصل": "Mosul",
+    "نينوى": "Nineveh",
+    "كركوك": "Kirkuk",
+    "النجف": "Najaf",
+    "الكوفة": "Kufa",
+    "المسيب": "Musayyib",
+    "بابل": "Babylon",
+    "ذي قار": "Thi-Qar",
+    "ميسان": "Misan",
+    "السماوة": "Samawah",
+    "الدور": "Al-Dour",
+    "الشرقاط": "Al-Shirqat",
+    "طوزخورماتو": "Tuz Khurmatu",
+    "المقدادية": "Al-Miqdadiya",
+    "الطارمية": "Al-Tarmiyah",
+    "العزيزية": "Al-Aziziyah",
+    "الحي": "Al-Hay",
+    "هيت": "Hit",
+    "القائم": "Al-Qaim",
+    "حديثة": "Haditha",
+    "بلد": "Balad",
+    "الدواية": "Al-Dawaya",
+    "سوق الشيوخ": "Suq Al-Shuyukh"
+  }
+}

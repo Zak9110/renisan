@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
-import type { AdmissionSystem, FederalCutoff, KRGCutoff, CheckerFilters } from '../lib/types';
-import { normalizeDigits, validateScore, computeKRGComposite } from '../lib/normalizer';
+import type { AdmissionSystem, FederalCutoff, KRGCutoff, CheckerFilters, DatasetMeta, Gender, ProgramLevel } from '../lib/types';
+import { normalizeDigits, validateScore, computeKRGComposite, MAX_SCORE_FEDERAL, MAX_SCORE_KRG } from '../lib/normalizer';
+import { fillTemplate } from '../lib/format';
 import { filterFederalCutoffs, filterKRGCutoffs, getUniqueGovernorates, getUniqueCities } from '../lib/search';
 import { parseCheckerState, serializeCheckerState, type Stream, type SubStream } from '../lib/url-state';
 import { localizePlace } from '../lib/places';
@@ -12,6 +13,7 @@ import { ResultsList } from './ResultsList';
 interface EligibilityCheckerProps {
   federalData: FederalCutoff[];
   krgData: KRGCutoff[];
+  meta: DatasetMeta | null;
 }
 
 const STUDY_TYPES_FEDERAL = ['morning', 'evening', 'parallel'];
@@ -32,15 +34,17 @@ const CHANNEL_LABELS: Record<string, keyof TranslationKeys> = {
   medical_free: 'channelMedicalFree'
 };
 
-/** Parses user input (any digit script) into a number, or null if not a valid 0–100 score. */
-function parseScore(raw: string): number | null {
+const SCORE_PRESETS = [98, 95, 90, 85, 80, 75, 70];
+
+/** Parses user input (any digit script) into a number, or null if not a valid 0–max score. */
+function parseScore(raw: string, max: number = MAX_SCORE_FEDERAL): number | null {
   const cleaned = normalizeDigits(raw);
   if (cleaned === '') return null;
   const val = parseFloat(cleaned);
-  return validateScore(val) ? val : null;
+  return validateScore(val, max) ? val : null;
 }
 
-export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerProps) {
+export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCheckerProps) {
   const { t, lang } = useI18n();
 
   // Initial state comes from the URL so shared links reopen with the same inputs
@@ -56,6 +60,20 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
   const [governorate, setGovernorate] = useState<string>(initial.location);
   const [studyType, setStudyType] = useState<string>(initial.studyType);
   const [channel, setChannel] = useState<string>(initial.channel);
+  const [gender, setGender] = useState<Gender>(initial.gender);
+  const [level, setLevel] = useState<ProgramLevel | 'all'>(initial.level);
+
+  // Score ceiling differs per system: Federal competitive averages can exceed 100
+  const maxScore = system === 'federal'
+    ? (meta?.federal.max_score ?? MAX_SCORE_FEDERAL)
+    : (meta?.krg.max_score ?? MAX_SCORE_KRG);
+  const info = meta ? (system === 'federal' ? meta.federal : meta.krg) : null;
+  const yearLabel = info ? (lang === 'ar' && info.year_label_ar) || info.year_label : '';
+
+  // New search, sort and reach state
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortBy, setSortBy] = useState<'cutoff_desc' | 'cutoff_asc' | 'closest' | 'alpha'>('cutoff_desc');
+  const [showReach, setShowReach] = useState<boolean>(false);
 
   // KRG Composite Calculator state
   const [showCompositeCalc, setShowCompositeCalc] = useState(false);
@@ -70,10 +88,11 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
     setGovernorate('all');
     setStudyType('all');
     setChannel('all');
+    setLevel('all');
     setShowCompositeCalc(false);
   };
 
-  const score = useMemo(() => parseScore(rawScore), [rawScore]);
+  const score = useMemo(() => parseScore(rawScore, maxScore), [rawScore, maxScore]);
   const hasScoreInput = normalizeDigits(rawScore) !== '';
   const scoreError = hasScoreInput && score === null;
 
@@ -103,13 +122,15 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
       subStream: stream === 'scientific' ? subStream : undefined,
       location: governorate,
       studyType,
-      channel
+      channel,
+      gender,
+      level
     });
     const next = `${window.location.pathname}${qs}${window.location.hash}`;
     if (next !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
       window.history.replaceState(null, '', next);
     }
-  }, [system, rawScore, stream, subStream, governorate, studyType, channel]);
+  }, [system, rawScore, stream, subStream, governorate, studyType, channel, gender, level]);
 
   // Unique locations
   const federalGovernorates = useMemo(() => getUniqueGovernorates(federalData), [federalData]);
@@ -131,6 +152,13 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
     const present = new Set((rowsForStream as FederalCutoff[]).map((r) => r.channel as string));
     return CHANNELS.filter((c) => present.has(c));
   }, [system, rowsForStream]);
+  // Sub-stream (bio/applied) and institute filters only appear when the dataset uses them
+  const hasSubStreams = useMemo(() => rowsForStream.some((r) => !!r.sub_stream), [rowsForStream]);
+  const hasInstitutes = useMemo(
+    () => system === 'federal' && (rowsForStream as FederalCutoff[]).some((r) => r.level === 'institute'),
+    [system, rowsForStream]
+  );
+  const hasSingleSex = useMemo(() => rowsForStream.some((r) => r.gender !== 'both'), [rowsForStream]);
 
   // If a selection is no longer available (e.g. after changing stream), fall back to "all"
   useEffect(() => {
@@ -153,9 +181,14 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
       sub_stream: stream === 'scientific' ? subStream : undefined,
       governorate: governorate === 'all' ? undefined : governorate,
       study_type: studyType === 'all' ? undefined : studyType,
-      channel: system === 'federal' && channel !== 'all' ? channel : undefined
+      channel: system === 'federal' && channel !== 'all' ? channel : undefined,
+      gender: gender === 'both' ? undefined : gender,
+      level: level === 'all' ? undefined : level,
+      search: searchQuery.trim() !== '' ? searchQuery : undefined,
+      show_reach: showReach,
+      sort_by: sortBy
     };
-  }, [system, score, stream, subStream, governorate, studyType, channel]);
+  }, [system, score, stream, subStream, governorate, studyType, channel, gender, level, searchQuery, showReach, sortBy]);
 
   const federalResults = useMemo(
     () => (filters && system === 'federal' ? filterFederalCutoffs(federalData, filters) : []),
@@ -167,9 +200,48 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
     [krgData, filters, system]
   );
 
+  const resultCount = system === 'federal' ? federalResults.length : krgResults.length;
+
+  // For the "no results" screen: the lowest cutoff above the student's score
+  // among programs that match every other filter.
+  const nearestCutoff = useMemo(() => {
+    if (!filters || resultCount > 0) return null;
+    const relaxed = { ...filters, score: maxScore, show_reach: false };
+    const cutoffs = system === 'federal'
+      ? filterFederalCutoffs(federalData, relaxed).map((r) => r.min_average)
+      : filterKRGCutoffs(krgData, relaxed).map((r) => r.min_composite_score);
+    const above = cutoffs.filter((c) => c > filters.score);
+    return above.length ? Math.min(...above) : null;
+  }, [filters, resultCount, system, federalData, krgData, maxScore]);
+
+  const hasNarrowingFilters = governorate !== 'all' || studyType !== 'all' || channel !== 'all' || subStream !== undefined || gender !== 'both' || level !== 'all';
+  const clearNarrowingFilters = () => {
+    setGovernorate('all');
+    setStudyType('all');
+    setChannel('all');
+    setSubStream(undefined);
+    setGender('both');
+    setLevel('all');
+  };
+  const scrollToResults = () => {
+    document.getElementById('results-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  // Weighted sum before the best-of rule, so the breakdown always adds up
+  const g12n = parseScore(g12);
+  const weightedSum =
+    g12n !== null ? g12n * 0.8 + (parseScore(g11) ?? g12n) * 0.1 + (parseScore(g10) ?? g12n) * 0.1 : null;
+  const bestOfApplied = compositeScore !== null && weightedSum !== null && compositeScore > weightedSum + 1e-9;
+
   const selectStream = (next: Stream) => {
     setStream(next);
     if (next !== 'scientific') setSubStream(undefined);
+  };
+
+  const adjustScore = (delta: number) => {
+    const current = score ?? 80;
+    const next = Math.max(0, Math.min(maxScore, Number((current + delta).toFixed(2))));
+    setRawScore(String(next));
   };
 
   const pill = (active: boolean) => `pill-btn ${active ? 'pill-btn--active' : ''}`;
@@ -178,30 +250,111 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
     <div class="checker-container">
       <SystemSelector selected={system} onSelect={setSystem} />
 
+      {info && (
+        <p class={`data-note ${system === 'krg' ? 'data-note--warning' : ''}`} role="note">
+          <span aria-hidden="true">{system === 'federal' ? '📄' : '⚠️'}</span>
+          <span>
+            {fillTemplate(t(system === 'federal' ? 'federalDataNote' : 'krgDataNote'), { year: yearLabel })}
+            {' '}
+            <a href={info.source_url} target="_blank" rel="noopener noreferrer">{t('officialSourceLink')}</a>
+          </span>
+        </p>
+      )}
+
       <form class="checker-form" onSubmit={(e) => e.preventDefault()}>
         <div class="form-grid">
-          {/* Score input */}
-          <div class="form-group">
-            <label class="form-label" for="score-input">
-              {t('scoreLabel')}
-            </label>
-            <input
-              id="score-input"
-              class="form-input"
-              type="text"
-              inputMode="decimal"
-              autoComplete="off"
-              value={rawScore}
-              onInput={(e) => setRawScore((e.target as HTMLInputElement).value)}
-              placeholder={t('scorePlaceholder')}
-              readOnly={system === 'krg' && showCompositeCalc}
-              aria-invalid={scoreError}
-              aria-describedby={scoreError ? 'score-error' : undefined}
-            />
+          {/* Score input with quick clear and +/- step controls */}
+          <div class="form-group score-form-group">
+            <div class="score-label-row">
+              <label class="form-label" for="score-input">
+                {t('scoreLabel')}
+              </label>
+              {rawScore && (
+                <button
+                  type="button"
+                  class="score-clear-text-btn"
+                  onClick={() => setRawScore('')}
+                  aria-label={t('clearScore')}
+                >
+                  {t('clearScore')}
+                </button>
+              )}
+            </div>
+
+            <div class="score-input-wrapper">
+              <input
+                id="score-input"
+                class="form-input score-main-input"
+                type="text"
+                inputMode="decimal"
+                autoComplete="off"
+                value={rawScore}
+                onInput={(e) => setRawScore((e.target as HTMLInputElement).value)}
+                placeholder={t('scorePlaceholder')}
+                readOnly={system === 'krg' && showCompositeCalc}
+                aria-invalid={scoreError}
+                aria-describedby={scoreError ? 'score-error' : undefined}
+              />
+              <div class="score-stepper-buttons">
+                <button
+                  type="button"
+                  class="stepper-btn"
+                  dir="ltr"
+                  onClick={() => adjustScore(-0.5)}
+                  title="-0.5"
+                  aria-label="-0.5"
+                >
+                  −0.5
+                </button>
+                <button
+                  type="button"
+                  class="stepper-btn"
+                  dir="ltr"
+                  onClick={() => adjustScore(0.5)}
+                  title="+0.5"
+                  aria-label="+0.5"
+                >
+                  +0.5
+                </button>
+              </div>
+            </div>
+
             {scoreError && (
               <span id="score-error" class="form-error" role="status">
-                {t('scoreOutOfRange')}
+                {fillTemplate(t('scoreOutOfRange'), { max: maxScore })}
               </span>
+            )}
+            {system === 'federal' && score !== null && score > 100 && (
+              <span class="form-hint" role="status">{t('scoreAbove100Hint')}</span>
+            )}
+
+            {/* Instant feedback: on phones the results are far below the form */}
+            {score !== null && resultCount > 0 && (
+              <button type="button" class="jump-to-results" onClick={scrollToResults} aria-live="polite">
+                <span>{t('resultsCount').replace('{count}', String(resultCount))}</span>
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+            )}
+
+            {/* Quick Score Preset Chips — starter suggestions only, hidden once a real score is typed */}
+            {!hasScoreInput && (
+            <div class="quick-presets-row">
+              <span class="quick-presets-label">{t('quickPresets')}</span>
+              <div class="quick-presets-chips">
+                {SCORE_PRESETS.map((val) => (
+                  <button
+                    key={val}
+                    type="button"
+                    class={`quick-preset-chip ${rawScore === String(val) ? 'quick-preset-chip--active' : ''}`}
+                    onClick={() => setRawScore(String(val))}
+                  >
+                    {val}%
+                  </button>
+                ))}
+              </div>
+            </div>
             )}
           </div>
 
@@ -224,8 +377,8 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
             </div>
           </div>
 
-          {/* Sub stream (Bio / Applied) if scientific */}
-          {stream === 'scientific' && (
+          {/* Sub stream (Bio / Applied) — only when the dataset distinguishes them */}
+          {stream === 'scientific' && hasSubStreams && (
             <div class="form-group">
               <span class="form-label" id="substream-label">{t('subStreamLabel')}</span>
               <div class="pill-group" role="radiogroup" aria-labelledby="substream-label">
@@ -238,6 +391,34 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
                 <button type="button" role="radio" aria-checked={subStream === 'applied'} class={pill(subStream === 'applied')} onClick={() => setSubStream('applied')}>
                   {t('subStreamApplied')}
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* Gender — single-sex programmes (nursing, women's colleges) */}
+          {hasSingleSex && (
+            <div class="form-group">
+              <span class="form-label" id="gender-label">{t('genderLabel')}</span>
+              <div class="pill-group pill-group--compact" role="radiogroup" aria-labelledby="gender-label">
+                {(['both', 'male', 'female'] as const).map((g) => (
+                  <button key={g} type="button" role="radio" aria-checked={gender === g} class={pill(gender === g)} onClick={() => setGender(g)}>
+                    {g === 'both' ? t('genderAny') : g === 'male' ? t('genderMale') : t('genderFemale')}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Programme level — bachelor colleges vs. technical institutes */}
+          {hasInstitutes && (
+            <div class="form-group">
+              <span class="form-label" id="level-label">{t('levelLabel')}</span>
+              <div class="pill-group pill-group--compact" role="radiogroup" aria-labelledby="level-label">
+                {(['all', 'college', 'institute'] as const).map((l) => (
+                  <button key={l} type="button" role="radio" aria-checked={level === l} class={pill(level === l)} onClick={() => setLevel(l)}>
+                    {l === 'all' ? t('levelAll') : l === 'college' ? t('levelCollege') : t('levelInstitute')}
+                  </button>
+                ))}
               </div>
             </div>
           )}
@@ -347,25 +528,111 @@ export function EligibilityChecker({ federalData, krgData }: EligibilityCheckerP
                   <span>{t('krgCompositeResult')}</span>
                   <strong>{compositeScore !== null ? `${compositeScore.toFixed(2)}%` : '—'}</strong>
                 </div>
+
+                {/* Calculation breakdown */}
+                {compositeScore !== null && parseScore(g12) !== null && (
+                  <div class="composite-breakdown-card">
+                    <span class="composite-breakdown-card__title">{t('krgFormulaBreakdown')}</span>
+                    <div class="composite-breakdown-card__steps">
+                      <span>G12 (80%): {(parseScore(g12)! * 0.8).toFixed(1)}</span>
+                      <span>+ G11 (10%): {((parseScore(g11) ?? g12n!) * 0.1).toFixed(1)}</span>
+                      <span>+ G10 (10%): {((parseScore(g10) ?? g12n!) * 0.1).toFixed(1)}</span>
+                      <strong>= {weightedSum!.toFixed(2)}%</strong>
+                    </div>
+                    {bestOfApplied && (
+                      <p class="composite-breakdown-card__bestof">
+                        {t('compositeBestOfApplied').replace('{score}', compositeScore.toFixed(2))}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                <p class="composite-note-banner">
+                  ℹ️ {t('compositeEstimateNote')}
+                </p>
               </div>
             )}
           </div>
         )}
+
+        {/* Second Row: Instant Search & Sort Controls & Reach Checkbox */}
+        <div class="checker-secondary-controls">
+          <div class="search-input-wrapper">
+            <svg aria-hidden="true" class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              class="search-input"
+              placeholder={t('searchPlaceholder')}
+              value={searchQuery}
+              onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
+              aria-label={t('searchPlaceholder')}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                class="search-clear-btn"
+                onClick={() => setSearchQuery('')}
+                aria-label={t('clearScore')}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          <div class="sort-and-reach-group">
+            <div class="sort-wrapper">
+              <label class="sort-label" for="sort-select">{t('sortByLabel')}:</label>
+              <select
+                id="sort-select"
+                class="form-select sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy((e.target as HTMLSelectElement).value as any)}
+              >
+                <option value="cutoff_desc">{t('sortCutoffDesc')}</option>
+                <option value="cutoff_asc">{t('sortCutoffAsc')}</option>
+                <option value="closest">{t('sortClosest')}</option>
+                <option value="alpha">{t('sortAlpha')}</option>
+              </select>
+            </div>
+
+            <label class="reach-toggle-label">
+              <input
+                type="checkbox"
+                class="reach-checkbox"
+                checked={showReach}
+                onChange={(e) => setShowReach((e.target as HTMLInputElement).checked)}
+              />
+              <span>{t('showReachLabel')}</span>
+            </label>
+          </div>
+        </div>
       </form>
 
       {/* Results List */}
+      <div id="results-anchor" class="results-anchor" />
       {score === null ? (
         <div class="empty-state">
           <span class="empty-state__icon" aria-hidden="true">✍️</span>
           <h3 class="empty-state__title">{t('enterScorePrompt')}</h3>
-          <p class="empty-state__hint">{t('enterScoreHint')}</p>
+          <p class="empty-state__hint">{fillTemplate(t('enterScoreHint'), { max: maxScore })}</p>
         </div>
       ) : (
-      <ResultsList
-        federalResults={federalResults}
-        krgResults={krgResults}
-        system={system}
-      />
+        <ResultsList
+          federalResults={federalResults}
+          krgResults={krgResults}
+          system={system}
+          studentScore={score}
+          yearLabel={yearLabel}
+          emptyHelp={{
+            nearestCutoff,
+            onClearSearch: searchQuery.trim() ? () => setSearchQuery('') : undefined,
+            onShowReach: !showReach ? () => setShowReach(true) : undefined,
+            onClearFilters: hasNarrowingFilters ? clearNarrowingFilters : undefined
+          }}
+        />
       )}
     </div>
   );

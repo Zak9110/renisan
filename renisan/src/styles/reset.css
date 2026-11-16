@@ -23,6 +23,9 @@ html {
   text-size-adjust: 100%;
   color-scheme: dark;
 }
+:root[data-theme="light"] {
+  color-scheme: light;
+}
 
 /* 4. Body defaults with font-smoothing */
 body {
@@ -32,6 +35,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: var(--leading-normal, 1.5);
   background-color: var(--color-bg-primary, #0a0f1e);
+  background-image: var(--bg-page-image);
+  background-attachment: fixed;
   color: var(--color-text-primary, #f1f5f9);
   overflow-x: hidden;
 }

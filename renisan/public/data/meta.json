@@ -1,0 +1,29 @@
+{
+  "updated": "2026-11-16",
+  "federal": {
+    "file": "cutoffs-federal-2026.json",
+    "year": 2026,
+    "year_label": "2026-2027",
+    "year_label_ar": "٢٠٢٦-٢٠٢٧",
+    "max_score": 110,
+    "source_name": "MOHESR — Directorate of Studies, Planning and Follow-up",
+    "source_url": "https://dirasat.mohesr.gov.iq/download-center.html",
+    "published": "2026-10-19",
+    "note": "Official minimum averages for the general channel, morning study (الحدود الدنيا للقبول المركزي — القناة العامة). Averages are the competitive average (total ÷ 7) and may exceed 100 because 8% of the foreign-language mark is added to the total."
+  },
+  "krg": {
+    "file": "cutoffs-krg-2024.json",
+    "year": 2024,
+    "year_label": "2024-2025",
+    "year_label_ar": "٢٠٢٤-٢٠٢٥",
+    "max_score": 100,
+    "source_name": "KRG Ministry of Higher Education — Zankoline",
+    "source_url": "https://gov.krd/mohe",
+    "published": "2024-10-01",
+    "note": "Zankoline does not publish an official cut-off table; these are the lowest admitted composite scores reported by universities and student unions for the 2024-2025 intake."
+  },
+  "scholarships": {
+    "file": "scholarships.json",
+    "verified": "2026-11-16"
+  }
+}

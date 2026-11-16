@@ -44,8 +44,16 @@ const PLACES: Record<string, PlaceNames> = {
   'الولايات المتحدة الأمريكية': { ckb: 'ویلایەتە یەکگرتووەکانی ئەمریکا', kmr: 'Dewletên Yekbûyî yên Amerîkayê' },
   'الصين': { ckb: 'چین', kmr: 'Çîn' },
   'ألمانيا': { ckb: 'ئەڵمانیا', kmr: 'Almanya' },
-  'دول متعددة': { ckb: 'چەند وڵاتێک', kmr: 'Gelek welat' }
+  'دول متعددة': { ckb: 'چەند وڵاتێک', kmr: 'Gelek welat' },
+  'المملكة المتحدة': { ckb: 'شانشینی یەکگرتوو (بەریتانیا)', kmr: 'Keyaniya Yekbûyî (Brîtanya)' },
+  'اليابان': { ckb: 'ژاپۆن', kmr: 'Japonya' },
+  'الاتحاد الأوروبي': { ckb: 'یەکێتیی ئەوروپا', kmr: 'Yekîtiya Ewropayê' }
 };
+
+/** True when the name has an entry in the translation table (used by tests and data checks). */
+export function isKnownPlace(name: string): boolean {
+  return Object.prototype.hasOwnProperty.call(PLACES, name);
+}
 
 /** Returns the place name in the reader's language, falling back to the stored (Arabic) name. */
 export function localizePlace(name: string, lang: Language): string {

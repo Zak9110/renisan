@@ -3,17 +3,56 @@ import { useI18n } from '../hooks/useI18n';
 import { Header } from './Header';
 import { EligibilityChecker } from './EligibilityChecker';
 import { ScholarshipDirectory } from './ScholarshipDirectory';
+import { Wishlist } from './Wishlist';
 import { DisclaimerBanner } from './DisclaimerBanner';
 import { Footer } from './Footer';
 import type { ComponentChildren } from 'preact';
-import type { FederalCutoff, KRGCutoff, Scholarship } from '../lib/types';
-import { loadFederalCutoffs, loadKRGCutoffs, loadScholarships, clearDataCache } from '../lib/data-loader';
+import type { FederalCutoff, KRGCutoff, Scholarship, DatasetMeta } from '../lib/types';
+import { loadMeta, loadFederalCutoffs, loadKRGCutoffs, loadScholarships, clearDataCache } from '../lib/data-loader';
+import { getWishlist, onWishlistChange } from '../lib/wishlist';
 
-type Tab = 'checker' | 'scholarships';
+type Tab = 'checker' | 'scholarships' | 'wishlist';
 
 export function App() {
   const { t, isLoaded } = useI18n();
-  const [activeTab, setActiveTab] = useState<Tab>('checker');
+  const [activeTab, setActiveTabState] = useState<Tab>(() => {
+    if (typeof window === 'undefined') return 'checker';
+    const tabParam = new URLSearchParams(window.location.search).get('tab');
+    if (tabParam === 'scholarships' || tabParam === 'wishlist') return tabParam;
+    return 'checker';
+  });
+
+  const [wishlistCount, setWishlistCount] = useState<number>(() => getWishlist().length);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    return onWishlistChange(() => {
+      setWishlistCount(getWishlist().length);
+    });
+  }, []);
+
+  // Listen to window scroll to show/hide "Back to Top" button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Reflect the tab in the URL so links can point straight at any tab
+  const setActiveTab = (tab: Tab) => {
+    setActiveTabState(tab);
+    const url = new URL(window.location.href);
+    if (tab === 'checker') {
+      url.searchParams.delete('tab');
+    } else {
+      url.searchParams.set('tab', tab);
+    }
+    window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+  };
+
+  const [meta, setMeta] = useState<DatasetMeta | null>(null);
   const [federalData, setFederalData] = useState<FederalCutoff[]>([]);
   const [krgData, setKrgData] = useState<KRGCutoff[]>([]);
   const [scholarships, setScholarships] = useState<Scholarship[]>([]);
@@ -25,10 +64,12 @@ export function App() {
     setDataLoaded(false);
     setLoadError(false);
     Promise.all([
+      loadMeta(),
       loadFederalCutoffs(),
       loadKRGCutoffs(),
       loadScholarships()
-    ]).then(([fed, krg, sch]) => {
+    ]).then(([m, fed, krg, sch]) => {
+      setMeta(m);
       setFederalData(fed);
       setKrgData(krg);
       setScholarships(sch);
@@ -52,6 +93,10 @@ export function App() {
       return () => navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
     }
   }, [loadData]);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const renderPanel = (content: ComponentChildren) => {
     if (!dataLoaded) {
@@ -87,7 +132,7 @@ export function App() {
   return (
     <div class="app-container">
       <Header isOfflineReady={isOfflineReady} />
-      <DisclaimerBanner />
+      <DisclaimerBanner meta={meta} />
 
       <nav class="tab-nav" role="tablist">
         <button
@@ -117,12 +162,28 @@ export function App() {
           </svg>
           <span>{t('navScholarships')}</span>
         </button>
+        <button
+          id="tab-wishlist"
+          class={`tab-nav__btn ${activeTab === 'wishlist' ? 'tab-nav__btn--active' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'wishlist'}
+          aria-controls="panel-wishlist"
+          onClick={() => setActiveTab('wishlist')}
+        >
+          <svg aria-hidden="true" class="tab-nav__icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          <span>{t('navWishlist')}</span>
+          {wishlistCount > 0 && (
+            <span class="tab-nav__badge">{wishlistCount}</span>
+          )}
+        </button>
       </nav>
 
       <main>
         {activeTab === 'checker' && (
           <div id="panel-checker" role="tabpanel" aria-labelledby="tab-checker" class="fade-in">
-            {renderPanel(<EligibilityChecker federalData={federalData} krgData={krgData} />)}
+            {renderPanel(<EligibilityChecker federalData={federalData} krgData={krgData} meta={meta} />)}
           </div>
         )}
         {activeTab === 'scholarships' && (
@@ -130,9 +191,29 @@ export function App() {
             {renderPanel(<ScholarshipDirectory scholarships={scholarships} />)}
           </div>
         )}
+        {activeTab === 'wishlist' && (
+          <div id="panel-wishlist" role="tabpanel" aria-labelledby="tab-wishlist" class="fade-in">
+            {renderPanel(<Wishlist onGoToChecker={() => setActiveTab('checker')} />)}
+          </div>
+        )}
       </main>
 
-      <Footer />
+      <Footer meta={meta} />
+
+      {/* Floating Back to Top button */}
+      {showScrollTop && (
+        <button
+          type="button"
+          class="back-to-top-btn fade-in"
+          onClick={scrollToTop}
+          aria-label={t('backToTop')}
+          title={t('backToTop')}
+        >
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="18 15 12 9 6 15" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@
 // Lets students share a link that reopens with the same score and filters.
 // ============================================
 
-import type { AdmissionSystem } from './types';
+import type { AdmissionSystem, Gender, ProgramLevel } from './types';
 
 export type Stream = 'scientific' | 'literary' | 'vocational';
 export type SubStream = 'bio' | 'applied';
@@ -16,6 +16,8 @@ export interface CheckerUrlState {
   location: string;
   studyType: string;
   channel: string;
+  gender: Gender;
+  level: ProgramLevel | 'all';
 }
 
 export const DEFAULT_CHECKER_STATE: CheckerUrlState = {
@@ -25,12 +27,16 @@ export const DEFAULT_CHECKER_STATE: CheckerUrlState = {
   subStream: undefined,
   location: 'all',
   studyType: 'all',
-  channel: 'all'
+  channel: 'all',
+  gender: 'both',
+  level: 'all'
 };
 
 const SYSTEMS: readonly AdmissionSystem[] = ['federal', 'krg'];
 const STREAMS: readonly Stream[] = ['scientific', 'literary', 'vocational'];
 const SUB_STREAMS: readonly SubStream[] = ['bio', 'applied'];
+const GENDERS: readonly Gender[] = ['both', 'male', 'female'];
+const LEVELS: readonly (ProgramLevel | 'all')[] = ['all', 'college', 'institute'];
 
 function pick<T extends string>(value: string | null, allowed: readonly T[]): T | undefined {
   return value !== null && (allowed as readonly string[]).includes(value) ? (value as T) : undefined;
@@ -48,7 +54,9 @@ export function parseCheckerState(search: string): CheckerUrlState {
     subStream: stream === 'scientific' ? pick(p.get('sub'), SUB_STREAMS) : undefined,
     location: p.get('loc') || d.location,
     studyType: p.get('type') || d.studyType,
-    channel: p.get('ch') || d.channel
+    channel: p.get('ch') || d.channel,
+    gender: pick(p.get('g'), GENDERS) ?? d.gender,
+    level: pick(p.get('lvl'), LEVELS) ?? d.level
   };
 }
 
@@ -63,6 +71,8 @@ export function serializeCheckerState(state: CheckerUrlState): string {
   if (state.location !== d.location) p.set('loc', state.location);
   if (state.studyType !== d.studyType) p.set('type', state.studyType);
   if (state.channel !== d.channel) p.set('ch', state.channel);
+  if (state.gender !== d.gender) p.set('g', state.gender);
+  if (state.level !== d.level) p.set('lvl', state.level);
   const qs = p.toString();
   return qs ? `?${qs}` : '';
 }

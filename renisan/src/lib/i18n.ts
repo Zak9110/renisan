@@ -166,9 +166,78 @@ export interface TranslationKeys {
   scholarshipsEmptyHint: string;
   scholarshipDeadlinePassed: string;
   resetFilters: string;
+  disclaimerShort: string;
+  showMore: string;
+  showLess: string;
+  nearestProgram: string;
+  clearSearch: string;
+  compositeBestOfApplied: string;
+  reportDataError: string;
+  deadlineExpected: string;
+  deadlineTBA: string;
+  compositeEstimateNote: string;
   enterScorePrompt: string;
   enterScoreHint: string;
   channelMedicalFree: string;
+
+  // New UX & Design enhancements
+  navWishlist: string;
+  searchPlaceholder: string;
+  sortByLabel: string;
+  sortCutoffDesc: string;
+  sortCutoffAsc: string;
+  sortClosest: string;
+  sortAlpha: string;
+  scoreDeltaSafe: string;
+  scoreDeltaTarget: string;
+  scoreDeltaReach: string;
+  showReachLabel: string;
+  reachTag: string;
+  saveToWishlist: string;
+  removeFromWishlist: string;
+  wishlistTitle: string;
+  wishlistSubtitle: string;
+  wishlistEmpty: string;
+  wishlistEmptyHint: string;
+  copyWishlist: string;
+  wishlistCopied: string;
+  clearWishlist: string;
+  clearWishlistConfirm: string;
+  printWishlist: string;
+  scholarshipSearchPlaceholder: string;
+  daysRemaining: string;
+  deadlineUrgent: string;
+  clearScore: string;
+  quickPresets: string;
+  activeFiltersLabel: string;
+  clearAllFilters: string;
+  backToTop: string;
+  krgFormulaBreakdown: string;
+  wishlistAverageScore: string;
+  wishlistTotalItems: string;
+
+  // Data-driven year labels, theme, gender/level filters (2026-2027 update)
+  themeLabel: string;
+  themeSystem: string;
+  themeDark: string;
+  themeLight: string;
+  genderLabel: string;
+  genderAny: string;
+  genderMale: string;
+  genderFemale: string;
+  tagMaleOnly: string;
+  tagFemaleOnly: string;
+  levelLabel: string;
+  levelAll: string;
+  levelCollege: string;
+  levelInstitute: string;
+  resultTotalScore: string;
+  dataYearTag: string;
+  federalDataNote: string;
+  krgDataNote: string;
+  scoreAbove100Hint: string;
+  officialSourceLink: string;
+  campusLabel: string;
 }
 
 // Default language
@@ -198,7 +267,14 @@ function applyLanguageToDocument(lang: Language): void {
   if (document.body) document.body.style.fontFamily = config.fontFamily;
 }
 
-let currentLang: Language = readStoredLanguage();
+/** `?lang=ckb|ar|kmr` in a shared link opens the app in that language (and remembers it). */
+function readUrlLanguage(): Language | null {
+  if (typeof window === 'undefined') return null;
+  const v = new URLSearchParams(window.location.search).get('lang');
+  return isLanguage(v) ? v : null;
+}
+
+let currentLang: Language = readUrlLanguage() ?? readStoredLanguage();
 
 const listeners: Set<(lang: Language) => void> = new Set();
 
@@ -222,7 +298,7 @@ export function onLanguageChange(fn: (lang: Language) => void): () => void {
   return () => listeners.delete(fn);
 }
 
-// Initialize on load
+// Initialize on load (a ?lang= override is also persisted)
 if (typeof document !== 'undefined') {
-  applyLanguageToDocument(currentLang);
+  if (readUrlLanguage()) setLanguage(currentLang); else applyLanguageToDocument(currentLang);
 }

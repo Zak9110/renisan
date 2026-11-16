@@ -7,9 +7,18 @@ interface ResultsListProps {
   federalResults: FederalCutoff[];
   krgResults: KRGCutoff[];
   system: 'federal' | 'krg';
+  studentScore?: number | null;
+  yearLabel?: string;
+  /** Context for a helpful "no results" screen */
+  emptyHelp?: {
+    nearestCutoff: number | null;
+    onClearSearch?: () => void;
+    onShowReach?: () => void;
+    onClearFilters?: () => void;
+  };
 }
 
-export function ResultsList({ federalResults, krgResults, system }: ResultsListProps) {
+export function ResultsList({ federalResults, krgResults, system, studentScore, yearLabel, emptyHelp }: ResultsListProps) {
   const { t } = useI18n();
 
   const isFederal = system === 'federal';
@@ -20,7 +29,25 @@ export function ResultsList({ federalResults, krgResults, system }: ResultsListP
       <div class="empty-state">
         <span class="empty-state__icon" aria-hidden="true">🔍</span>
         <h3 class="empty-state__title">{t('resultsEmpty')}</h3>
-        <p class="empty-state__hint">{t('resultsEmptyHint')}</p>
+        {emptyHelp?.nearestCutoff != null ? (
+          <p class="empty-state__hint">
+            {t('nearestProgram').replace('{score}', emptyHelp.nearestCutoff.toFixed(1))}
+          </p>
+        ) : (
+          <p class="empty-state__hint">{t('resultsEmptyHint')}</p>
+        )}
+        <div class="empty-state__actions">
+          {emptyHelp?.onClearSearch && (
+            <button type="button" class="pill-btn" onClick={emptyHelp.onClearSearch}>✕ {t('clearSearch')}</button>
+          )}
+          {emptyHelp?.onShowReach && emptyHelp.nearestCutoff != null && studentScore != null &&
+            emptyHelp.nearestCutoff - studentScore <= 2 && (
+            <button type="button" class="pill-btn pill-btn--active" onClick={emptyHelp.onShowReach}>{t('showReachLabel')}</button>
+          )}
+          {emptyHelp?.onClearFilters && (
+            <button type="button" class="pill-btn" onClick={emptyHelp.onClearFilters}>{t('resetFilters')}</button>
+          )}
+        </div>
       </div>
     );
   }
@@ -37,10 +64,10 @@ export function ResultsList({ federalResults, krgResults, system }: ResultsListP
       <div class="results-list">
         {isFederal
           ? federalResults.map((item) => (
-              <ResultCard key={item.id} item={item} type="federal" />
+              <ResultCard key={item.id} item={item} type="federal" studentScore={studentScore} yearLabel={yearLabel} />
             ))
           : krgResults.map((item) => (
-              <ResultCard key={item.id} item={item} type="krg" />
+              <ResultCard key={item.id} item={item} type="krg" studentScore={studentScore} yearLabel={yearLabel} />
             ))}
       </div>
     </section>

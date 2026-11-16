@@ -1,16 +1,18 @@
 {
   "name": "renisan",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "description": "Multilingual eligibility checker & scholarship directory for Iraqi & Kurdish Grade-12 students",
   "scripts": {
     "dev": "vite",
-    "build": "node tests/verify.js && tsc && vite build",
+    "build": "node tests/verify.js && tsc && vite build && node tests/check-build.js",
     "preview": "vite preview",
     "test": "node tests/verify.js",
+    "test:build": "node tests/check-build.js",
     "typecheck": "tsc --noEmit",
-    "check": "tsc && node tests/verify.js"
+    "check": "tsc && node tests/verify.js",
+    "import:federal": "python3 scripts/import-federal-cutoffs.py"
   },
   "dependencies": {
     "preact": "^10.25.0"

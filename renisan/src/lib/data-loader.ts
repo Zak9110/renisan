@@ -1,13 +1,15 @@
 // ============================================
-// Renisan — Data Loader with in-memory caching
-// Fetches static JSON datasets from /data/
+// Renisan — Data Loader
+// Reads public/data/meta.json first, then the dataset files it names, so a new
+// year is a data-only change (drop in the file, edit meta.json, run npm test).
 // ============================================
 
-import { FederalCutoff, KRGCutoff, Scholarship } from './types';
+import type { FederalCutoff, KRGCutoff, Scholarship, DatasetMeta } from './types';
 
-let federalCache: FederalCutoff[] | null = null;
-let krgCache: KRGCutoff[] | null = null;
-let scholarshipCache: Scholarship[] | null = null;
+const FETCH_TIMEOUT_MS = 15000;
+
+let metaCache: DatasetMeta | null = null;
+const fileCache = new Map<string, unknown>();
 
 function resolveDataUrl(filename: string): string {
   const base = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
@@ -16,71 +18,88 @@ function resolveDataUrl(filename: string): string {
   return `${normalizedBase}${normalizedFile}`;
 }
 
-/**
- * Loads Federal central admissions cutoffs (2023-2024).
- * Caches in memory for fast offline-first retrieval.
- */
+/** fetch() with a timeout so a stalled network never leaves the app on the spinner. */
+async function fetchJson<T>(filename: string, validate: (data: unknown) => data is T): Promise<T> {
+  const cached = fileCache.get(filename);
+  if (cached) return cached as T;
+
+  const url = resolveDataUrl(filename);
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS) : null;
+  try {
+    const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
+    if (!response.ok) {
+      throw new Error(`Failed to load ${filename} (${response.status} ${response.statusText})`);
+    }
+    const data: unknown = await response.json();
+    if (!validate(data)) {
+      throw new Error(`Unexpected shape in ${filename}`);
+    }
+    fileCache.set(filename, data);
+    return data;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+// ---- Runtime shape guards (cheap, catch a broken deploy before it renders) ----
+
+const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
+const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+const isStr = (v: unknown): v is string => typeof v === 'string';
+
+function isDatasetInfo(v: unknown): boolean {
+  return isObj(v) && isStr(v.file) && isNum(v.year) && isStr(v.year_label) && isNum(v.max_score);
+}
+
+function isMeta(v: unknown): v is DatasetMeta {
+  return isObj(v) && isDatasetInfo(v.federal) && isDatasetInfo(v.krg)
+    && isObj(v.scholarships) && isStr(v.scholarships.file);
+}
+
+function isFederalRows(v: unknown): v is FederalCutoff[] {
+  return Array.isArray(v) && v.every((r) => isObj(r) && isStr(r.id) && isStr(r.university)
+    && isStr(r.college) && isStr(r.stream) && isNum(r.min_average) && isStr(r.governorate));
+}
+
+function isKRGRows(v: unknown): v is KRGCutoff[] {
+  return Array.isArray(v) && v.every((r) => isObj(r) && isStr(r.id) && isStr(r.university)
+    && isStr(r.college) && isStr(r.stream) && isNum(r.min_composite_score) && isStr(r.city));
+}
+
+function isScholarships(v: unknown): v is Scholarship[] {
+  return Array.isArray(v) && v.every((r) => isObj(r) && isStr(r.id) && isStr(r.name)
+    && isStr(r.status) && Array.isArray(r.degree_levels) && isObj(r.eligibility));
+}
+
+// ---- Public API ----
+
+export async function loadMeta(): Promise<DatasetMeta> {
+  if (metaCache) return metaCache;
+  metaCache = await fetchJson('data/meta.json', isMeta);
+  return metaCache;
+}
+
+/** Federal (MOHESR central admission) minimum averages for the year named in meta.json. */
 export async function loadFederalCutoffs(): Promise<FederalCutoff[]> {
-  if (federalCache) {
-    return federalCache;
-  }
-
-  const url = resolveDataUrl('data/cutoffs-federal-2024.json');
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to load Federal cutoffs (${response.status} ${response.statusText})`);
-  }
-
-  const data: FederalCutoff[] = await response.json();
-  federalCache = data;
-  return data;
+  const meta = await loadMeta();
+  return fetchJson(`data/${meta.federal.file}`, isFederalRows);
 }
 
-/**
- * Loads KRG (Zankoline) cutoffs (2023-2024).
- * Caches in memory for fast offline-first retrieval.
- */
+/** KRG (Zankoline) minimum composite scores for the year named in meta.json. */
 export async function loadKRGCutoffs(): Promise<KRGCutoff[]> {
-  if (krgCache) {
-    return krgCache;
-  }
-
-  const url = resolveDataUrl('data/cutoffs-krg-2024.json');
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to load KRG cutoffs (${response.status} ${response.statusText})`);
-  }
-
-  const data: KRGCutoff[] = await response.json();
-  krgCache = data;
-  return data;
+  const meta = await loadMeta();
+  return fetchJson(`data/${meta.krg.file}`, isKRGRows);
 }
 
-/**
- * Loads scholarships and exchange opportunities.
- * Caches in memory for fast offline-first retrieval.
- */
+/** Scholarships and exchange opportunities. */
 export async function loadScholarships(): Promise<Scholarship[]> {
-  if (scholarshipCache) {
-    return scholarshipCache;
-  }
-
-  const url = resolveDataUrl('data/scholarships.json');
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to load scholarships (${response.status} ${response.statusText})`);
-  }
-
-  const data: Scholarship[] = await response.json();
-  scholarshipCache = data;
-  return data;
+  const meta = await loadMeta();
+  return fetchJson(`data/${meta.scholarships.file}`, isScholarships);
 }
 
-/**
- * Clears in-memory cache if manual refresh is needed.
- */
+/** Clears in-memory caches so a retry re-fetches everything. */
 export function clearDataCache(): void {
-  federalCache = null;
-  krgCache = null;
-  scholarshipCache = null;
+  metaCache = null;
+  fileCache.clear();
 }

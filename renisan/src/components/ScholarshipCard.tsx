@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
 import type { Scholarship } from '../lib/types';
 import { getEffectiveStatus, isDeadlinePassed } from '../lib/status';
 import { localizePlace } from '../lib/places';
+import { isWishlisted, toggleWishlist, onWishlistChange } from '../lib/wishlist';
 
 interface ScholarshipCardProps {
   scholarship: Scholarship;
@@ -9,6 +11,13 @@ interface ScholarshipCardProps {
 
 export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
   const { lang, t } = useI18n();
+  const [bookmarked, setBookmarked] = useState(() => isWishlisted(scholarship.id));
+
+  useEffect(() => {
+    return onWishlistChange(() => {
+      setBookmarked(isWishlisted(scholarship.id));
+    });
+  }, [scholarship.id]);
 
   // Name based on locale
   const getLocalizedName = () => {
@@ -25,9 +34,40 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 
   // Effective status: a listing marked open/upcoming whose deadline has passed shows as closed
   const status = getEffectiveStatus(scholarship);
+  const pick = <T,>(ar: T, ckb?: T, kmr?: T): T =>
+    (lang === 'ckb' && ckb) || (lang === 'kmr' && kmr) || ar;
+  const covers = pick(scholarship.covers, scholarship.covers_ckb, scholarship.covers_kmr) ?? [];
+  const deadlineNote = pick(scholarship.deadline_note, scholarship.deadline_note_ckb, scholarship.deadline_note_kmr);
+  const hasDate = !!scholarship.deadline && /^\d{4}-\d{2}-\d{2}$/.test(scholarship.deadline);
+
   const isDiscontinued = status === 'discontinued';
   const isClosed = status === 'closed';
   const deadlinePassed = isDeadlinePassed(scholarship);
+
+  // Calculate days remaining if open and deadline is set
+  let daysRemaining: number | null = null;
+  if (hasDate && !deadlinePassed && status === 'open' && !scholarship.deadline_estimated) {
+    const [y, m, d] = scholarship.deadline!.split('-').map(Number);
+    const deadlineDate = new Date(y, m - 1, d, 23, 59, 59);
+    const diffMs = deadlineDate.getTime() - Date.now();
+    if (diffMs > 0) {
+      daysRemaining = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    }
+  }
+
+  const handleToggleWishlist = () => {
+    toggleWishlist({
+      id: scholarship.id,
+      type: 'scholarship',
+      title: getLocalizedName(),
+      subtitle: `${scholarship.provider} • ${localizePlace(scholarship.country, lang)}`,
+      location: scholarship.country,
+      score: scholarship.eligibility.min_gpa,
+      url: scholarship.application_url,
+      raw: scholarship,
+      addedAt: Date.now()
+    });
+  };
 
   return (
     <article
@@ -45,13 +85,35 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
           <span class="scholarship-card__provider">{scholarship.provider}</span>
         </div>
 
-        <span class={`status-pill status-pill--${status}`}>
-          {status === 'open' && t('scholarshipOpen')}
-          {status === 'closed' && t('scholarshipClosed')}
-          {status === 'upcoming' && t('scholarshipUpcoming')}
-          {status === 'discontinued' && t('scholarshipDiscontinued')}
-        </span>
+        <div class="scholarship-card__actions-top">
+          <span class={`status-pill status-pill--${status}`}>
+            {status === 'open' && t('scholarshipOpen')}
+            {status === 'closed' && t('scholarshipClosed')}
+            {status === 'upcoming' && t('scholarshipUpcoming')}
+            {status === 'discontinued' && t('scholarshipDiscontinued')}
+          </span>
+
+          <button
+            type="button"
+            class={`bookmark-btn ${bookmarked ? 'bookmark-btn--active' : ''}`}
+            onClick={handleToggleWishlist}
+            aria-label={bookmarked ? t('removeFromWishlist') : t('saveToWishlist')}
+            title={bookmarked ? t('removeFromWishlist') : t('saveToWishlist')}
+          >
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill={bookmarked ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+        </div>
       </div>
+
+      {daysRemaining != null && daysRemaining <= 30 && (
+        <div class="scholarship-card__urgency-banner">
+          <span class="urgency-pill">
+            ⏰ {daysRemaining <= 7 ? t('deadlineUrgent') : ''} ({t('daysRemaining').replace('{days}', String(daysRemaining))})
+          </span>
+        </div>
+      )}
 
       <div class="scholarship-card__meta-grid">
         <div class="meta-item">
@@ -71,17 +133,24 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
         <div class="meta-item">
           <span class="meta-item__label">{t('scholarshipDeadline')}</span>
           <span class="meta-item__value" style={{ color: isClosed ? 'var(--color-danger)' : 'var(--color-text-accent)' }}>
-            {scholarship.deadline || scholarship.deadline_note || '—'}
+            {hasDate ? (
+              <bdi>{scholarship.deadline}</bdi>
+            ) : isDiscontinued ? t('scholarshipDiscontinued') : t('deadlineTBA')}
+            {hasDate && scholarship.deadline_estimated && !deadlinePassed && (
+              <span class="deadline-estimated"> ({t('deadlineExpected')})</span>
+            )}
           </span>
-          {deadlinePassed && (
+          {deadlinePassed ? (
             <span class="meta-item__hint">{t('scholarshipDeadlinePassed')}</span>
-          )}
+          ) : deadlineNote ? (
+            <span class="meta-item__hint">{deadlineNote}</span>
+          ) : null}
         </div>
 
         {scholarship.eligibility.min_gpa != null && (
           <div class="meta-item">
             <span class="meta-item__label">{t('scholarshipGPA')}</span>
-            <span class="meta-item__value">{scholarship.eligibility.min_gpa}%</span>
+            <span class="meta-item__value"><bdi>{scholarship.eligibility.min_gpa}%</bdi></span>
           </div>
         )}
 
@@ -112,12 +181,12 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
       </div>
 
       {/* Covers list */}
-      {scholarship.covers && scholarship.covers.length > 0 && (
+      {covers.length > 0 && (
         <div class="scholarship-card__covers">
           <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--color-text-tertiary)', alignSelf: 'center' }}>
             {t('scholarshipCovers')}:
           </span>
-          {scholarship.covers.map((c, i) => (
+          {covers.map((c, i) => (
             <span key={i} class="cover-tag">
               ✓ {c}
             </span>
@@ -134,8 +203,8 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
             backgroundColor: isDiscontinued ? 'var(--color-danger-bg)' : undefined
           }}
         >
-          {isDiscontinued ? '⚠️ ' : 'ℹ️ '}
-          {getLocalizedNotes()}
+          <span aria-hidden="true">{isDiscontinued ? '⚠️' : 'ℹ️'}</span>{' '}
+          <bdi>{getLocalizedNotes()}</bdi>
         </div>
       )}
 

@@ -2,27 +2,42 @@
 // Renisan — Data type definitions
 // ============================================
 
+export type Gender = 'male' | 'female' | 'both';
+export type Confidence = 'official' | 'verified_third_party' | 'unverified';
+/** Bachelor college vs. 2-year technical institute (diploma). */
+export type ProgramLevel = 'college' | 'institute';
+
 export interface FederalCutoff {
   id: string;
   year: number;
   university: string;
   university_en: string;
+  university_ku?: string | null;
   college: string;
   college_en: string;
+  college_ku?: string | null;
   department: string | null;
   department_en: string | null;
+  /** Branch campus or programme track printed by the ministry (e.g. "القرنة", "التخصصات الطبية") */
+  campus?: string | null;
+  campus_en?: string | null;
+  level?: ProgramLevel;
+  /** "2" (institute diploma) or "2-4" (technical college) when the ministry prints a duration */
+  program_length?: string | null;
   stream: 'scientific' | 'literary' | 'vocational';
   sub_stream?: 'bio' | 'applied';
-  gender: 'male' | 'female' | 'both';
+  gender: Gender;
   study_type: 'morning' | 'evening' | 'parallel';
   channel: 'general' | 'martyrs' | 'distinguished' | 'medical_free' | 'survivors';
   governorate: string;
+  /** Competitive average (total ÷ 7). Can exceed 100 — see DatasetMeta.federal.max_score */
   min_average: number;
+  /** Total marks out of 700 (plus language bonus) */
   min_score?: number;
   seats?: number;
   source_url: string;
   source_date: string;
-  confidence: 'official' | 'verified_third_party' | 'unverified';
+  confidence: Confidence;
 }
 
 export interface KRGCutoff {
@@ -40,7 +55,7 @@ export interface KRGCutoff {
   city: string;
   stream: 'scientific' | 'literary' | 'vocational';
   sub_stream?: 'bio' | 'applied';
-  gender: 'male' | 'female' | 'both';
+  gender: Gender;
   study_type: 'government' | 'parallel' | 'evening';
   min_composite_score: number;
   min_g12_equivalent?: number;
@@ -48,9 +63,30 @@ export interface KRGCutoff {
   seats?: number;
   source_url: string;
   source_date: string;
-  confidence: 'official' | 'verified_third_party' | 'unverified';
+  confidence: Confidence;
   notes_ar?: string;
   notes_ckb?: string;
+}
+
+/** public/data/meta.json — which dataset files to load and how to label them. */
+export interface DatasetInfo {
+  file: string;
+  year: number;
+  year_label: string;
+  year_label_ar?: string;
+  /** Highest average the checker accepts for this system */
+  max_score: number;
+  source_name: string;
+  source_url: string;
+  published: string;
+  note?: string;
+}
+
+export interface DatasetMeta {
+  updated: string;
+  federal: DatasetInfo;
+  krg: DatasetInfo;
+  scholarships: { file: string; verified: string };
 }
 
 export interface Scholarship {
@@ -78,8 +114,14 @@ export interface Scholarship {
   };
   application_url: string;
   deadline?: string;
+  /** True when `deadline` is projected from previous cycles, not officially announced */
+  deadline_estimated?: boolean;
   deadline_note?: string;
+  deadline_note_ckb?: string;
+  deadline_note_kmr?: string;
   covers: string[];
+  covers_ckb?: string[];
+  covers_kmr?: string[];
   acceptance_rate?: string;
   status: 'open' | 'closed' | 'upcoming' | 'discontinued';
   last_verified: string;
@@ -99,6 +141,11 @@ export interface CheckerFilters {
   governorate?: string;
   study_type?: string;
   channel?: string;
+  gender?: Gender;
+  level?: ProgramLevel;
+  search?: string;
+  show_reach?: boolean;
+  sort_by?: 'cutoff_desc' | 'cutoff_asc' | 'closest' | 'alpha';
 }
 
 export interface ScholarshipFilters {
@@ -106,4 +153,5 @@ export interface ScholarshipFilters {
   degree_level?: string;
   country?: string;
   refugee_eligible?: boolean;
+  search?: string;
 }

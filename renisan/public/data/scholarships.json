@@ -8,19 +8,27 @@
     "country": "تركيا",
     "country_flag": "🇹🇷",
     "provider": "Presidency for Turks Abroad and Related Communities (YTB)",
-    "degree_levels": ["bachelor", "masters", "phd"],
+    "degree_levels": [
+      "bachelor",
+      "masters",
+      "phd"
+    ],
     "type": "full_scholarship",
     "eligibility": {
-      "nationalities": ["Iraqi"],
+      "nationalities": [
+        "Iraqi"
+      ],
       "refugee_idp_eligible": true,
       "survivor_eligible": true,
       "min_gpa": 70,
       "max_age": 21,
-      "language_requirements": ["سنة تحضيرية للغة التركية ممولة بالكامل"]
+      "language_requirements": [
+        "سنة تحضيرية للغة التركية ممولة بالكامل"
+      ]
     },
     "application_url": "https://www.turkiyeburslari.gov.tr",
-    "deadline": "2025-02-20",
-    "deadline_note": "تفتح سنوياً في شهر كانون الثاني (يناير) وتغلق في 20 شباط (فبراير)",
+    "deadline": "2027-02-20",
+    "deadline_note": "دورة 2026 فُتحت في 10 كانون الثاني وأُغلقت (بعد التمديد) في 25 شباط 2026. دورة 2027 متوقعة في الفترة نفسها ولم تُعلن رسمياً بعد.",
     "covers": [
       "الرسوم الدراسية كاملة",
       "راتب شهري مجزي",
@@ -31,10 +39,30 @@
     ],
     "acceptance_rate": "3% - 4% (تنافسية عالية)",
     "status": "upcoming",
-    "last_verified": "2024-11-10",
-    "verified_by": "فريق تدقيق رينيسان",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
     "notes_ar": "الحد الأدنى لمعدل التقديم للطب البشري وطب الأسنان والصيدلة هو 90%، بينما للتخصصات الهندسية والإنسانية 70%. يجب ألا يتجاوز عمر المتقدم للبكالوريوس 21 عاماً.",
-    "notes_ckb": "کەمترین نمرە بۆ کۆلێژە پزیشکییەکان 90% و بۆ بەشەکانی تر 70%یە. تەمەن بۆ بەکالۆریۆس نابێت لە 21 ساڵ زیاتر بێت."
+    "notes_ckb": "کەمترین نمرە بۆ کۆلێژە پزیشکییەکان 90% و بۆ بەشەکانی تر 70%یە. تەمەن بۆ بەکالۆریۆس نابێت لە 21 ساڵ زیاتر بێت.",
+    "deadline_estimated": true,
+    "deadline_note_ckb": "خولی 2026 لە 10ی کانوونی دووەم کرایەوە و (دوای درێژکردنەوە) لە 25ی شوبات داخرا. خولی 2027 لە هەمان ماوەدا چاوەڕوان دەکرێت و هێشتا بە فەرمی ڕانەگەیەنراوە.",
+    "deadline_note_kmr": "Dora 2026 di 10ê Çileyê de vebû û (piştî dirêjkirinê) di 25ê Sibatê de girt. Dora 2027 di heman demê de tê çaverêkirin û hîn bi fermî nehatiye ragihandin.",
+    "covers_ckb": [
+      "کرێی خوێندنی تەواو",
+      "مووچەی مانگانە",
+      "بەشی ناوخۆیی حکومی",
+      "بلیتی فڕۆکە بۆ چوون و گەڕانەوە",
+      "بیمەی تەندروستی",
+      "ساڵێکی ئامادەیی بۆ فێربوونی زمانی تورکی"
+    ],
+    "covers_kmr": [
+      "Heqê xwendinê yê tevahî",
+      "Mûçeya mehane",
+      "Xwendingeha dewletê",
+      "Bilêta balafirê çûn û hatin",
+      "Bîmeya tenduristiyê",
+      "Salek amadekariyê ji bo fêrbûna Tirkî"
+    ],
+    "notes_kmr": "Kêmtirîn nîmre ji bo bijîşkî, diranbijîşkî û dermansaziyê 90% û ji bo beşên din 70% e. Temen ji bo bakaloryosê divê ji 21 salî zêdetir nebe."
   },
   {
     "id": "sch-002",
@@ -45,18 +73,26 @@
     "country": "المجر",
     "country_flag": "🇭🇺",
     "provider": "Tempus Public Foundation & Hungarian Government",
-    "degree_levels": ["bachelor", "masters", "phd"],
+    "degree_levels": [
+      "bachelor",
+      "masters",
+      "phd"
+    ],
     "type": "full_scholarship",
     "eligibility": {
-      "nationalities": ["Iraqi"],
+      "nationalities": [
+        "Iraqi"
+      ],
       "refugee_idp_eligible": true,
       "survivor_eligible": false,
       "min_gpa": 75,
-      "language_requirements": ["IELTS 5.5+ أو TOEFL iBT أو اختبار الجامعة المجري"]
+      "language_requirements": [
+        "IELTS 5.5+ أو TOEFL iBT أو اختبار الجامعة المجري"
+      ]
     },
     "application_url": "https://stipendiumhungaricum.hu",
-    "deadline": "2025-01-15",
-    "deadline_note": "الموعد النهائي السنوي 15 كانون الثاني (يناير)",
+    "deadline": "2027-01-15",
+    "deadline_note": "أُغلق التقديم لعام 2026/2027 في 15 كانون الثاني 2026 (الساعة 14:00 بتوقيت وسط أوروبا). دعوة 2027/2028 تُفتح عادةً في تشرين الثاني وتُغلق منتصف كانون الثاني.",
     "covers": [
       "إعفاء كامل من الأجور الجامعية",
       "مخصصات مالية شهرية",
@@ -64,11 +100,27 @@
       "تأمين صحي"
     ],
     "acceptance_rate": "~16% عالمياً",
-    "status": "open",
-    "last_verified": "2024-11-12",
-    "verified_by": "فريق تدقيق رينيسان",
+    "status": "upcoming",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
     "notes_ar": "تنبيه هام: يتطلب التقديم ترشيحاً رسمياً من الجهة الشريكة في العراق (وزارة التعليم العالي الاتحادية ببغداد أو وزارة التعليم العالي في حكومة إقليم كوردستان كشريكين منفصلين).",
-    "notes_ckb": "گرنگ: پێویستی بە پەسەندکردنی وەزارەتی خوێندنی باڵای عێراق یان وەزارەتی خوێندنی باڵای هەرێمی کوردستان هەیە."
+    "notes_ckb": "گرنگ: پێویستی بە پەسەندکردنی وەزارەتی خوێندنی باڵای عێراق یان وەزارەتی خوێندنی باڵای هەرێمی کوردستان هەیە.",
+    "deadline_estimated": true,
+    "deadline_note_ckb": "پێشکەشکردن بۆ 2026/2027 لە 15ی کانوونی دووەمی 2026 داخرا. بانگەوازی 2027/2028 بەزۆری لە تشرینی دووەم دەکرێتەوە و لە ناوەڕاستی کانوونی دووەم دادەخرێت.",
+    "deadline_note_kmr": "Serlêdana 2026/2027 di 15ê Çileyê 2026 de girt. Banga 2027/2028 bi gelemperî di Mijdarê de vedibe û di nîvê Çileyê de digire.",
+    "covers_ckb": [
+      "لێخۆشبوونی تەواو لە کرێی خوێندن",
+      "بڕە پارەی مانگانە",
+      "بەشی ناوخۆیی یان پارەی کرێی خانوو",
+      "بیمەی تەندروستی"
+    ],
+    "covers_kmr": [
+      "Bêpere bûna tevahî ya xwendinê",
+      "Alîkariya darayî ya mehane",
+      "Xwendingeh an alîkariya kirêyê",
+      "Bîmeya tenduristiyê"
+    ],
+    "notes_kmr": "Girîng: pêdivî bi namzedkirina fermî ji Wezareta Xwendina Bilind a Iraqê an ya Herêma Kurdistanê heye."
   },
   {
     "id": "sch-003",
@@ -79,7 +131,9 @@
     "country": "العراق / محلي",
     "country_flag": "🇮🇶",
     "provider": "UNHCR & German Federal Foreign Office",
-    "degree_levels": ["bachelor"],
+    "degree_levels": [
+      "bachelor"
+    ],
     "type": "full_scholarship",
     "eligibility": {
       "refugee_idp_eligible": true,
@@ -87,104 +141,162 @@
       "min_gpa": 60,
       "max_age": 28
     },
-    "application_url": "https://www.unhcr.org/dafi-scholarships",
-    "deadline": "مغلقة نهائياً",
-    "deadline_note": "توقفت استمارات القبول الجديدة في العراق بدءاً من 2025-2026",
+    "application_url": "https://help.unhcr.org/iraq/en/education/higher-education",
+    "deadline_note": "توقف قبول الطلبة الجدد في العراق ابتداءً من العام الدراسي 2025-2026",
     "covers": [
       "الرسوم الدراسية الجامعية",
       "بدل نقل وإعاشة شهري",
       "مخصصات الكتب والمراجع"
     ],
     "status": "discontinued",
-    "last_verified": "2024-11-14",
-    "verified_by": "فريق تدقيق رينيسان",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
     "notes_ar": "تنبيه مصداقية وتحديث: أوقفت المفوضية السامية للأمم المتحدة لشؤون اللاجئين (UNHCR) قبول الدفعات الجديدة لمنحة DAFI في العراق ابتداءً من العام الأكاديمي 2025-2026، مع استمرار تمويل الطلبة المقبولين سابقاً فقط.",
-    "notes_ckb": "ئاگاداریی فەرمی: وەرگرتنی خوێندکاری نوێ بۆ سکۆلەرشیپی دافی لە عێراق لە ساڵی 2025-2026ەوە راگیراوە."
+    "notes_ckb": "ئاگاداریی فەرمی: وەرگرتنی خوێندکاری نوێ بۆ سکۆلەرشیپی دافی لە عێراق لە ساڵی 2025-2026ەوە راگیراوە.",
+    "deadline_note_ckb": "لە ساڵی خوێندنی 2025-2026ەوە وەرگرتنی خوێندکاری نوێ لە عێراق ڕاگیراوە",
+    "deadline_note_kmr": "Ji sala xwendinê 2025-2026 ve li Iraqê xwendekarên nû nayên wergirtin",
+    "covers_ckb": [
+      "کرێی خوێندنی زانکۆ",
+      "پارەی گواستنەوە و بژێوی مانگانە",
+      "پارەی کتێب و سەرچاوە"
+    ],
+    "covers_kmr": [
+      "Heqê xwendina zanîngehê",
+      "Alîkariya veguhastin û debarê ya mehane",
+      "Pereyê pirtûk û çavkaniyan"
+    ],
+    "notes_kmr": "UNHCR ji sala xwendinê 2025-2026 ve li Iraqê xwendekarên nû ji bo bûrsa DAFI wernagire; tenê xwendekarên berê berdewam dikin. Ji bo derfetên din, platforma \"Overseas Opportunities\" ya UNHCR bibîne."
   },
   {
     "id": "sch-004",
-    "name": "AUIS Hiwa Foundation Scholarship",
-    "name_ar": "منحة مؤسسة هيوا في الجامعة الأمريكية بالسليمانية (AUIS)",
-    "name_ckb": "سکۆلەرشیپی دەزگای هیوا لە زانکۆی ئەمریکی (AUIS)",
-    "name_kmr": "Bursa Weqfa Hiwa li Zanîngeha Amerîkî li Silêmaniyê",
+    "name": "AUIS National Scholarship",
+    "name_ar": "المنحة الوطنية للجامعة الأمريكية في السليمانية (AUIS)",
+    "name_ckb": "سکۆلارشیپی نیشتمانیی زانکۆی ئەمریکی لە سلێمانی (AUIS)",
+    "name_kmr": "Bûrsa Neteweyî ya AUIS (Zanîngeha Amerîkî ya Silêmaniyê)",
     "country": "إقليم كوردستان - العراق",
     "country_flag": "🇮🇶",
-    "provider": "Hiwa Foundation & AUIS",
-    "degree_levels": ["bachelor"],
+    "provider": "The American University of Iraq, Sulaimani (AUIS)",
+    "degree_levels": [
+      "bachelor"
+    ],
     "type": "full_scholarship",
     "eligibility": {
-      "nationalities": ["Iraqi"],
-      "refugee_idp_eligible": true,
-      "survivor_eligible": true,
-      "min_gpa": 85,
-      "language_requirements": ["اختبار التوفل التأسيسي للجامعة أو IELTS 6.0"]
+      "nationalities": [
+        "Iraqi"
+      ],
+      "refugee_idp_eligible": false
     },
-    "application_url": "https://auis.edu.krd/admissions/scholarships",
-    "deadline": "2025-08-15",
-    "deadline_note": "تفتح مع التقديم على الفصل الخريفي",
+    "application_url": "https://auis.edu.krd/auis-national-scholarship",
+    "deadline_note": "يُعلن الموعد مع كل دورة قبول — يجب التقديم على الجامعة وأداء اختبار تحديد المستوى المجاني قبل الموعد",
     "covers": [
-      "أجور دراسية كاملة 100%",
-      "بدل سكن جامعي للطلبة من خارج السليمانية (بما في ذلك دهوك وسنجار ومحافظات الوسط والجنوب)",
-      "مخصصات شهرية"
+      "الأجور الدراسية كاملة حتى التخرج",
+      "رسوم السكن الجامعي لمن يحتاجه"
     ],
-    "acceptance_rate": "~5% (محدودة وتنافسية)",
-    "status": "upcoming",
-    "last_verified": "2024-11-10",
-    "verified_by": "فريق تدقيق رينيسان",
-    "notes_ar": "منحة مخصصة للطلبة المتفوقين أكاديمياً الذين يواجهون ظروفاً اقتصادية واجتماعية قاهرة. تمنح أولوية خاصة لطلبة المناطق المتضررة والنازحين.",
-    "notes_ckb": "سکۆلەرشیپێک بۆ خوێندکارە زیرەک و کەمدرامەتەکان. گرنگی تایبەت بە قوتابیانی ئاوارە و ناوچە زیانلێکەوتووەکان دەدرێت."
+    "status": "closed",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "notes_ar": "آخر دورة معلنة على موقع AUIS كانت لطلبة القبول 2022-2023 (معدل 90% فأكثر، تغطية كاملة للأقساط والسكن). لم تُعلن دورة جديدة حتى تاريخ التحقق — راجع صفحة المساعدات المالية في AUIS أو راسل القبول مباشرة.",
+    "notes_ckb": "دوایین خولی ڕاگەیەنراو لەسەر ماڵپەڕی AUIS بۆ وەرگیرانی 2022-2023 بوو (نمرەی 90% و سەرووتر، داپۆشینی تەواوی کرێی خوێندن و بەشی ناوخۆیی). تا ڕێکەوتی پشکنین خولی نوێ ڕانەگەیەنراوە — سەردانی لاپەڕەی یارمەتی دارایی AUIS بکە یان ڕاستەوخۆ پەیوەندی بە وەرگرتنەوە بکە.",
+    "covers_ckb": [
+      "کرێی خوێندنی تەواو تا دەرچوون",
+      "کرێی بەشی ناوخۆیی بۆ ئەوانەی پێویستیانە"
+    ],
+    "covers_kmr": [
+      "Heqê xwendinê yê tevahî heta mezûnbûnê",
+      "Heqê xwendingehê ji bo kesên hewce"
+    ],
+    "deadline_note_ckb": "وادەکە لەگەڵ هەر خولێکی وەرگرتن ڕادەگەیەنرێت — پێش وادەکە دەبێت داواکاری بۆ زانکۆ پێشکەش بکەیت و تاقیکردنەوەی ئاست بدەیت",
+    "deadline_note_kmr": "Dîrok bi her dora wergirtinê tê ragihandin — berî wê divê serlêdana zanîngehê bikî û azmûna astê ya belaş bidî",
+    "notes_kmr": "Dora dawî ya ragihandî li ser malpera AUIS ji bo wergirtina 2022-2023 bû (nîmreya 90% û jortir, heqê xwendinê û xwendingeh bi tevahî). Heta roja kontrolê doreke nû nehatiye ragihandin — rûpela alîkariya darayî ya AUIS bibîne an rasterast bi wergirtinê re têkilî deyne.",
+    "deadline": null
   },
   {
     "id": "sch-005",
-    "name": "AUIS Acuity & Merit-Based Financial Aid",
-    "name_ar": "مساعدات ومنح التميز الأكاديمي في AUIS",
-    "name_ckb": "هاوکاری دارایی و نمرەی بەرز لە AUIS",
-    "name_kmr": "Harîkariya Darayî li Zanîngeha Amerîkî AUIS",
+    "name": "AUIS Presidential Scholarship",
+    "name_ar": "المنحة الرئاسية للجامعة الأمريكية في السليمانية (AUIS)",
+    "name_ckb": "سکۆلارشیپی سەرۆکایەتیی زانکۆی ئەمریکی لە سلێمانی",
+    "name_kmr": "Bûrsa Serokatiyê ya AUIS",
     "country": "إقليم كوردستان - العراق",
     "country_flag": "🇮🇶",
-    "provider": "American University of Iraq, Sulaimani",
-    "degree_levels": ["bachelor"],
+    "provider": "The American University of Iraq, Sulaimani (AUIS)",
+    "degree_levels": [
+      "bachelor"
+    ],
     "type": "partial_scholarship",
     "eligibility": {
-      "nationalities": ["Iraqi"],
-      "refugee_idp_eligible": true,
-      "survivor_eligible": true,
-      "min_gpa": 80
+      "nationalities": [
+        "Iraqi"
+      ],
+      "refugee_idp_eligible": false,
+      "min_gpa": 95,
+      "language_requirements": [
+        "رسالة دافع باللغة الإنجليزية ومقابلة"
+      ]
     },
-    "application_url": "https://auis.edu.krd/financial-aid",
-    "deadline": "2025-09-01",
+    "application_url": "https://auis.edu.krd/presidential-scholarship",
+    "deadline": "2027-09-01",
     "covers": [
-      "خصم من 20% إلى 80% من الأجور الدراسية بناءً على معدل الصف 12 واختبار الكفاءة"
+      "خصم 50% من الأجور الدراسية"
     ],
     "status": "upcoming",
-    "last_verified": "2024-11-10",
-    "verified_by": "فريق تدقيق رينيسان"
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "deadline_estimated": true,
+    "deadline_note": "كان الموعد السابق 1 أيلول 2026 — الموعد القادم متوقع في الفترة نفسها",
+    "deadline_note_ckb": "وادەی پێشوو 1ی ئەیلوولی 2026 بوو — وادەی داهاتوو چاوەڕوان دەکرێت لە هەمان کاتدا بێت",
+    "deadline_note_kmr": "Dîroka berê 1ê Îlona 2026 bû — ya bê di heman demê de tê texmînkirin",
+    "covers_ckb": [
+      "50% داشکاندن لە کرێی خوێندن"
+    ],
+    "covers_kmr": [
+      "50% daxistina heqê xwendinê"
+    ],
+    "notes_ar": "لخريجي السادس الإعدادي بمعدل 95% فأعلى. يُختار طالب واحد وطالبة واحدة فقط. لا تشمل الصيدلة وطب الأسنان.",
+    "notes_ckb": "بۆ دەرچووانی پۆلی 12 بە نمرەی 95% و زیاتر. تەنها یەک کوڕ و یەک کچ هەڵدەبژێردرێن. دەرمانسازی و ددانسازی ناگرێتەوە.",
+    "notes_kmr": "Ji bo mezûnên pola 12an bi nîmreya 95% û zêdetir. Tenê xwendekarek kur û yek keç tên hilbijartin. Dermansazî û diranbijîşkî nayên hesibandin."
   },
   {
     "id": "sch-006",
-    "name": "AUIB Need-Based Financial Aid & Merit Scholarships",
-    "name_ar": "منح ومساعدات الجامعة الأمريكية في بغداد (AUIB)",
-    "name_ckb": "سکۆلەرشیپی زانکۆی ئەمریکی لە بەغداد (AUIB)",
-    "name_kmr": "Bursa Zanîngeha Amerîkî li Bexdayê (AUIB)",
+    "name": "AUIB Builders of Iraq Scholarship",
+    "name_ar": "منحة بناة العراق — الجامعة الأمريكية في بغداد (AUIB)",
+    "name_ckb": "سکۆلارشیپی بنیاتنەرانی عێراق — زانکۆی ئەمریکی لە بەغدا",
+    "name_kmr": "Bûrsa Avakerên Iraqê — AUIB (Bexda)",
     "country": "العراق",
     "country_flag": "🇮🇶",
-    "provider": "American University of Iraq - Baghdad",
-    "degree_levels": ["bachelor"],
-    "type": "partial_scholarship",
+    "provider": "American University of Iraq – Baghdad (AUIB)",
+    "degree_levels": [
+      "bachelor"
+    ],
+    "type": "full_scholarship",
     "eligibility": {
-      "nationalities": ["Iraqi"],
-      "refugee_idp_eligible": true,
-      "survivor_eligible": true,
-      "min_gpa": 75
+      "nationalities": [
+        "Iraqi"
+      ],
+      "refugee_idp_eligible": false,
+      "min_gpa": 80
     },
-    "application_url": "https://auib.edu.iq/tuition-financial-aid",
-    "deadline": "2025-08-30",
+    "application_url": "https://auib.edu.iq/admissions/builders-of-iraq/",
     "covers": [
-      "منح جزئية وكاملة للأجور الدراسية للطلبة المتميزين وذوي الدخل المحدود"
+      "الأجور والرسوم الدراسية كاملة لمدة البرنامج",
+      "سنة إضافية لبرنامج اللغة الإنجليزية عند الحاجة"
     ],
     "status": "upcoming",
-    "last_verified": "2024-11-10",
-    "verified_by": "فريق تدقيق رينيسان"
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "covers_ckb": [
+      "کرێی خوێندنی تەواو بۆ ماوەی بەرنامەکە",
+      "ساڵێکی زیادە بۆ زمانی ئینگلیزی ئەگەر پێویست بێت"
+    ],
+    "covers_kmr": [
+      "Heqê xwendinê yê tevahî ji bo dema bernameyê",
+      "Saleke zêde ji bo Îngilîzî eger hewce be"
+    ],
+    "deadline_note": "اختر AUIB في بوابة وزارة التعليم العالي للجامعات الأهلية ثم قدّم الاستمارة حضورياً — راجع الجامعة للموعد",
+    "deadline_note_ckb": "AUIB لە پۆرتاڵی وەزارەت بۆ زانکۆ ئەهلییەکان هەڵبژێرە، پاشان فۆرمەکە بە ئامادەبوون پێشکەش بکە — بۆ وادە پەیوەندی بە زانکۆوە بکە",
+    "deadline_note_kmr": "AUIB di portala wezaretê ya zanîngehên taybet de hilbijêre û form bi xwe pêşkêş bike — ji bo dîrokê bi zanîngehê re têkilî dayne",
+    "notes_ar": "الشروط حسب موقع AUIB: معدل 80% فأكثر، حاجة مالية مثبتة، دراسة صباحية، واختيار AUIB عبر بوابة الجامعات الأهلية في وزارة التعليم العالي. الصفحة الرسمية تشير إلى دورة 2024 — أكّد موعد الدورة الحالية بالبريد: student.awards@auib.edu.iq",
+    "notes_ckb": "مەرجەکان بەپێی ماڵپەڕی AUIB: نمرەی 80% و سەرووتر، پێویستی دارایی سەلمێنراو، خوێندنی بەیانیان، و هەڵبژاردنی AUIB لە دەروازەی زانکۆ ئەهلییەکانی وەزارەت. لاپەڕە فەرمییەکە ئاماژە بە خولی 2024 دەکات — وادەی خولی ئێستا بە ئیمەیڵ دڵنیا بکەرەوە: student.awards@auib.edu.iq",
+    "notes_kmr": "Merc li gorî malpera AUIB: nîmreya 80% û jortir, hewcedariya darayî ya îspatkirî, xwendina sibehê, û hilbijartina AUIB di portala zanîngehên taybet a Wezaretê de. Rûpela fermî dora 2024 nîşan dide — dema dora niha bi e-nameyê piştrast bike: student.awards@auib.edu.iq"
   },
   {
     "id": "sch-007",
@@ -195,17 +307,22 @@
     "country": "الولايات المتحدة الأمريكية",
     "country_flag": "🇺🇸",
     "provider": "U.S. Department of State & World Learning",
-    "degree_levels": ["bachelor"],
+    "degree_levels": [
+      "bachelor"
+    ],
     "type": "exchange",
     "eligibility": {
-      "nationalities": ["Iraqi"],
+      "nationalities": [
+        "Iraqi"
+      ],
       "refugee_idp_eligible": true,
       "survivor_eligible": true,
-      "language_requirements": ["إجادة المحادثة باللغة الإنجليزية"]
+      "language_requirements": [
+        "إجادة المحادثة باللغة الإنجليزية"
+      ]
     },
-    "application_url": "https://www.worldlearning.org/program/iraqi-young-leaders-exchange-program",
-    "deadline": "2024-12-15",
-    "deadline_note": "برنامج صيفي سنوي، يفتح التقديم في الخريف",
+    "application_url": "https://www.iylep.org/apply/",
+    "deadline_note": "لا يُقبل حالياً تقديم طلبة الثانوية العراقيين (تم ترحيل مقبولي 2025 إلى دورة 2026). يتوقع البرنامج فتح التقديم لدورة 2027 لاحقاً — سجّل في \"Request Information\" على iylep.org لتصلك الإشعارات.",
     "covers": [
       "تذاكر الطيران للولايات المتحدة والعودة",
       "الإقامة والسكن مع عائلات أمريكية وفي جامعات",
@@ -213,11 +330,26 @@
       "تأمين صحي للسفر"
     ],
     "acceptance_rate": "~3%",
-    "status": "open",
-    "last_verified": "2024-11-05",
-    "verified_by": "فريق تدقيق رينيسان",
+    "status": "closed",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
     "notes_ar": "ملاحظة توضيحية: هذا برنامج تبادل قيادي وثقافي لمدة 4 أسابيع في أمريكا وليس منحة بكالوريوس للحصول على شهادة جامعية.",
-    "notes_ckb": "تێبینی: ئەمە بەرنامەیەکی ئاڵوگۆڕی سەرکردایەتی هاوینەیە بۆ ماوەی مانگێک لە ئەمریکا، نەک سکۆلەرشیپی بەدەستهێنانی بڕوانامەی زانکۆ."
+    "notes_ckb": "تێبینی: ئەمە بەرنامەیەکی ئاڵوگۆڕی سەرکردایەتی هاوینەیە بۆ ماوەی مانگێک لە ئەمریکا، نەک سکۆلەرشیپی بەدەستهێنانی بڕوانامەی زانکۆ.",
+    "deadline_note_ckb": "لە ئێستادا پێشکەشکردنی خوێندکارانی ئامادەیی عێراق وەرناگیرێت (وەرگیراوانی 2025 بۆ خولی 2026 گوازرانەوە). چاوەڕوان دەکرێت پێشکەشکردن بۆ خولی 2027 دواتر بکرێتەوە — لە iylep.org خۆت تۆمار بکە بۆ ئاگادارکردنەوە.",
+    "deadline_note_kmr": "Niha serlêdanên xwendekarên lîseyê yên Iraqê nayên wergirtin (yên 2025 hilbijartî bo dora 2026 hatin veguhestin). Tê çaverêkirin ku serlêdana dora 2027 paşê vebe — li iylep.org xwe tomar bike ji bo agahdariyê.",
+    "covers_ckb": [
+      "بلیتی فڕۆکە بۆ ئەمریکا و گەڕانەوە",
+      "نیشتەجێبوون لەگەڵ خێزانی ئەمریکی و لە زانکۆکان",
+      "خواردن و گواستنەوەی ناوخۆیی",
+      "بیمەی تەندروستیی گەشت"
+    ],
+    "covers_kmr": [
+      "Bilêta balafirê ji bo Amerîkayê û vegerê",
+      "Mana bi malbatên Amerîkî û li zanîngehan",
+      "Xwarin û veguhastina navxweyî",
+      "Bîmeya tenduristiyê ya rêwîtiyê"
+    ],
+    "notes_kmr": "Têbînî: ev bernameyeke guhertina serokatî û çandî ya 4 hefteyî li Amerîkayê ye, ne bûrsa bawernameya zanîngehê ye."
   },
   {
     "id": "sch-008",
@@ -228,23 +360,42 @@
     "country": "الولايات المتحدة الأمريكية",
     "country_flag": "🇺🇸",
     "provider": "U.S. Department of State & World Learning",
-    "degree_levels": ["bachelor"],
+    "degree_levels": [
+      "bachelor"
+    ],
     "type": "exchange",
     "eligibility": {
-      "nationalities": ["Iraqi"],
+      "nationalities": [
+        "Iraqi"
+      ],
       "refugee_idp_eligible": true,
       "survivor_eligible": true,
-      "language_requirements": ["TOEFL 48+ أو ما يعادله"]
+      "language_requirements": [
+        "TOEFL 48+ أو ما يعادله"
+      ]
     },
-    "application_url": "https://iq.usembassy.gov/education-culture/exchange-programs",
-    "deadline": "2024-12-15",
+    "application_url": "https://www.worldlearning.org/program/global-undergraduate-exchange-program/",
     "covers": [
       "فصل دراسي كامل في إحدى الجامعات الأمريكية",
       "تذاكر الطيران، السكن، الإعاشة، والتأمين الصحي"
     ],
-    "status": "open",
-    "last_verified": "2024-11-08",
-    "verified_by": "فريق تدقيق رينيسان"
+    "status": "upcoming",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "deadline_note": "يُعلن سنوياً بين تشرين الأول وكانون الثاني عبر السفارة الأمريكية — الدورة السابقة أُغلقت 15 كانون الأول 2025",
+    "deadline_note_ckb": "ساڵانە لە نێوان تشرینی یەکەم و کانوونی دووەم لەڕێی باڵیۆزخانەی ئەمریکاوە ڕادەگەیەنرێت — خولی پێشوو لە 15ی کانوونی یەکەمی 2025 داخرا",
+    "deadline_note_kmr": "Salane di navbera Cotmeh û Çileyê de bi rêya Balyozxaneya Amerîkayê tê ragihandin — dora berê di 15ê Kanûna 2025 de girt",
+    "covers_ckb": [
+      "وەرزێکی خوێندن لە زانکۆیەکی ئەمریکی",
+      "بلیتی فڕۆکە، نیشتەجێبوون، خواردن و بیمەی تەندروستی"
+    ],
+    "covers_kmr": [
+      "Semesterek xwendinê li zanîngeheke Amerîkî",
+      "Bilêta balafirê, mana, xwarin û bîmeya tenduristiyê"
+    ],
+    "notes_ar": "مخصص لطلبة الجامعات المسجلين حالياً (ليس لخريجي السادس الإعدادي مباشرة). فصل دراسي واحد بدون شهادة.",
+    "notes_ckb": "بۆ خوێندکارانی ئێستای زانکۆیە (نەک ڕاستەوخۆ بۆ دەرچووانی پۆلی 12). یەک وەرز بەبێ بڕوانامە.",
+    "notes_kmr": "Ji bo xwendekarên niha yên zanîngehê ye (ne rasterast ji bo mezûnên pola 12an). Semesterek bê bawername."
   },
   {
     "id": "sch-009",
@@ -255,16 +406,22 @@
     "country": "الصين",
     "country_flag": "🇨🇳",
     "provider": "China Scholarship Council & Iraqi MOHESR",
-    "degree_levels": ["bachelor", "masters", "phd"],
+    "degree_levels": [
+      "bachelor",
+      "masters",
+      "phd"
+    ],
     "type": "full_scholarship",
     "eligibility": {
-      "nationalities": ["Iraqi"],
+      "nationalities": [
+        "Iraqi"
+      ],
       "refugee_idp_eligible": false,
       "min_gpa": 80,
       "max_age": 25
     },
     "application_url": "https://www.campuschina.org",
-    "deadline": "2025-02-15",
+    "deadline": "2026-12-13",
     "covers": [
       "الأجور الدراسية",
       "السكن الجامعي",
@@ -272,9 +429,27 @@
       "تأمين طبي شامل"
     ],
     "status": "upcoming",
-    "last_verified": "2024-11-01",
-    "verified_by": "فريق تدقيق رينيسان",
-    "notes_ar": "يتم الإعلان عنها سنوياً عبر دائرة البعثات والعلاقات الثقافية في وزارة التعليم العالي الاتحادية ببغداد."
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "notes_ar": "يتم الإعلان عنها سنوياً عبر دائرة البعثات والعلاقات الثقافية في وزارة التعليم العالي الاتحادية ببغداد.",
+    "deadline_estimated": true,
+    "deadline_note": "الترشيح يتم عبر دائرة البعثات في وزارة التعليم العالي العراقية. موعد دورة 2026-2027 كان 13 كانون الأول 2025 (15 مقعداً)؛ الموعد المعروض لدورة 2027-2028 تقديري.",
+    "deadline_note_ckb": "پاڵاوتن لەڕێگەی بەڕێوەبەرایەتی بەعسە (بورس) لە وەزارەتی خوێندنی باڵای عێراق دەکرێت. وادەی خولی 2026-2027 لە 13ی کانوونی یەکەمی 2025 بوو (15 کورسی)؛ وادەی پیشاندراو بۆ 2027-2028 خەمڵاندنە.",
+    "deadline_note_kmr": "Namzedkirin bi rêya Beşa Bursan a Wezareta Xwendina Bilind a Iraqê ye. Dema dora 2026-2027 13ê Kanûna Pêşîn 2025 bû (15 kursî); dîroka nîşandayî bo 2027-2028 texmînî ye.",
+    "covers_ckb": [
+      "کرێی خوێندن",
+      "بەشی ناوخۆیی",
+      "مووچەی مانگانە",
+      "بیمەی تەندروستی"
+    ],
+    "covers_kmr": [
+      "Heqê xwendinê",
+      "Xwendingeh",
+      "Mûçeya mehane",
+      "Bîmeya tenduristiyê"
+    ],
+    "notes_ckb": "ساڵانە لەلایەن فەرمانگەی نێردراوەکان و پەیوەندییە ڕۆشنبیرییەکان لە وەزارەتی خوێندنی باڵا لە بەغدا ڕادەگەیەنرێت.",
+    "notes_kmr": "Salane ji aliyê Daîreya Şandiyan û Têkiliyên Çandî ya Wezareta Xwendina Bilind li Bexdayê tê ragihandin."
   },
   {
     "id": "sch-010",
@@ -285,16 +460,22 @@
     "country": "دول متعددة",
     "country_flag": "🌐",
     "provider": "Islamic Development Bank",
-    "degree_levels": ["bachelor", "masters", "phd"],
+    "degree_levels": [
+      "bachelor",
+      "masters",
+      "phd"
+    ],
     "type": "full_scholarship",
     "eligibility": {
-      "nationalities": ["Iraqi"],
+      "nationalities": [
+        "Iraqi"
+      ],
       "refugee_idp_eligible": true,
       "min_gpa": 75,
       "max_age": 24
     },
     "application_url": "https://www.isdb.org/scholarships",
-    "deadline": "2025-02-28",
+    "deadline": "2027-01-31",
     "covers": [
       "أجور التعليم الجامعي",
       "راتب شهري لتغطية المعيشة",
@@ -302,9 +483,27 @@
       "تأمين صحي وتذاكر سفر"
     ],
     "status": "upcoming",
-    "last_verified": "2024-11-05",
-    "verified_by": "فريق تدقيق رينيسان",
-    "notes_ar": "منحة مستردة بدون فوائد لدعم التنمية والكوادر العلمية المتخصصة في الطب والهندسة والعلوم والتكنولوجيا."
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "notes_ar": "منحة مستردة بدون فوائد لدعم التنمية والكوادر العلمية المتخصصة في الطب والهندسة والعلوم والتكنولوجيا.",
+    "deadline_estimated": true,
+    "deadline_note": "كان موعد دورة 2026-2027 هو 31 كانون الثاني 2026 — الموعد القادم متوقع في الفترة نفسها",
+    "deadline_note_ckb": "وادەی خولی 2026-2027 بریتی بوو لە 31ی کانوونی دووەمی 2026 — وادەی داهاتوو چاوەڕوان دەکرێت لە هەمان کاتدا بێت",
+    "deadline_note_kmr": "Dîroka dora 2026-2027 31ê Çileya 2026 bû — ya bê di heman demê de tê texmînkirin",
+    "covers_ckb": [
+      "کرێی خوێندنی زانکۆ",
+      "مووچەی مانگانە بۆ بژێوی",
+      "پارەی کتێب و جلوبەرگ",
+      "بیمەی تەندروستی و بلیتی گەشت"
+    ],
+    "covers_kmr": [
+      "Heqê xwendina zanîngehê",
+      "Mûçeya mehane ji bo debarê",
+      "Pereyê pirtûk û cilan",
+      "Bîmeya tenduristiyê û bilêta rêwîtiyê"
+    ],
+    "notes_ckb": "سکۆلارشیپێکی گەڕاندنەوەیی بێ سوود بۆ پسپۆڕییەکانی پزیشکی، ئەندازیاری، زانست و تەکنەلۆژیا.",
+    "notes_kmr": "Bûrseke vegerandinê ya bê faîz ji bo bijîşkî, endezyarî, zanist û teknolojiyê."
   },
   {
     "id": "sch-011",
@@ -315,24 +514,41 @@
     "country": "العراق وإقليم كوردستان",
     "country_flag": "🇮🇶",
     "provider": "SPARK & European Union Trust Fund",
-    "degree_levels": ["bachelor"],
+    "degree_levels": [
+      "bachelor"
+    ],
     "type": "partial_scholarship",
     "eligibility": {
-      "nationalities": ["Iraqi", "Syrian"],
+      "nationalities": [
+        "Iraqi",
+        "Syrian"
+      ],
       "refugee_idp_eligible": true,
       "survivor_eligible": true,
       "min_gpa": 65
     },
     "application_url": "https://spark.ngo/programmes/higher-education",
-    "deadline": "2025-07-31",
     "covers": [
       "دعم الأجور الدراسية في المعاهد والجامعات التقنية في إقليم كوردستان ونينوى",
       "تدريب على المهارات الرقمية وريادة الأعمال"
     ],
-    "status": "upcoming",
-    "last_verified": "2024-11-10",
-    "verified_by": "فريق تدقيق رينيسان",
-    "notes_ar": "يركز على تمكين الشباب النازحين واللاجئين والمجتمعات المضيفة في دهوك وأربيل والموصل."
+    "status": "closed",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "notes_ar": "لا يعرض موقع SPARK حالياً أي برنامج منح جامعية في العراق أو إقليم كوردستان (آخر دورات الدعم انتهت). أُبقي على الإدراج للمتابعة فقط.",
+    "deadline_note": "أُغلقت الدورة السابقة في أيار 2026 — لم تُعلن الدورة القادمة بعد. تستهدف بشكل رئيسي اللاجئين السوريين في الإقليم",
+    "deadline_note_ckb": "خولی پێشوو لە ئایاری 2026 داخرا — خولی داهاتوو هێشتا ڕانەگەیەنراوە. بەشێوەیەکی سەرەکی پەنابەرە سوورییەکانی هەرێم دەگرێتەوە",
+    "deadline_note_kmr": "Dora berê di Gulana 2026 de girt — ya bê hîn nehatiye ragihandin. Bi giranî ji bo penaberên Sûrî yên li Herêmê ye",
+    "covers_ckb": [
+      "پاڵپشتیی کرێی خوێندن لە پەیمانگا و زانکۆ تەکنیکییەکانی هەرێم و نەینەوا",
+      "ڕاهێنان لەسەر کارامەیی دیجیتاڵی و کارسازی"
+    ],
+    "covers_kmr": [
+      "Piştgiriya heqê xwendinê li enstîtû û zanîngehên teknîkî yên Herêmê û Neynewayê",
+      "Perwerdeya jêhatîbûna dîjîtal û karsaziyê"
+    ],
+    "notes_ckb": "ماڵپەڕی SPARK لە ئێستادا هیچ بەرنامەیەکی بورسی زانکۆ بۆ عێراق یان هەرێمی کوردستان پیشان نادات. تەنها بۆ بەدواداچوون هێڵراوەتەوە.",
+    "notes_kmr": "Malpera SPARK niha ti bernameyeke bursa zanîngehê ji bo Iraq an Herêma Kurdistanê nîşan nade. Tenê ji bo şopandinê hatiye hiştin."
   },
   {
     "id": "sch-012",
@@ -343,24 +559,273 @@
     "country": "ألمانيا",
     "country_flag": "🇩🇪",
     "provider": "DAAD & German Federal Foreign Office",
-    "degree_levels": ["bachelor", "masters", "phd"],
+    "degree_levels": [
+      "bachelor",
+      "masters",
+      "phd"
+    ],
     "type": "full_scholarship",
     "eligibility": {
       "refugee_idp_eligible": true,
       "survivor_eligible": true,
-      "language_requirements": ["اللغة الإنجليزية أو الألمانية"]
+      "language_requirements": [
+        "اللغة الإنجليزية أو الألمانية"
+      ]
     },
     "application_url": "https://www.daad.de/en/study-and-research-in-germany/scholarships/hilde-domin-programm",
-    "deadline": "2025-03-15",
+    "deadline": "2027-03-15",
     "covers": [
       "راتب شهري (934 يورو للبكالوريوس)",
       "تأمين صحي",
       "تذاكر السفر وتكاليف دورات اللغة التمهيدية"
     ],
-    "status": "open",
-    "last_verified": "2024-11-12",
-    "verified_by": "فريق تدقيق رينيسان",
+    "status": "upcoming",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
     "notes_ar": "مخصصة للطلبة المهددين بالاضطهاد أو الذين حُرموا من حقهم في التعليم لأسباب أمنية أو سياسية أو دينية أو عرقية. يتطلب ترشيحاً من منظمة موثوقة.",
-    "notes_ckb": "تایبەتە بەو خوێندکارانەی لەژێر مەترسیدان یان لە خوێندن بێبەشکراون."
+    "notes_ckb": "تایبەتە بەو خوێندکارانەی لەژێر مەترسیدان یان لە خوێندن بێبەشکراون.",
+    "deadline_estimated": true,
+    "deadline_note": "لا يمكن التقديم مباشرة — يجب أن ترشّحك جامعة ألمانية. موعد الترشيح القادم المتوقع 15 آذار 2027",
+    "deadline_note_ckb": "ناتوانیت ڕاستەوخۆ داواکاری پێشکەش بکەیت — دەبێت زانکۆیەکی ئەڵمانی کاندیدت بکات. وادەی کاندیدکردنی داهاتوو 15ی ئازاری 2027",
+    "deadline_note_kmr": "Serlêdana rasterast nabe — divê zanîngeheke Alman te namzed bike. Dîroka namzedkirinê ya bê 15ê Adara 2027",
+    "covers_ckb": [
+      "مووچەی مانگانە (934 یۆرۆ بۆ بەکالۆریۆس)",
+      "بیمەی تەندروستی",
+      "بلیتی گەشت و خولی زمانی ئامادەیی"
+    ],
+    "covers_kmr": [
+      "Mûçeya mehane (934 euro ji bo bakaloryosê)",
+      "Bîmeya tenduristiyê",
+      "Bilêta rêwîtiyê û kursên zimanê amadekariyê"
+    ],
+    "notes_kmr": "Ji bo xwendekarên di bin metirsiya çewsandinê de an yên ji mafê xwendinê bêpar hatine hiştin."
+  },
+  {
+    "id": "sch-013",
+    "name": "Chevening Scholarships (UK Government)",
+    "name_ar": "منحة تشيفنينغ (الحكومة البريطانية)",
+    "name_ckb": "سکۆلەرشیپی چیڤنینگ (حکومەتی بەریتانیا)",
+    "name_kmr": "Bursa Chevening (Hikûmeta Brîtanyayê)",
+    "country": "المملكة المتحدة",
+    "country_flag": "🇬🇧",
+    "provider": "UK Foreign, Commonwealth & Development Office",
+    "degree_levels": [
+      "masters"
+    ],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": [
+        "Iraqi"
+      ],
+      "refugee_idp_eligible": false,
+      "survivor_eligible": false,
+      "work_experience_years": 2,
+      "must_return": true,
+      "language_requirements": [
+        "شرط اللغة الإنكليزية حسب الجامعة البريطانية المختارة"
+      ]
+    },
+    "application_url": "https://www.chevening.org/scholarship/iraq/",
+    "deadline": "2027-10-05",
+    "deadline_estimated": true,
+    "deadline_note": "أُغلق التقديم لدورة 2027-2028 في 6 تشرين الأول 2026. التقديم يُفتح سنوياً في آب ويُغلق أوائل تشرين الأول.",
+    "deadline_note_ckb": "پێشکەشکردن بۆ خولی 2027-2028 لە 6ی تشرینی یەکەمی 2026 داخرا. هەموو ساڵێک لە ئابدا دەکرێتەوە و لە سەرەتای تشرینی یەکەم دادەخرێت.",
+    "deadline_note_kmr": "Serlêdana dora 2027-2028 di 6ê Cotmehê 2026 de girt. Her sal di Tebaxê de vedibe û di destpêka Cotmehê de digire.",
+    "covers": [
+      "الأقساط الدراسية كاملة لسنة ماجستير واحدة",
+      "راتب شهري للمعيشة",
+      "تذاكر سفر ذهاباً وإياباً",
+      "رسوم التأشيرة وبدل وصول"
+    ],
+    "covers_ckb": [
+      "کرێی خوێندنی تەواو بۆ ساڵێکی ماستەر",
+      "مووچەی مانگانەی ژیان",
+      "بلیتی فڕۆکە چوون و گەڕانەوە",
+      "کرێی ڤیزا و پارەی گەیشتن"
+    ],
+    "covers_kmr": [
+      "Heqê xwendinê yê tevahî ji bo salek master",
+      "Mûçeya mehane ya jiyanê",
+      "Bilêta balafirê çûn û hatin",
+      "Heqê vîzeyê û alîkariya gihîştinê"
+    ],
+    "acceptance_rate": "تنافسية عالية",
+    "status": "upcoming",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "notes_ar": "للخريجين فقط: يشترط إكمال البكالوريوس وخبرة عمل لا تقل عن سنتين (2,800 ساعة) والعودة إلى العراق لمدة سنتين بعد التخرج. غير مناسبة لطلبة الصف الثاني عشر الآن لكنها خيار مهم بعد التخرج.",
+    "notes_ckb": "تەنها بۆ دەرچووان: پێویستە بەکالۆریۆس تەواو کرابێت و لانیکەم دوو ساڵ ئەزموونی کار (2,800 کاتژمێر) هەبێت و دوای تەواوبوون دوو ساڵ بگەڕێیتەوە عێراق. بۆ خوێندکارانی پۆلی 12 ئێستا نییە، بەڵام هەلێکی گرنگە دوای دەرچوون.",
+    "notes_kmr": "Tenê ji bo mezûnan: divê bakaloryos temam be, herî kêm du sal ezmûna kar (2,800 saet) hebe û piştî xwendinê du salan vegerî Iraqê. Niha ji bo xwendekarên pola 12 ne guncaw e lê piştî mezûnbûnê hilbijarkeke girîng e."
+  },
+  {
+    "id": "sch-014",
+    "name": "Fulbright Foreign Student Program (Iraq)",
+    "name_ar": "برنامج فولبرايت للطلبة الأجانب (العراق)",
+    "name_ckb": "بەرنامەی فوڵبرایت بۆ خوێندکارانی بیانی (عێراق)",
+    "name_kmr": "Bernameya Fulbright ji bo Xwendekarên Biyanî (Iraq)",
+    "country": "الولايات المتحدة الأمريكية",
+    "country_flag": "🇺🇸",
+    "provider": "U.S. Department of State / AMIDEAST Iraq",
+    "degree_levels": [
+      "masters"
+    ],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": [
+        "Iraqi"
+      ],
+      "refugee_idp_eligible": false,
+      "survivor_eligible": false,
+      "must_return": true,
+      "language_requirements": [
+        "TOEFL iBT أو IELTS (الاختبار يُجرى بعد الترشيح الأولي)"
+      ]
+    },
+    "application_url": "https://www.amideast.org/our-work/find-a-scholarship/fulbright-program/iraq",
+    "deadline": "2027-05-01",
+    "deadline_estimated": true,
+    "deadline_note": "أُغلقت دورة 2027-2028 في 1 أيار 2026. الدورة التالية تُعلن عادةً في شباط/آذار وتُغلق مطلع أيار.",
+    "deadline_note_ckb": "خولی 2027-2028 لە 1ی ئایاری 2026 داخرا. خولی داهاتوو بەزۆری لە شوبات/ئازار ڕادەگەیەنرێت و لە سەرەتای ئایار دادەخرێت.",
+    "deadline_note_kmr": "Dora 2027-2028 di 1ê Gulanê 2026 de girt. Dora bê bi gelemperî di Sibat/Adarê de tê ragihandin û di destpêka Gulanê de digire.",
+    "covers": [
+      "الأقساط الدراسية كاملة",
+      "راتب شهري",
+      "تذاكر السفر",
+      "تأمين صحي",
+      "دعم أكاديمي ولغوي قبل السفر"
+    ],
+    "covers_ckb": [
+      "کرێی خوێندنی تەواو",
+      "مووچەی مانگانە",
+      "بلیتی فڕۆکە",
+      "بیمەی تەندروستی",
+      "پشتگیریی ئەکادیمی و زمانی پێش سەفەر"
+    ],
+    "covers_kmr": [
+      "Heqê xwendinê yê tevahî",
+      "Mûçeya mehane",
+      "Bilêtên balafirê",
+      "Bîmeya tenduristiyê",
+      "Piştgiriya akademîk û zimanî berî rêwîtiyê"
+    ],
+    "acceptance_rate": "تنافسية عالية",
+    "status": "upcoming",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "notes_ar": "للخريجين (ماجستير) المقيمين في العراق وقت التقديم. يلتزم المستفيد بالعودة إلى العراق لمدة سنتين بعد إكمال الدراسة.",
+    "notes_ckb": "بۆ دەرچووان (ماستەر) کە لە کاتی پێشکەشکردندا لە عێراق دەژین. وەرگیراو پابەندە دوای تەواوکردنی خوێندن دوو ساڵ بگەڕێتەوە عێراق.",
+    "notes_kmr": "Ji bo mezûnan (master) ku di dema serlêdanê de li Iraqê dijîn. Wergir piştî xwendinê divê du salan vegere Iraqê."
+  },
+  {
+    "id": "sch-015",
+    "name": "Japanese Government (MEXT) Scholarship – Undergraduate",
+    "name_ar": "منحة الحكومة اليابانية (MEXT) – بكالوريوس",
+    "name_ckb": "سکۆلەرشیپی حکومەتی ژاپۆن (MEXT) – بەکالۆریۆس",
+    "name_kmr": "Bursa Hikûmeta Japonyayê (MEXT) – Bakaloryos",
+    "country": "اليابان",
+    "country_flag": "🇯🇵",
+    "provider": "Ministry of Education, Culture, Sports, Science and Technology (MEXT) via Embassy of Japan in Iraq",
+    "degree_levels": [
+      "bachelor",
+      "masters",
+      "phd"
+    ],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": [
+        "Iraqi"
+      ],
+      "refugee_idp_eligible": false,
+      "survivor_eligible": false,
+      "max_age": 24,
+      "language_requirements": [
+        "سنة تحضيرية لتعلم اللغة اليابانية",
+        "امتحان تحريري في السفارة (رياضيات، إنكليزي، علوم)"
+      ]
+    },
+    "application_url": "https://www.iraq.emb-japan.go.jp/itpr_en/culture.html",
+    "deadline_estimated": true,
+    "deadline_note": "التقديم عبر سفارة اليابان في بغداد (ترشيح السفارة) للدراسة في العام التالي؛ يُفتح عادةً بين نيسان وحزيران. تحقّق من صفحة الثقافة والتعليم في موقع السفارة.",
+    "deadline_note_ckb": "پێشکەشکردن لەڕێگەی باڵیۆزخانەی ژاپۆن لە بەغدا (پاڵاوتنی باڵیۆزخانە) بۆ خوێندن لە ساڵی داهاتوو؛ بەزۆری لە نێوان نیسان و حوزەیران دەکرێتەوە. لاپەڕەی کولتوور و پەروەردەی ماڵپەڕی باڵیۆزخانە بپشکنە.",
+    "deadline_note_kmr": "Serlêdan bi rêya Balyozxaneya Japonyayê li Bexdayê (pêşniyara balyozxaneyê) ji bo xwendina sala bê; bi gelemperî di navbera Nîsan û Hezîranê de vedibe. Rûpela çand û perwerdeyê ya malpera balyozxaneyê kontrol bike.",
+    "covers": [
+      "الأقساط الدراسية كاملة",
+      "راتب شهري (نحو 117,000 ين)",
+      "تذاكر السفر ذهاباً وإياباً",
+      "سنة تحضيرية للغة اليابانية"
+    ],
+    "covers_ckb": [
+      "کرێی خوێندنی تەواو",
+      "مووچەی مانگانە (نزیکەی 117,000 یەن)",
+      "بلیتی فڕۆکە چوون و گەڕانەوە",
+      "ساڵێکی ئامادەیی بۆ زمانی ژاپۆنی"
+    ],
+    "covers_kmr": [
+      "Heqê xwendinê yê tevahî",
+      "Mûçeya mehane (nêzîkî 117,000 yen)",
+      "Bilêta balafirê çûn û hatin",
+      "Salek amadekariyê ji bo zimanê Japonî"
+    ],
+    "acceptance_rate": "عدد محدود جداً من المقاعد لكل دولة",
+    "status": "upcoming",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "notes_ar": "للبكالوريوس: العمر بين 17 و24 عاماً عند بدء الدراسة، ومعدل مرتفع في الثانوية. يشمل سنة تحضيرية للغة اليابانية قبل الجامعة. المواعيد تختلف كل عام وتحددها السفارة.",
+    "notes_ckb": "بۆ بەکالۆریۆس: تەمەن لە نێوان 17 و 24 ساڵ لە کاتی دەستپێکردنی خوێندن، و نمرەی بەرز لە ئامادەیی. ساڵێکی ئامادەیی زمانی ژاپۆنی پێش زانکۆ لەخۆدەگرێت. وادەکان هەموو ساڵێک دەگۆڕێن و باڵیۆزخانە دیاریان دەکات.",
+    "notes_kmr": "Ji bo bakaloryosê: temen di navbera 17 û 24 salî de di destpêka xwendinê de, û nîmreyeke bilind ya lîseyê. Salek amadekariya zimanê Japonî berî zanîngehê tê de ye. Dîrok her sal diguherin û balyozxane wan diyar dike."
+  },
+  {
+    "id": "sch-016",
+    "name": "Erasmus Mundus Joint Masters (European Union)",
+    "name_ar": "منح إيراسموس موندوس للماجستير المشترك (الاتحاد الأوروبي)",
+    "name_ckb": "سکۆلەرشیپی ئیراسمۆس موندوس بۆ ماستەری هاوبەش (یەکێتیی ئەوروپا)",
+    "name_kmr": "Bursa Erasmus Mundus ji bo Masterê Hevbeş (Yekîtiya Ewropayê)",
+    "country": "الاتحاد الأوروبي",
+    "country_flag": "🇪🇺",
+    "provider": "European Commission (Erasmus+)",
+    "degree_levels": [
+      "masters"
+    ],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": [
+        "Iraqi"
+      ],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": false,
+      "language_requirements": [
+        "شهادة لغة إنكليزية (IELTS/TOEFL) حسب البرنامج"
+      ]
+    },
+    "application_url": "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en",
+    "deadline_estimated": true,
+    "deadline_note": "أكثر من 200 برنامج، لكل منها موعده الخاص؛ أغلب مواعيد قبول 2027 تقع بين تشرين الأول 2026 وآذار 2027. اختر البرنامج من الدليل الرسمي وتحقق من موعده.",
+    "deadline_note_ckb": "زیاتر لە 200 بەرنامە، هەریەکە وادەی خۆی هەیە؛ زۆربەی وادەکانی وەرگیرانی 2027 لە نێوان تشرینی یەکەمی 2026 و ئازاری 2027 دان. بەرنامەکە لە کاتەلۆگی فەرمی هەڵبژێرە و وادەکەی بپشکنە.",
+    "deadline_note_kmr": "Zêdetirî 200 bername, her yek bi dîroka xwe; piranîya dîrokên wergirtina 2027 di navbera Cotmeh 2026 û Adar 2027 de ne. Bernameyê ji kataloga fermî hilbijêre û dîroka wê kontrol bike.",
+    "covers": [
+      "الأقساط الدراسية كاملة",
+      "منحة شهرية (نحو 1,400 يورو)",
+      "تكاليف السفر والتأشيرة",
+      "الدراسة في جامعتين أوروبيتين على الأقل"
+    ],
+    "covers_ckb": [
+      "کرێی خوێندنی تەواو",
+      "مووچەی مانگانە (نزیکەی 1,400 یۆرۆ)",
+      "تێچووی سەفەر و ڤیزا",
+      "خوێندن لە لانیکەم دوو زانکۆی ئەوروپی"
+    ],
+    "covers_kmr": [
+      "Heqê xwendinê yê tevahî",
+      "Mûçeya mehane (nêzîkî 1,400 euro)",
+      "Mesrefên rêwîtî û vîzeyê",
+      "Xwendin li herî kêm du zanîngehên Ewropî"
+    ],
+    "acceptance_rate": "تنافسية عالية",
+    "status": "open",
+    "last_verified": "2026-11-16",
+    "verified_by": "Renisan",
+    "notes_ar": "للخريجين (ماجستير). لا يوجد حد للعمر. التقديم مباشر إلى اتحاد الجامعات المنظِّم لكل برنامج، ولا يحتاج ترشيحاً حكومياً.",
+    "notes_ckb": "بۆ دەرچووان (ماستەر). سنووری تەمەن نییە. پێشکەشکردن ڕاستەوخۆ بۆ کۆنسۆرتیۆمی زانکۆکانی هەر بەرنامەیەکە و پێویستی بە پاڵاوتنی حکومی نییە.",
+    "notes_kmr": "Ji bo mezûnan (master). Sînorê temenî tune. Serlêdan rasterast ji konsorsiyûma zanîngehên her bernameyê re ye û ne hewceyî pêşniyara hikûmetê ye."
   }
 ]

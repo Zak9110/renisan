@@ -10,6 +10,11 @@ import type {
   ScholarshipFilters
 } from './types';
 import { getEffectiveStatus } from './status.ts';
+import { matchesQuery } from './text.ts';
+import { localizePlace } from './places.ts';
+
+/** A place name in every language, so searches match whatever the student sees on screen. */
+const allPlaceNames = (name: string) => [name, localizePlace(name, 'ckb'), localizePlace(name, 'kmr')];
 
 /**
  * Filter Federal (Central Admissions) cutoffs by student score, stream, governorate, study type, channel.
@@ -19,10 +24,13 @@ export function filterFederalCutoffs(
   data: FederalCutoff[],
   filters: CheckerFilters
 ): FederalCutoff[] {
+  const maxScore = filters.show_reach ? (filters.score + 2.0) : filters.score;
+  const q = filters.search?.trim();
+
   return data
     .filter(item => {
-      // Minimum score threshold
-      if (typeof filters.score === 'number' && filters.score < item.min_average) {
+      // Minimum score threshold (with optional reach +2.0%)
+      if (typeof filters.score === 'number' && maxScore < item.min_average) {
         return false;
       }
 
@@ -67,9 +75,38 @@ export function filterFederalCutoffs(
         return false;
       }
 
+      // Gender: single-sex programmes (nursing, women's colleges) only show for that gender
+      if (filters.gender && filters.gender !== 'both' && item.gender !== 'both' && item.gender !== filters.gender) {
+        return false;
+      }
+
+      // Programme level: bachelor colleges vs. 2-year technical institutes
+      if (filters.level && (item.level ?? 'college') !== filters.level) {
+        return false;
+      }
+
+      // Keyword search (Arabic/Kurdish/Latin-insensitive)
+      if (q && !matchesQuery(q, [
+        item.university, item.university_en, item.university_ku, item.college, item.college_en, item.college_ku,
+        item.department, item.department_en, item.campus, item.campus_en, ...allPlaceNames(item.governorate)
+      ])) {
+        return false;
+      }
+
       return true;
     })
-    .sort((a, b) => b.min_average - a.min_average);
+    .sort((a, b) => {
+      if (filters.sort_by === 'cutoff_asc') {
+        return a.min_average - b.min_average;
+      }
+      if (filters.sort_by === 'closest') {
+        return Math.abs(filters.score - a.min_average) - Math.abs(filters.score - b.min_average);
+      }
+      if (filters.sort_by === 'alpha') {
+        return a.university.localeCompare(b.university) || a.college.localeCompare(b.college) || b.min_average - a.min_average;
+      }
+      return b.min_average - a.min_average;
+    });
 }
 
 /**
@@ -80,10 +117,13 @@ export function filterKRGCutoffs(
   data: KRGCutoff[],
   filters: CheckerFilters
 ): KRGCutoff[] {
+  const maxScore = filters.show_reach ? (filters.score + 2.0) : filters.score;
+  const q = filters.search?.trim();
+
   return data
     .filter(item => {
-      // Minimum composite score threshold
-      if (typeof filters.score === 'number' && filters.score < item.min_composite_score) {
+      // Minimum composite score threshold (with optional reach +2.0%)
+      if (typeof filters.score === 'number' && maxScore < item.min_composite_score) {
         return false;
       }
 
@@ -119,9 +159,33 @@ export function filterKRGCutoffs(
         return false;
       }
 
+      if (filters.gender && filters.gender !== 'both' && item.gender !== 'both' && item.gender !== filters.gender) {
+        return false;
+      }
+
+      // Keyword search (Arabic/Kurdish/Latin-insensitive)
+      if (q && !matchesQuery(q, [
+        item.university, item.university_en, item.university_ku,
+        item.college, item.college_en, item.college_ku,
+        item.department, item.department_en, item.department_ku, ...allPlaceNames(item.city)
+      ])) {
+        return false;
+      }
+
       return true;
     })
-    .sort((a, b) => b.min_composite_score - a.min_composite_score);
+    .sort((a, b) => {
+      if (filters.sort_by === 'cutoff_asc') {
+        return a.min_composite_score - b.min_composite_score;
+      }
+      if (filters.sort_by === 'closest') {
+        return Math.abs(filters.score - a.min_composite_score) - Math.abs(filters.score - b.min_composite_score);
+      }
+      if (filters.sort_by === 'alpha') {
+        return a.university.localeCompare(b.university) || a.college.localeCompare(b.college) || b.min_composite_score - a.min_composite_score;
+      }
+      return b.min_composite_score - a.min_composite_score;
+    });
 }
 
 /**
@@ -140,6 +204,7 @@ export function filterScholarships(
     discontinued: 3
   };
   const statusOf = (s: Scholarship) => getEffectiveStatus(s, today);
+  const q = filters.search?.trim();
 
   return data
     .filter(item => {
@@ -175,6 +240,15 @@ export function filterScholarships(
         filters.refugee_eligible &&
         !item.eligibility.refugee_idp_eligible
       ) {
+        return false;
+      }
+
+      // Search keyword filter (Arabic/Kurdish/Latin-insensitive)
+      if (q && !matchesQuery(q, [
+        item.name, item.name_ar, item.name_ckb, item.name_kmr, item.provider,
+        ...allPlaceNames(item.country),
+        ...item.covers, ...(item.covers_ckb ?? []), ...(item.covers_kmr ?? [])
+      ])) {
         return false;
       }
 
