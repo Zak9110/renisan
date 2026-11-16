@@ -1,0 +1,24 @@
+/**
+ * Renisan Design System — Typography & Font Declarations
+ * Uses Vazirmatn for Arabic and Sorani Kurdish (RTL)
+ * Modern system-ui font stack for Kurmanji Kurdish in Latin script (LTR)
+ */
+
+/* Base font family assignment */
+:root {
+  font-family: var(--font-arabic);
+}
+
+/* RTL languages (Arabic and Sorani Kurdish) use Vazirmatn */
+:root[dir="rtl"],
+html[dir="rtl"],
+body[dir="rtl"] {
+  font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+/* LTR languages (Kurmanji Kurdish Latin script) use modern Latin system-ui stack */
+:root[dir="ltr"],
+html[dir="ltr"],
+body[dir="ltr"] {
+  font-family: var(--font-latin);
+}

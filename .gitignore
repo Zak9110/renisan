@@ -1,0 +1,14 @@
+# Dependencies and builds
+node_modules/
+dist/
+renisan/node_modules/
+renisan/dist/
+
+# Original zip archive
+*.zip
+*.tar.gz
+
+# System files
+.DS_Store
+Thumbs.db
+*.log

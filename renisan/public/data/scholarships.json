@@ -1,0 +1,366 @@
+[
+  {
+    "id": "sch-001",
+    "name": "Türkiye Bursları (Government of Türkiye)",
+    "name_ar": "منحة الحكومة التركية (Türkiye Bursları)",
+    "name_ckb": "سکۆلەرشیپی حکومەتی تورکیا (تورکیە بورسلەری)",
+    "name_kmr": "Bursa Hikûmeta Tirkiyeyê (Türkiye Bursları)",
+    "country": "تركيا",
+    "country_flag": "🇹🇷",
+    "provider": "Presidency for Turks Abroad and Related Communities (YTB)",
+    "degree_levels": ["bachelor", "masters", "phd"],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "min_gpa": 70,
+      "max_age": 21,
+      "language_requirements": ["سنة تحضيرية للغة التركية ممولة بالكامل"]
+    },
+    "application_url": "https://www.turkiyeburslari.gov.tr",
+    "deadline": "2025-02-20",
+    "deadline_note": "تفتح سنوياً في شهر كانون الثاني (يناير) وتغلق في 20 شباط (فبراير)",
+    "covers": [
+      "الرسوم الدراسية كاملة",
+      "راتب شهري مجزي",
+      "السكن الجامعي الحكومي",
+      "تذاكر الطيران ذهاباً وإياباً",
+      "تأمين صحي شامل",
+      "سنة تحضيرية لتعلم اللغة التركية"
+    ],
+    "acceptance_rate": "3% - 4% (تنافسية عالية)",
+    "status": "upcoming",
+    "last_verified": "2024-11-10",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "الحد الأدنى لمعدل التقديم للطب البشري وطب الأسنان والصيدلة هو 90%، بينما للتخصصات الهندسية والإنسانية 70%. يجب ألا يتجاوز عمر المتقدم للبكالوريوس 21 عاماً.",
+    "notes_ckb": "کەمترین نمرە بۆ کۆلێژە پزیشکییەکان 90% و بۆ بەشەکانی تر 70%یە. تەمەن بۆ بەکالۆریۆس نابێت لە 21 ساڵ زیاتر بێت."
+  },
+  {
+    "id": "sch-002",
+    "name": "Stipendium Hungaricum Scholarship Programme",
+    "name_ar": "منحة الحكومة الهنغارية (Stipendium Hungaricum)",
+    "name_ckb": "سکۆلەرشیپی حکومەتی مەجەڕ (مەجارستان)",
+    "name_kmr": "Bursa Hikûmeta Macaristanê (Stipendium Hungaricum)",
+    "country": "المجر",
+    "country_flag": "🇭🇺",
+    "provider": "Tempus Public Foundation & Hungarian Government",
+    "degree_levels": ["bachelor", "masters", "phd"],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": false,
+      "min_gpa": 75,
+      "language_requirements": ["IELTS 5.5+ أو TOEFL iBT أو اختبار الجامعة المجري"]
+    },
+    "application_url": "https://stipendiumhungaricum.hu",
+    "deadline": "2025-01-15",
+    "deadline_note": "الموعد النهائي السنوي 15 كانون الثاني (يناير)",
+    "covers": [
+      "إعفاء كامل من الأجور الجامعية",
+      "مخصصات مالية شهرية",
+      "سكن جامعي أو بدل سكن شهري",
+      "تأمين صحي"
+    ],
+    "acceptance_rate": "~16% عالمياً",
+    "status": "open",
+    "last_verified": "2024-11-12",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "تنبيه هام: يتطلب التقديم ترشيحاً رسمياً من الجهة الشريكة في العراق (وزارة التعليم العالي الاتحادية ببغداد أو وزارة التعليم العالي في حكومة إقليم كوردستان كشريكين منفصلين).",
+    "notes_ckb": "گرنگ: پێویستی بە پەسەندکردنی وەزارەتی خوێندنی باڵای عێراق یان وەزارەتی خوێندنی باڵای هەرێمی کوردستان هەیە."
+  },
+  {
+    "id": "sch-003",
+    "name": "UNHCR Albert Einstein Academic Refugee Initiative (DAFI)",
+    "name_ar": "منحة دافي للطلبة اللاجئين (UNHCR DAFI Iraq)",
+    "name_ckb": "سکۆلەرشیپی دافی (DAFI) بۆ پەنابەران",
+    "name_kmr": "Bursa DAFI ya Penaberan (UNHCR)",
+    "country": "العراق / محلي",
+    "country_flag": "🇮🇶",
+    "provider": "UNHCR & German Federal Foreign Office",
+    "degree_levels": ["bachelor"],
+    "type": "full_scholarship",
+    "eligibility": {
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "min_gpa": 60,
+      "max_age": 28
+    },
+    "application_url": "https://www.unhcr.org/dafi-scholarships",
+    "deadline": "مغلقة نهائياً",
+    "deadline_note": "توقفت استمارات القبول الجديدة في العراق بدءاً من 2025-2026",
+    "covers": [
+      "الرسوم الدراسية الجامعية",
+      "بدل نقل وإعاشة شهري",
+      "مخصصات الكتب والمراجع"
+    ],
+    "status": "discontinued",
+    "last_verified": "2024-11-14",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "تنبيه مصداقية وتحديث: أوقفت المفوضية السامية للأمم المتحدة لشؤون اللاجئين (UNHCR) قبول الدفعات الجديدة لمنحة DAFI في العراق ابتداءً من العام الأكاديمي 2025-2026، مع استمرار تمويل الطلبة المقبولين سابقاً فقط.",
+    "notes_ckb": "ئاگاداریی فەرمی: وەرگرتنی خوێندکاری نوێ بۆ سکۆلەرشیپی دافی لە عێراق لە ساڵی 2025-2026ەوە راگیراوە."
+  },
+  {
+    "id": "sch-004",
+    "name": "AUIS Hiwa Foundation Scholarship",
+    "name_ar": "منحة مؤسسة هيوا في الجامعة الأمريكية بالسليمانية (AUIS)",
+    "name_ckb": "سکۆلەرشیپی دەزگای هیوا لە زانکۆی ئەمریکی (AUIS)",
+    "name_kmr": "Bursa Weqfa Hiwa li Zanîngeha Amerîkî li Silêmaniyê",
+    "country": "إقليم كوردستان - العراق",
+    "country_flag": "🇮🇶",
+    "provider": "Hiwa Foundation & AUIS",
+    "degree_levels": ["bachelor"],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "min_gpa": 85,
+      "language_requirements": ["اختبار التوفل التأسيسي للجامعة أو IELTS 6.0"]
+    },
+    "application_url": "https://auis.edu.krd/admissions/scholarships",
+    "deadline": "2025-08-15",
+    "deadline_note": "تفتح مع التقديم على الفصل الخريفي",
+    "covers": [
+      "أجور دراسية كاملة 100%",
+      "بدل سكن جامعي للطلبة من خارج السليمانية (بما في ذلك دهوك وسنجار ومحافظات الوسط والجنوب)",
+      "مخصصات شهرية"
+    ],
+    "acceptance_rate": "~5% (محدودة وتنافسية)",
+    "status": "upcoming",
+    "last_verified": "2024-11-10",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "منحة مخصصة للطلبة المتفوقين أكاديمياً الذين يواجهون ظروفاً اقتصادية واجتماعية قاهرة. تمنح أولوية خاصة لطلبة المناطق المتضررة والنازحين.",
+    "notes_ckb": "سکۆلەرشیپێک بۆ خوێندکارە زیرەک و کەمدرامەتەکان. گرنگی تایبەت بە قوتابیانی ئاوارە و ناوچە زیانلێکەوتووەکان دەدرێت."
+  },
+  {
+    "id": "sch-005",
+    "name": "AUIS Acuity & Merit-Based Financial Aid",
+    "name_ar": "مساعدات ومنح التميز الأكاديمي في AUIS",
+    "name_ckb": "هاوکاری دارایی و نمرەی بەرز لە AUIS",
+    "name_kmr": "Harîkariya Darayî li Zanîngeha Amerîkî AUIS",
+    "country": "إقليم كوردستان - العراق",
+    "country_flag": "🇮🇶",
+    "provider": "American University of Iraq, Sulaimani",
+    "degree_levels": ["bachelor"],
+    "type": "partial_scholarship",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "min_gpa": 80
+    },
+    "application_url": "https://auis.edu.krd/financial-aid",
+    "deadline": "2025-09-01",
+    "covers": [
+      "خصم من 20% إلى 80% من الأجور الدراسية بناءً على معدل الصف 12 واختبار الكفاءة"
+    ],
+    "status": "upcoming",
+    "last_verified": "2024-11-10",
+    "verified_by": "فريق تدقيق رينيسان"
+  },
+  {
+    "id": "sch-006",
+    "name": "AUIB Need-Based Financial Aid & Merit Scholarships",
+    "name_ar": "منح ومساعدات الجامعة الأمريكية في بغداد (AUIB)",
+    "name_ckb": "سکۆلەرشیپی زانکۆی ئەمریکی لە بەغداد (AUIB)",
+    "name_kmr": "Bursa Zanîngeha Amerîkî li Bexdayê (AUIB)",
+    "country": "العراق",
+    "country_flag": "🇮🇶",
+    "provider": "American University of Iraq - Baghdad",
+    "degree_levels": ["bachelor"],
+    "type": "partial_scholarship",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "min_gpa": 75
+    },
+    "application_url": "https://auib.edu.iq/tuition-financial-aid",
+    "deadline": "2025-08-30",
+    "covers": [
+      "منح جزئية وكاملة للأجور الدراسية للطلبة المتميزين وذوي الدخل المحدود"
+    ],
+    "status": "upcoming",
+    "last_verified": "2024-11-10",
+    "verified_by": "فريق تدقيق رينيسان"
+  },
+  {
+    "id": "sch-007",
+    "name": "Iraqi Young Leaders Exchange Program (IYLEP)",
+    "name_ar": "برنامج القيادات العراقية الشابة (IYLEP)",
+    "name_ckb": "بەرنامەی سەرکردە گەنجەکانی عێراق (IYLEP)",
+    "name_kmr": "Bernameya Rêberên Ciwanên Iraqê (IYLEP)",
+    "country": "الولايات المتحدة الأمريكية",
+    "country_flag": "🇺🇸",
+    "provider": "U.S. Department of State & World Learning",
+    "degree_levels": ["bachelor"],
+    "type": "exchange",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "language_requirements": ["إجادة المحادثة باللغة الإنجليزية"]
+    },
+    "application_url": "https://www.worldlearning.org/program/iraqi-young-leaders-exchange-program",
+    "deadline": "2024-12-15",
+    "deadline_note": "برنامج صيفي سنوي، يفتح التقديم في الخريف",
+    "covers": [
+      "تذاكر الطيران للولايات المتحدة والعودة",
+      "الإقامة والسكن مع عائلات أمريكية وفي جامعات",
+      "التغذية والتنقلات الداخلية كاملة",
+      "تأمين صحي للسفر"
+    ],
+    "acceptance_rate": "~3%",
+    "status": "open",
+    "last_verified": "2024-11-05",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "ملاحظة توضيحية: هذا برنامج تبادل قيادي وثقافي لمدة 4 أسابيع في أمريكا وليس منحة بكالوريوس للحصول على شهادة جامعية.",
+    "notes_ckb": "تێبینی: ئەمە بەرنامەیەکی ئاڵوگۆڕی سەرکردایەتی هاوینەیە بۆ ماوەی مانگێک لە ئەمریکا، نەک سکۆلەرشیپی بەدەستهێنانی بڕوانامەی زانکۆ."
+  },
+  {
+    "id": "sch-008",
+    "name": "Global Undergraduate Exchange Program (Global UGRAD)",
+    "name_ar": "برنامج التبادل الجامعي العالمي (Global UGRAD)",
+    "name_ckb": "بەرنامەی گلۆباڵ یوگراد بۆ خوێندکارانی زانکۆ",
+    "name_kmr": "Bernameya Guhertina Xwendekaran Global UGRAD",
+    "country": "الولايات المتحدة الأمريكية",
+    "country_flag": "🇺🇸",
+    "provider": "U.S. Department of State & World Learning",
+    "degree_levels": ["bachelor"],
+    "type": "exchange",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "language_requirements": ["TOEFL 48+ أو ما يعادله"]
+    },
+    "application_url": "https://iq.usembassy.gov/education-culture/exchange-programs",
+    "deadline": "2024-12-15",
+    "covers": [
+      "فصل دراسي كامل في إحدى الجامعات الأمريكية",
+      "تذاكر الطيران، السكن، الإعاشة، والتأمين الصحي"
+    ],
+    "status": "open",
+    "last_verified": "2024-11-08",
+    "verified_by": "فريق تدقيق رينيسان"
+  },
+  {
+    "id": "sch-009",
+    "name": "Chinese Government Scholarship (CSC) - Bilateral Program",
+    "name_ar": "منحة الحكومة الصينية (CSC - البرنامج الثنائي)",
+    "name_ckb": "سکۆلەرشیپی حکومەتی چین (CSC)",
+    "name_kmr": "Bursa Hikûmeta Çînê (CSC)",
+    "country": "الصين",
+    "country_flag": "🇨🇳",
+    "provider": "China Scholarship Council & Iraqi MOHESR",
+    "degree_levels": ["bachelor", "masters", "phd"],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": false,
+      "min_gpa": 80,
+      "max_age": 25
+    },
+    "application_url": "https://www.campuschina.org",
+    "deadline": "2025-02-15",
+    "covers": [
+      "الأجور الدراسية",
+      "السكن الجامعي",
+      "راتب شهري",
+      "تأمين طبي شامل"
+    ],
+    "status": "upcoming",
+    "last_verified": "2024-11-01",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "يتم الإعلان عنها سنوياً عبر دائرة البعثات والعلاقات الثقافية في وزارة التعليم العالي الاتحادية ببغداد."
+  },
+  {
+    "id": "sch-010",
+    "name": "Islamic Development Bank (IsDB) Scholarship Programme",
+    "name_ar": "منحة البنك الإسلامي للتنمية (IsDB)",
+    "name_ckb": "سکۆلەرشیپی بانکی گەشەپێدانی ئیسلامی (IsDB)",
+    "name_kmr": "Bursa Banka Pêşketina Îslamî (IsDB)",
+    "country": "دول متعددة",
+    "country_flag": "🌐",
+    "provider": "Islamic Development Bank",
+    "degree_levels": ["bachelor", "masters", "phd"],
+    "type": "full_scholarship",
+    "eligibility": {
+      "nationalities": ["Iraqi"],
+      "refugee_idp_eligible": true,
+      "min_gpa": 75,
+      "max_age": 24
+    },
+    "application_url": "https://www.isdb.org/scholarships",
+    "deadline": "2025-02-28",
+    "covers": [
+      "أجور التعليم الجامعي",
+      "راتب شهري لتغطية المعيشة",
+      "بدل كتب وملابس",
+      "تأمين صحي وتذاكر سفر"
+    ],
+    "status": "upcoming",
+    "last_verified": "2024-11-05",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "منحة مستردة بدون فوائد لدعم التنمية والكوادر العلمية المتخصصة في الطب والهندسة والعلوم والتكنولوجيا."
+  },
+  {
+    "id": "sch-011",
+    "name": "SPARK Higher Education Support Programme for Youth",
+    "name_ar": "برنامج سبارك (SPARK) لدعم التعليم العالي للشباب والنازحين",
+    "name_ckb": "بەرنامەی سپارک (SPARK) بۆ خوێندنی باڵا",
+    "name_kmr": "Bernameya SPARK a Xwendina Bilind",
+    "country": "العراق وإقليم كوردستان",
+    "country_flag": "🇮🇶",
+    "provider": "SPARK & European Union Trust Fund",
+    "degree_levels": ["bachelor"],
+    "type": "partial_scholarship",
+    "eligibility": {
+      "nationalities": ["Iraqi", "Syrian"],
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "min_gpa": 65
+    },
+    "application_url": "https://spark.ngo/programmes/higher-education",
+    "deadline": "2025-07-31",
+    "covers": [
+      "دعم الأجور الدراسية في المعاهد والجامعات التقنية في إقليم كوردستان ونينوى",
+      "تدريب على المهارات الرقمية وريادة الأعمال"
+    ],
+    "status": "upcoming",
+    "last_verified": "2024-11-10",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "يركز على تمكين الشباب النازحين واللاجئين والمجتمعات المضيفة في دهوك وأربيل والموصل."
+  },
+  {
+    "id": "sch-012",
+    "name": "German DAAD - Hilde Domin Programme",
+    "name_ar": "منحة هيلدا دومين للطلبة المعرضين للمخاطر (DAAD)",
+    "name_ckb": "سکۆلەرشیپی هیلدا دۆمین (DAAD ئەڵمانیا)",
+    "name_kmr": "Bursa Hilde Domin a DAAD ya Almanyayê",
+    "country": "ألمانيا",
+    "country_flag": "🇩🇪",
+    "provider": "DAAD & German Federal Foreign Office",
+    "degree_levels": ["bachelor", "masters", "phd"],
+    "type": "full_scholarship",
+    "eligibility": {
+      "refugee_idp_eligible": true,
+      "survivor_eligible": true,
+      "language_requirements": ["اللغة الإنجليزية أو الألمانية"]
+    },
+    "application_url": "https://www.daad.de/en/study-and-research-in-germany/scholarships/hilde-domin-programm",
+    "deadline": "2025-03-15",
+    "covers": [
+      "راتب شهري (934 يورو للبكالوريوس)",
+      "تأمين صحي",
+      "تذاكر السفر وتكاليف دورات اللغة التمهيدية"
+    ],
+    "status": "open",
+    "last_verified": "2024-11-12",
+    "verified_by": "فريق تدقيق رينيسان",
+    "notes_ar": "مخصصة للطلبة المهددين بالاضطهاد أو الذين حُرموا من حقهم في التعليم لأسباب أمنية أو سياسية أو دينية أو عرقية. يتطلب ترشيحاً من منظمة موثوقة.",
+    "notes_ckb": "تایبەتە بەو خوێندکارانەی لەژێر مەترسیدان یان لە خوێندن بێبەشکراون."
+  }
+]
