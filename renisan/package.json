@@ -6,10 +6,11 @@
   "description": "Multilingual eligibility checker & scholarship directory for Iraqi & Kurdish Grade-12 students",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "node tests/verify.js && tsc && vite build",
     "preview": "vite preview",
     "test": "node tests/verify.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check": "tsc && node tests/verify.js"
   },
   "dependencies": {
     "preact": "^10.25.0"
@@ -23,5 +24,8 @@
   "allowScripts": {
     "esbuild@0.25.12": true,
     "fsevents@2.3.3": true
+  },
+  "engines": {
+    "node": ">=22.18"
   }
 }

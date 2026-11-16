@@ -9,6 +9,7 @@ import { normalizeScoreInput, computeKRGComposite, validateScore } from '../src/
 import { filterFederalCutoffs, filterKRGCutoffs, filterScholarships } from '../src/lib/search.ts';
 import { getEffectiveStatus, isDeadlinePassed } from '../src/lib/status.ts';
 import { parseCheckerState, serializeCheckerState, DEFAULT_CHECKER_STATE } from '../src/lib/url-state.ts';
+import { localizePlace } from '../src/lib/places.ts';
 import { ar } from '../src/lib/translations/ar.ts';
 import { ckb } from '../src/lib/translations/ckb.ts';
 import { kmr } from '../src/lib/translations/kmr.ts';
@@ -159,6 +160,20 @@ suite('Translations complete in all languages', () => {
     for (const k of ['resultsCount', 'scholarshipsFound']) {
       assert(dict[k].includes('{count}'), `${name}.${k} must contain {count}`);
     }
+  }
+});
+
+suite('Every place name in the data has Kurdish translations', () => {
+  const places = new Set([
+    ...fedData.map((r) => r.governorate),
+    ...krgData.map((r) => r.city),
+    ...schData.map((s) => s.country)
+  ]);
+  for (const p of places) {
+    for (const lang of ['ckb', 'kmr']) {
+      assert.notStrictEqual(localizePlace(p, lang), p, `Missing ${lang} name for "${p}" in src/lib/places.ts`);
+    }
+    assert.strictEqual(localizePlace(p, 'ar'), p);
   }
 });
 
