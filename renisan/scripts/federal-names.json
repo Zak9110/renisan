@@ -750,6 +750,186 @@
     "هندسة المواد": {
       "en": "Materials Engineering",
       "ku": "ئەندازیاری مادەکان"
+    },
+    "المعهد الطبي": {
+      "en": "Medical Institute",
+      "ku": "پەیمانگای پزیشکی"
+    },
+    "المعهد التقني بابل": {
+      "en": "Technical Institute – Babylon",
+      "ku": "پەیمانگای تەکنیکی بابل"
+    },
+    "المعهد التقني النجف": {
+      "en": "Technical Institute – Najaf",
+      "ku": "پەیمانگای تەکنیکی نەجەف"
+    },
+    "المعهد التقني الناصرية": {
+      "en": "Technical Institute – Nasiriyah",
+      "ku": "پەیمانگای تەکنیکی ناسریە"
+    },
+    "المعهد التقني الكوفة": {
+      "en": "Technical Institute – Kufa",
+      "ku": "پەیمانگای تەکنیکی کوفە"
+    },
+    "المعهد التقني القادسية": {
+      "en": "Technical Institute – Qadisiyah",
+      "ku": "پەیمانگای تەکنیکی قادسیە"
+    },
+    "المعهد التقني العمارة": {
+      "en": "Technical Institute – Amarah",
+      "ku": "پەیمانگای تەکنیکی عەمارە"
+    },
+    "المعهد التقني الدور(صلاح الدين)": {
+      "en": "Technical Institute – Al-Dour (Salah al-Din)",
+      "ku": "پەیمانگای تەکنیکی دەور (سەڵاحەدین)"
+    },
+    "المعهد التقني كركوك": {
+      "en": "Technical Institute – Kirkuk",
+      "ku": "پەیمانگای تەکنیکی کەرکووک"
+    },
+    "المعهد التقني كربلاء": {
+      "en": "Technical Institute – Karbala",
+      "ku": "پەیمانگای تەکنیکی کەربەلا"
+    },
+    "المعهد التقني الموصل": {
+      "en": "Technical Institute – Mosul",
+      "ku": "پەیمانگای تەکنیکی مووسڵ"
+    },
+    "المعهد التقني المسيب": {
+      "en": "Technical Institute – Musayyib",
+      "ku": "پەیمانگای تەکنیکی موسەییب"
+    },
+    "المعهد التقني الشطرة": {
+      "en": "Technical Institute – Shatrah",
+      "ku": "پەیمانگای تەکنیکی شەترە"
+    },
+    "المعهد التقني السماوة": {
+      "en": "Technical Institute – Samawah",
+      "ku": "پەیمانگای تەکنیکی سەماوە"
+    },
+    "المعهد التقني الرميثة": {
+      "en": "Technical Institute – Rumaitha",
+      "ku": "پەیمانگای تەکنیکی ڕومەیسە"
+    },
+    "المعهد التقني الحويجة": {
+      "en": "Technical Institute – Hawija",
+      "ku": "پەیمانگای تەکنیکی هەویجە"
+    },
+    "المعهد التقني القرنة": {
+      "en": "Technical Institute – Qurna",
+      "ku": "پەیمانگای تەکنیکی قورنە"
+    },
+    "المعهد التقني التكنولوجي": {
+      "en": "Technological Technical Institute",
+      "ku": "پەیمانگای تەکنیکی تەکنەلۆژی"
+    },
+    "المعهد التقني الاداري": {
+      "en": "Administrative Technical Institute",
+      "ku": "پەیمانگای تەکنیکی کارگێڕی"
+    },
+    "معهد الفنون التطبيقية": {
+      "en": "Institute of Applied Arts",
+      "ku": "پەیمانگای هونەرە پراکتیکییەکان"
+    },
+    "معهد التكنلوجيا": {
+      "en": "Institute of Technology",
+      "ku": "پەیمانگای تەکنەلۆژیا"
+    },
+    "معهد الادارة التقني": {
+      "en": "Technical Institute of Administration",
+      "ku": "پەیمانگای تەکنیکی کارگێڕی"
+    },
+    "معهد الادارة": {
+      "en": "Institute of Administration",
+      "ku": "پەیمانگای کارگێڕی"
+    },
+    "معهد اعداد المدربين التقنيين": {
+      "en": "Technical Trainers Institute",
+      "ku": "پەیمانگای ئامادەکردنی ڕاهێنەرانی تەکنیکی"
+    },
+    "كلية الهندسة الكيميائية": {
+      "en": "College of Chemical Engineering",
+      "ku": "کۆلێژی ئەندازیاری کیمیایی"
+    },
+    "كلية البوليتكنك بغداد": {
+      "en": "Baghdad Polytechnic College",
+      "ku": "کۆلێژی پۆلیتەکنیکی بەغدا"
+    },
+    "كلية البوليتكنك القرنة": {
+      "en": "Qurna Polytechnic College",
+      "ku": "کۆلێژی پۆلیتەکنیکی قورنە"
+    },
+    "كلية تقنيات التاهيل الطبي والاطراف الصناعية": {
+      "en": "College of Medical Rehabilitation & Prosthetics Techniques",
+      "ku": "کۆلێژی تەکنیکی چاککردنەوەی پزیشکی و ئەندامی دەستکرد"
+    },
+    "الكلية التقنية الهندسية للحاسوب والذكاءالاصطناعي": {
+      "en": "Technical Engineering College for Computer & AI",
+      "ku": "کۆلێژی تەکنیکی ئەندازیاری کۆمپیوتەر و زیرەکی دەستکرد"
+    },
+    "هندسة النفط والغاز": {
+      "en": "Oil & Gas Engineering",
+      "ku": "ئەندازیاری نەوت و گاز"
+    },
+    "هندسة الليزر والالكترونيات البصرية": {
+      "en": "Laser & Optoelectronics Engineering",
+      "ku": "ئەندازیاری لەیزەر و ئەلیکترۆنیکی بینایی"
+    },
+    "هندسة الكهروميكانيك": {
+      "en": "Electromechanical Engineering",
+      "ku": "ئەندازیاری کارۆمیکانیک"
+    },
+    "هندسة العمارة-التصميم المعماري": {
+      "en": "Architecture – Architectural Design",
+      "ku": "ئەندازیاری تەلارسازی – دیزاینی تەلارسازی"
+    },
+    "هندسة العمارة-التصميم الحضري": {
+      "en": "Architecture – Urban Design",
+      "ku": "ئەندازیاری تەلارسازی – دیزاینی شارستانی"
+    },
+    "هندسة الطب الحياتي": {
+      "en": "Biomedical Engineering",
+      "ku": "ئەندازیاری پزیشکی زیندەیی"
+    },
+    "هندسة السيطرة والنظم": {
+      "en": "Control & Systems Engineering",
+      "ku": "ئەندازیاری کۆنترۆڵ و سیستەم"
+    },
+    "هندسة الحاسوب": {
+      "en": "Computer Engineering",
+      "ku": "ئەندازیاری کۆمپیوتەر"
+    },
+    "هندسة الانتاج والمعادن": {
+      "en": "Production & Metallurgy Engineering",
+      "ku": "ئەندازیاری بەرهەمهێنان و کانزا"
+    },
+    "هندسة الاتصالات": {
+      "en": "Communications Engineering",
+      "ku": "ئەندازیاری پەیوەندییەکان"
+    },
+    "علوم الحاسوب": {
+      "en": "Computer Science",
+      "ku": "زانستی کۆمپیوتەر"
+    },
+    "الهندسة الميكانيكية": {
+      "en": "Mechanical Engineering",
+      "ku": "ئەندازیاری میکانیک"
+    },
+    "الهندسة المدنية": {
+      "en": "Civil Engineering",
+      "ku": "ئەندازیاری شارستانی"
+    },
+    "الهندسة الكيميائية": {
+      "en": "Chemical Engineering",
+      "ku": "ئەندازیاری کیمیایی"
+    },
+    "الهندسة الكهربائية": {
+      "en": "Electrical Engineering",
+      "ku": "ئەندازیاری کارەبا"
+    },
+    "العلوم التطبيقية": {
+      "en": "Applied Sciences",
+      "ku": "زانستە پراکتیکییەکان"
     }
   },
   "departments": {
@@ -1012,6 +1192,9 @@
     "حديثة": "Haditha",
     "بلد": "Balad",
     "الدواية": "Al-Dawaya",
-    "سوق الشيوخ": "Suq Al-Shuyukh"
+    "سوق الشيوخ": "Suq Al-Shuyukh",
+    "بغداد-هندسة تقنيات الفضاء والطائرات المسيرة": "Baghdad – Space & drone engineering techniques",
+    "ابناء المحافظة": "Governorate residents",
+    "الفنون التطبيقية": "Applied arts"
   }
 }

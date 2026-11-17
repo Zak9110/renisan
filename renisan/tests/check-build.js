@@ -10,7 +10,13 @@ const must = (f) => assert(fs.existsSync(path.join(dist, f)), `dist/${f} missing
 for (const f of ['index.html', 'sw.js', 'manifest.webmanifest', 'robots.txt', 'sitemap.xml', 'data/meta.json', 'og-image.png', 'icons/icon-512.png']) must(f);
 
 const meta = JSON.parse(read('data/meta.json'));
-for (const f of [meta.federal.file, meta.krg.file, meta.scholarships.file]) must(`data/${f}`);
+const dataFiles = [
+  meta.federal.file, meta.krg.file, meta.scholarships.file,
+  ...(meta.federal.extra_files ?? []).map((e) => e.file),
+  ...(meta.federal.history ?? []).map((h) => h.file),
+  ...(meta.federal.rules ? [meta.federal.rules.file] : [])
+];
+for (const f of dataFiles) must(`data/${f}`);
 
 const html = read('index.html');
 assert(!html.includes('__SITE_URL__') || !process.env.SITE_URL, 'SITE_URL placeholder left in index.html');
@@ -19,7 +25,7 @@ assert(html.includes('data-theme'), 'theme bootstrap missing');
 assert(!html.includes('/src/main.tsx'), 'index.html still points at the dev entry');
 
 const sw = read('sw.js');
-for (const f of [meta.federal.file, meta.krg.file, meta.scholarships.file, 'meta.json']) {
+for (const f of [...dataFiles, 'meta.json']) {
   assert(sw.includes(`data/${f}`), `service worker does not precache data/${f}`);
 }
 const manifest = JSON.parse(read('manifest.webmanifest'));

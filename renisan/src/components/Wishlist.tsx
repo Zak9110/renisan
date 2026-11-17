@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
-import { getWishlist, removeWishlistItem, clearWishlist, onWishlistChange, type WishlistItem } from '../lib/wishlist';
+import { getWishlist, removeWishlistItem, clearWishlist, moveWishlistItem, onWishlistChange, type WishlistItem } from '../lib/wishlist';
 
 interface WishlistProps {
   onGoToChecker: () => void;
@@ -74,6 +74,7 @@ export function Wishlist({ onGoToChecker }: WishlistProps) {
         <div class="wishlist-hero__content">
           <h2 class="wishlist-hero__title">{t('wishlistTitle')}</h2>
           <p class="wishlist-hero__subtitle">{t('wishlistSubtitle')}</p>
+          {items.length > 1 && <p class="wishlist-hero__hint">{t('wishlistOrderHint')}</p>}
         </div>
 
         {items.length > 0 && (
@@ -158,6 +159,28 @@ export function Wishlist({ onGoToChecker }: WishlistProps) {
               <div key={item.id} class="result-card wishlist-card">
                 <div class="wishlist-card__badge-row">
                   <span class="wishlist-priority-badge">#{index + 1}</span>
+                  <span class="wishlist-order-btns">
+                    <button
+                      type="button"
+                      class="wishlist-order-btn"
+                      onClick={() => moveWishlistItem(item.id, -1)}
+                      disabled={index === 0}
+                      aria-label={t('wishlistMoveUp')}
+                      title={t('wishlistMoveUp')}
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      class="wishlist-order-btn"
+                      onClick={() => moveWishlistItem(item.id, 1)}
+                      disabled={index === items.length - 1}
+                      aria-label={t('wishlistMoveDown')}
+                      title={t('wishlistMoveDown')}
+                    >
+                      ▼
+                    </button>
+                  </span>
                   <span class="tag tag--official">
                     {item.type === 'federal' ? t('systemFederal') : item.type === 'krg' ? t('systemKRG') : t('navScholarships')}
                   </span>

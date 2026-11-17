@@ -80,6 +80,60 @@ export interface DatasetInfo {
   source_url: string;
   published: string;
   note?: string;
+  /** Other channels of the same year, merged into the dataset (Federal only) */
+  extra_files?: { file: string; channel: string }[];
+  /** Prior years, used for year-over-year trends (Federal only) */
+  history?: HistoryFileInfo[];
+  /** Rule-based application minimums (Federal only) */
+  rules?: { file: string; source_name: string; source_url: string; published: string };
+}
+
+/** A prior-year (or other-channel) Federal file listed in meta.json */
+export interface HistoryFileInfo {
+  file: string;
+  year: number;
+  year_label: string;
+  year_label_ar?: string;
+  channel?: string;
+}
+
+export type RouteStream = 'scientific' | 'literary';
+
+/** One field in the ministry's table of minimum averages to apply per route */
+export interface RouteMinimum {
+  id: string;
+  ar: string;
+  en: string;
+  ckb: string;
+  kmr: string;
+  gov_morning: Partial<Record<RouteStream, number>>;
+  gov_evening: Partial<Record<RouteStream, number>>;
+  private_morning: Partial<Record<RouteStream, number>>;
+  private_evening: Partial<Record<RouteStream, number>>;
+}
+
+export interface PrivateMedicalMinimum {
+  id: string;
+  ar: string;
+  en: string;
+  ckb: string;
+  kmr: string;
+  morning: number;
+  evening: number | null;
+}
+
+/** public/data/rules-federal-<year>.json — rule-based application minimums */
+export interface FederalRules {
+  year: number;
+  year_label: string;
+  source_name: string;
+  source_url: string;
+  published: string;
+  note?: string;
+  martyrs_allowance?: { medical: number; other: number; note_ar?: string };
+  medical_update?: { dentistry_pharmacy: number; decision: string; note_ar?: string };
+  routes: RouteMinimum[];
+  private_medical: PrivateMedicalMinimum[];
 }
 
 export interface DatasetMeta {

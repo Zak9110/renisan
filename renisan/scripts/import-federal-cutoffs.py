@@ -4,7 +4,11 @@ Renisan — import the official MOHESR "الحدود الدنيا للقبول �
 public/data/cutoffs-federal-<year>.json.
 
 Usage:
-  python3 scripts/import-federal-cutoffs.py <limits.pdf> <year> <source_url> [source_date]
+  python3 scripts/import-federal-cutoffs.py <limits.pdf> <year> <source_url> [source_date] [--channel=general|distinguished]
+
+The ministry publishes one PDF per channel: the general channel (default) and, since
+2025-2026, a separate list for graduates of distinguished schools (--channel=distinguished),
+which is written to cutoffs-federal-<year>-distinguished.json with its own id prefix.
 
 Requires: pip install pypdf
 
@@ -24,14 +28,22 @@ except ImportError:
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
+# 2026-2027 layout: "<n><names><stream><gender><total><average+tiebreak>"
 ROW = re.compile(
-    r'^(\d+)(.+?)(علمي|احيائي|تطبيقي|ادبي|مهني|صناعي|تجاري|زراعي|فنون|تمريض)'
+    r'^(\d+)(.+?)(علمي،احيائي،تطبيقي|علمي،احيائي|علمي،تطبيقي|علمي|احيائي|تطبيقي|ادبي|مهني|صناعي|تجاري|زراعي|الفنون|فنون|تمريض)'
     r'(مختلط|ذكور|اناث|انثى|ذكر|بنات|بنين)(\d{3}\.\d{2})([\d.]+)$'
 )
+# 2024-2025 / 2025-2026 layout: "[n]<names><total><average+tiebreak><stream><gender>" (2025 has no row number)
+ROW_NUMBERS_FIRST = re.compile(
+    r'^(\d*)(.+?)(\d{3}\.\d{2})([\d.]+)'
+    r'(علمي،احيائي،تطبيقي|علمي،احيائي|علمي،تطبيقي|علمي|احيائي|تطبيقي|ادبي|مهني|صناعي|تجاري|زراعي|الفنون|فنون|تمريض)'
+    r'(مختلط|ذكور|اناث|انثى|ذكر|بنات|بنين)$'
+)
 STREAM = {'علمي': 'scientific', 'احيائي': 'scientific', 'تطبيقي': 'scientific', 'ادبي': 'literary',
+          'علمي،احيائي': 'scientific', 'علمي،تطبيقي': 'scientific', 'علمي،احيائي،تطبيقي': 'scientific',
           'مهني': 'vocational', 'صناعي': 'vocational', 'تجاري': 'vocational', 'زراعي': 'vocational',
-          'فنون': 'literary', 'تمريض': 'vocational'}
-SUB = {'احيائي': 'bio', 'تطبيقي': 'applied'}
+          'فنون': 'literary', 'الفنون': 'literary', 'تمريض': 'vocational'}
+SUB = {'احيائي': 'bio', 'تطبيقي': 'applied', 'علمي،احيائي': 'bio', 'علمي،تطبيقي': 'applied'}
 GENDER = {'مختلط': 'both', 'ذكور': 'male', 'ذكر': 'male', 'بنين': 'male', 'اناث': 'female', 'انثى': 'female', 'بنات': 'female'}
 
 
@@ -63,10 +75,17 @@ def split_number_tail(tail: str, total: float):
 
 
 def main():
-    if len(sys.argv) < 4:
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    opts = dict(a[2:].split('=', 1) for a in sys.argv[1:] if a.startswith('--') and '=' in a)
+    if len(args) < 3:
         sys.exit(__doc__)
-    pdf, year, source_url = sys.argv[1], int(sys.argv[2]), sys.argv[3]
-    source_date = sys.argv[4] if len(sys.argv) > 4 else f'{year}-10-01'
+    pdf, year, source_url = args[0], int(args[1]), args[2]
+    source_date = args[3] if len(args) > 3 else f'{year}-10-01'
+    channel = opts.get('channel', 'general')
+    if channel not in ('general', 'distinguished'):
+        sys.exit('--channel must be general or distinguished')
+    id_prefix = f'fed{str(year)[2:]}' + ('' if channel == 'general' else f'-{channel[:3]}')
+    suffix = '' if channel == 'general' else f'-{channel}'
     names = json.load(open(os.path.join(HERE, 'federal-names.json'), encoding='utf8'))
     U = {fold(k): v for k, v in names['universities'].items()}
     C = {fold(k): v for k, v in names['colleges'].items() if not k.startswith('_')}
@@ -80,19 +99,41 @@ def main():
     for page in reader.pages:
         lines.extend((page.extract_text() or '').split('\n'))
 
-    rows, unknown = [], collections.Counter()
+    rows, unknown, counter = [], collections.Counter(), 0
+    pending = ''
     for line in lines:
         line = line.strip()
-        m = ROW.match(line)
-        if not m:
-            if re.match(r'^\d+[^\d]', line) and '/' in line:
-                print('UNPARSED:', line, file=sys.stderr)
+        if pending:
+            line, pending = pending + line, ''
+        if 'وزارة التعليم' in line or 'المفاضلة' in line:
+            # page header; a row may follow it on the same extracted line
+            cut = max(line.rfind('الجنس'), line.rfind('المفاضلة'))
+            line = line[cut + len('المفاضلة'):] if line[cut:].startswith('المفاضلة') else line[cut + len('الجنس'):]
+            line = line.strip()
+            if not line:
+                continue
+        if '/' in line and not re.search(r'\d{3}\.\d{2}', line):
+            pending = line  # row wrapped onto the next PDF line
             continue
-        n, name, stream, gender, total_s, tail = m.groups()
+        m = ROW.match(line)
+        if m:
+            n, name, stream, gender, total_s, tail = m.groups()
+        else:
+            m = ROW_NUMBERS_FIRST.match(line)
+            if not m:
+                if '/' in line and re.search(r'\d{3}\.\d{2}', line):
+                    print('UNPARSED:', line, file=sys.stderr)
+                continue
+            n, name, total_s, tail, stream, gender = m.groups()
+        counter += 1
+        n = n or str(counter)
         total = float(total_s)
         avg, _tiebreak = split_number_tail(tail, total)
 
-        segs = [fold(s) for s in name.split('/')]
+        segs = []
+        for s_ in name.split('/'):
+            parts = re.split(r'\s*-\s*(?=قسم)', s_, maxsplit=1)
+            segs.extend(fold(re.sub(r'^قسم(?=\S)', 'قسم ', x)) for x in parts)
         uni_ar, col_ar = segs[0], (segs[1] if len(segs) > 1 else '')
         dept_ar, campus_parts, length = None, [], None
         for seg in segs[2:]:
@@ -130,7 +171,7 @@ def main():
 
         is_institute = 'المعهد' in col_ar or length == '2'
         rows.append({
-            'id': f'fed{str(year)[2:]}-{int(n):04d}',
+            'id': f'{id_prefix}-{int(n):04d}',
             'year': year,
             'university': uni_ar,
             'university_en': uni['en'] if uni else uni_ar,
@@ -148,7 +189,7 @@ def main():
             **({'sub_stream': SUB[stream]} if stream in SUB else {}),
             'gender': GENDER[gender],
             'study_type': 'morning',
-            'channel': 'general',
+            'channel': channel,
             'governorate': governorate,
             'min_average': round(avg, 2),
             'min_score': total,
@@ -163,7 +204,7 @@ def main():
             print(f'  {v:4d}  {k}', file=sys.stderr)
     ids = [r['id'] for r in rows]
     assert len(ids) == len(set(ids)), 'duplicate ids'
-    out = os.path.join(ROOT, 'public', 'data', f'cutoffs-federal-{year}.json')
+    out = os.path.join(ROOT, 'public', 'data', f'cutoffs-federal-{year}{suffix}.json')
     # One row per line: diff-friendly in git, ~40% smaller than indented JSON
     with open(out, 'w', encoding='utf8') as f:
         f.write('[\n' + ',\n'.join(json.dumps(r, ensure_ascii=False, separators=(',', ':')) for r in rows) + '\n]\n')

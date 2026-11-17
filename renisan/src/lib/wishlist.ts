@@ -64,6 +64,19 @@ export function removeWishlistItem(id: string): void {
   listeners.forEach(cb => cb());
 }
 
+/** Moves an item one step up or down so the list can mirror the order of the official form. */
+export function moveWishlistItem(id: string, direction: -1 | 1): void {
+  const list = getWishlist();
+  const from = list.findIndex((x) => x.id === id);
+  const to = from + direction;
+  if (from < 0 || to < 0 || to >= list.length) return;
+  [list[from], list[to]] = [list[to], list[from]];
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch {}
+  listeners.forEach(cb => cb());
+}
+
 export function clearWishlist(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);

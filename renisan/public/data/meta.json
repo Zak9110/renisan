@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-16",
+  "updated": "2026-11-17",
   "federal": {
     "file": "cutoffs-federal-2026.json",
     "year": 2026,
@@ -9,7 +9,21 @@
     "source_name": "MOHESR — Directorate of Studies, Planning and Follow-up",
     "source_url": "https://dirasat.mohesr.gov.iq/download-center.html",
     "published": "2026-10-19",
-    "note": "Official minimum averages for the general channel, morning study (الحدود الدنيا للقبول المركزي — القناة العامة). Averages are the competitive average (total ÷ 7) and may exceed 100 because 8% of the foreign-language mark is added to the total."
+    "note": "Official minimum averages for morning study: the general channel (الحدود الدنيا للقبول المركزي — القناة العامة) plus the separate list for graduates of distinguished schools (المتميزين). Averages are the competitive average (total ÷ 7) and may exceed 100 because 8% of the foreign-language mark is added to the total.",
+    "extra_files": [
+      { "file": "cutoffs-federal-2026-distinguished.json", "channel": "distinguished" }
+    ],
+    "history": [
+      { "file": "cutoffs-federal-2025.json", "year": 2025, "year_label": "2025-2026", "year_label_ar": "٢٠٢٥-٢٠٢٦", "channel": "general" },
+      { "file": "cutoffs-federal-2025-distinguished.json", "year": 2025, "year_label": "2025-2026", "year_label_ar": "٢٠٢٥-٢٠٢٦", "channel": "distinguished" },
+      { "file": "cutoffs-federal-2024.json", "year": 2024, "year_label": "2024-2025", "year_label_ar": "٢٠٢٤-٢٠٢٥", "channel": "general" }
+    ],
+    "rules": {
+      "file": "rules-federal-2026.json",
+      "source_name": "MOHESR — Private Higher Education admission guide 2026-2027",
+      "source_url": "https://mohesr.gov.iq/ar/assets/img/uploaded_files/17092026.pdf",
+      "published": "2026-09-17"
+    }
   },
   "krg": {
     "file": "cutoffs-krg-2024.json",

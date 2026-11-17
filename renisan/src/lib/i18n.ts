@@ -238,6 +238,32 @@ export interface TranslationKeys {
   scoreAbove100Hint: string;
   officialSourceLink: string;
   campusLabel: string;
+
+  // Year-over-year trends, result paging, rule-based routes (Nov 2026)
+  trendLabel: string;
+  trendPrev: string;
+  trendUp: string;
+  trendDown: string;
+  trendSame: string;
+  trendNew: string;
+  showMoreResults: string;
+  routesTitle: string;
+  routesSubtitle: string;
+  routesEligible: string;
+  routesField: string;
+  routesGovEvening: string;
+  routesPrivateMorning: string;
+  routesPrivateEvening: string;
+  routesMedicalTitle: string;
+  routesMedicalNote: string;
+  routesMartyrsNote: string;
+  routesNotOffered: string;
+  routesShowOnlyEligible: string;
+  routesMorning: string;
+  routesEvening: string;
+  wishlistMoveUp: string;
+  wishlistMoveDown: string;
+  wishlistOrderHint: string;
 }
 
 // Default language

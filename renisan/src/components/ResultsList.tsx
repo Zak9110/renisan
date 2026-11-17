@@ -1,7 +1,13 @@
+import { useState, useEffect } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
 import type { FederalCutoff, KRGCutoff } from '../lib/types';
+import type { Trend } from '../lib/history';
+import { fillTemplate } from '../lib/format';
 import { ResultCard } from './ResultCard';
 import { ShareButton } from './ShareButton';
+
+/** Cards rendered before the "show more" button; low scores can match 1,000+ programmes. */
+const PAGE_SIZE = 60;
 
 interface ResultsListProps {
   federalResults: FederalCutoff[];
@@ -9,6 +15,8 @@ interface ResultsListProps {
   system: 'federal' | 'krg';
   studentScore?: number | null;
   yearLabel?: string;
+  /** Year-over-year history for a Federal row (null while history is still loading) */
+  trendFor?: (item: FederalCutoff) => Trend | null;
   /** Context for a helpful "no results" screen */
   emptyHelp?: {
     nearestCutoff: number | null;
@@ -18,11 +26,17 @@ interface ResultsListProps {
   };
 }
 
-export function ResultsList({ federalResults, krgResults, system, studentScore, yearLabel, emptyHelp }: ResultsListProps) {
+export function ResultsList({ federalResults, krgResults, system, studentScore, yearLabel, trendFor, emptyHelp }: ResultsListProps) {
   const { t } = useI18n();
+  const [visible, setVisible] = useState(PAGE_SIZE);
 
   const isFederal = system === 'federal';
   const count = isFederal ? federalResults.length : krgResults.length;
+
+  // A new result set starts again from the first page
+  useEffect(() => {
+    setVisible(PAGE_SIZE);
+  }, [federalResults, krgResults]);
 
   if (count === 0) {
     return (
@@ -52,6 +66,8 @@ export function ResultsList({ federalResults, krgResults, system, studentScore, 
     );
   }
 
+  const remaining = Math.max(0, count - visible);
+
   return (
     <section class="results-section" aria-label={t('resultsTitle')}>
       <div class="results-header">
@@ -63,13 +79,28 @@ export function ResultsList({ federalResults, krgResults, system, studentScore, 
 
       <div class="results-list">
         {isFederal
-          ? federalResults.map((item) => (
-              <ResultCard key={item.id} item={item} type="federal" studentScore={studentScore} yearLabel={yearLabel} />
+          ? federalResults.slice(0, visible).map((item) => (
+              <ResultCard
+                key={item.id}
+                item={item}
+                type="federal"
+                studentScore={studentScore}
+                yearLabel={yearLabel}
+                trend={trendFor ? trendFor(item) : null}
+              />
             ))
-          : krgResults.map((item) => (
+          : krgResults.slice(0, visible).map((item) => (
               <ResultCard key={item.id} item={item} type="krg" studentScore={studentScore} yearLabel={yearLabel} />
             ))}
       </div>
+
+      {remaining > 0 && (
+        <div class="results-more">
+          <button type="button" class="pill-btn pill-btn--active" onClick={() => setVisible((v) => v + PAGE_SIZE)}>
+            {fillTemplate(t('showMoreResults'), { count: Math.min(PAGE_SIZE, remaining) })}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

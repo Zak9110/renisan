@@ -12,6 +12,7 @@ import { parseCheckerState, serializeCheckerState, DEFAULT_CHECKER_STATE } from 
 import { localizePlace, isKnownPlace } from '../src/lib/places.ts';
 import { normalizeForSearch, matchesQuery } from '../src/lib/text.ts';
 import { fillTemplate, formatAverage } from '../src/lib/format.ts';
+import { buildHistory, getTrend, programKey, coverage } from '../src/lib/history.ts';
 import { ar } from '../src/lib/translations/ar.ts';
 import { ckb } from '../src/lib/translations/ckb.ts';
 import { kmr } from '../src/lib/translations/kmr.ts';
@@ -291,6 +292,89 @@ suite('Search works across Arabic, Kurdish and Latin spellings', () => {
   assert(soraniUni.some((r) => r.university_en === 'University of Mosul'), 'University of Mosul found by its Sorani name');
   const kmrCity = filterKRGCutoffs(krgData, { system: 'krg', score: 100, stream: 'scientific', search: 'hewler' });
   assert(kmrCity.length > 0, 'Kurmanji city name (no accents) finds Erbil rows');
+});
+
+// ---------- Multi-channel, history and rule-based routes (Nov 2026) ----------
+const extraFiles = meta.federal.extra_files ?? [];
+const historyFiles = meta.federal.history ?? [];
+
+suite(`Federal extra channel files load and merge cleanly (${extraFiles.map((e) => e.channel).join(', ') || 'none'})`, () => {
+  const allIds = new Set(fedData.map((r) => r.id));
+  for (const e of extraFiles) {
+    assert(fs.existsSync(path.join(DATA_DIR, e.file)), `${e.file} must exist`);
+    const rows = load(e.file);
+    assert(rows.length > 100, `${e.file}: expected a full list`);
+    for (const r of rows) {
+      assert.strictEqual(r.channel, e.channel, `${r.id}: channel must be ${e.channel}`);
+      assert.strictEqual(r.year, meta.federal.year, `${r.id}: year must match meta`);
+      assert(validateScore(r.min_average, meta.federal.max_score), `${r.id}: average out of range`);
+      assert(!allIds.has(r.id), `${r.id}: id collides with another file`);
+      allIds.add(r.id);
+      assert(r.university_en && r.college_en, `${r.id}: English names required`);
+    }
+  }
+});
+
+suite(`Federal history files are valid and match the current list (${historyFiles.map((h) => h.year_label).join(', ') || 'none'})`, () => {
+  const datasets = [];
+  for (const h of historyFiles) {
+    assert(fs.existsSync(path.join(DATA_DIR, h.file)), `${h.file} must exist`);
+    assert(Number.isInteger(h.year) && h.year < meta.federal.year, `${h.file}: history must be a prior year`);
+    assert(/^\d{4}-\d{4}$/.test(h.year_label), `${h.file}: year_label`);
+    const rows = load(h.file);
+    assert(rows.length > 100, `${h.file}: expected a full list`);
+    const ids = new Set(rows.map((r) => r.id));
+    assert.strictEqual(ids.size, rows.length, `${h.file}: ids unique`);
+    for (const r of rows) {
+      assert.strictEqual(r.year, h.year, `${r.id}: year must match meta.history`);
+      assert(validateScore(r.min_average, meta.federal.max_score), `${r.id}: average out of range`);
+      assert(r.university && r.college && r.governorate, `${r.id}: names required`);
+    }
+    datasets.push({ info: h, rows });
+  }
+  if (datasets.length === 0) return;
+  const history = buildHistory(datasets);
+  const cov = coverage(fedData, history);
+  console.log(`    history coverage of current rows: ${(cov * 100).toFixed(1)}%`);
+  assert(cov >= 0.7, `At least 70% of current programmes should match a prior year (got ${(cov * 100).toFixed(1)}%)`);
+
+  const baghdadMedicine = fedData.find((r) => r.university_en === 'University of Baghdad' && r.college_en === 'College of Medicine' && !r.department);
+  assert(baghdadMedicine, 'Baghdad Medicine row exists');
+  const trend = getTrend(baghdadMedicine, history);
+  assert(trend && trend.previous && trend.previous.year === meta.federal.year - 1, 'Baghdad Medicine has last-year data');
+  assert(trend.series.length >= 2, 'Baghdad Medicine has at least two prior years');
+  assert(typeof trend.delta === 'number' && Math.abs(trend.delta) < 5, 'delta is a small number');
+  assert.strictEqual(programKey(baghdadMedicine), programKey({ ...baghdadMedicine, university: 'جامعة  بغداد', college: 'كلية الطب ' }), 'programme key folds spacing');
+  assert.strictEqual(getTrend(baghdadMedicine, null), null, 'no history → null');
+});
+
+suite('Federal rules file (evening / private minimums) is complete', () => {
+  if (!meta.federal.rules) return;
+  const rules = load(meta.federal.rules.file);
+  assert.strictEqual(rules.year, meta.federal.year, 'rules year matches current year');
+  assert(/^https?:\/\//.test(rules.source_url) && ISO.test(rules.published));
+  assert(rules.routes.length >= 30 && rules.private_medical.length >= 20, 'tables look complete');
+  const ids = new Set();
+  for (const r of [...rules.routes, ...rules.private_medical]) {
+    assert(!ids.has(r.id), `duplicate rule id ${r.id}`);
+    ids.add(r.id);
+    for (const k of ['ar', 'en', 'ckb', 'kmr']) assert(typeof r[k] === 'string' && r[k].trim(), `${r.id}: ${k} name`);
+  }
+  for (const r of rules.routes) {
+    for (const key of ['gov_morning', 'gov_evening', 'private_morning', 'private_evening']) {
+      assert(r[key] && typeof r[key] === 'object', `${r.id}: ${key}`);
+      for (const [stream, v] of Object.entries(r[key])) {
+        assert(['scientific', 'literary'].includes(stream) && Number.isFinite(v) && v >= 40 && v <= 100, `${r.id}: ${key}.${stream}`);
+      }
+    }
+    assert(Object.keys(r.gov_evening).length > 0, `${r.id}: needs at least one stream`);
+  }
+  for (const m of rules.private_medical) {
+    assert(m.morning >= 50 && m.morning <= 100, `${m.id}: morning`);
+    assert(m.evening === null || (m.evening >= 50 && m.evening <= m.morning), `${m.id}: evening`);
+  }
+  const medicine = rules.private_medical.find((m) => m.id === 'medicine');
+  assert(medicine && medicine.morning === 95, 'private medicine minimum is 95');
 });
 
 if (failed > 0) {

@@ -4,9 +4,14 @@ University eligibility checker and scholarship directory for Grade-12 students i
 Works in Sorani Kurdish, Arabic and Kurmanji, installs as an app (PWA), works offline after the first visit,
 and has dark / light / system themes.
 
-**Data (as of 2026-11-16)**
-- Federal: the complete official MOHESR *الحدود الدنيا للقبول المركزي* list for **2026-2027** — 1,263 programmes
-  (general channel, morning study) with English + Sorani names, governorate, single-sex and institute tags.
+**Data (as of 2026-11-17)**
+- Federal: the complete official MOHESR *الحدود الدنيا للقبول المركزي* lists for **2026-2027** — 1,263 general-channel
+  programmes plus 438 on the distinguished-schools channel (morning study) with English + Sorani names, governorate,
+  single-sex and institute tags.
+- Federal history: the official **2025-2026** (1,222 + 411 distinguished) and **2024-2025** (1,111) lists, used to show
+  each programme's year-over-year trend on its card.
+- Federal rules: the ministry's **2026-2027** minimum averages to *apply* for government evening study and private
+  colleges per field (`rules-federal-2026.json`), shown as an "other admission routes" panel under the checker.
 - KRG: Zankoline **2024-2025** reported minimums (the KRG ministry publishes no official cut-off table).
 - Scholarships: 16 listings, each verified against the provider's site with estimated next-cycle deadlines.
 
@@ -52,7 +57,12 @@ All content lives in `public/data/`, and **`meta.json` says which files the app 
 
 - `meta.json` — dataset file names, academic-year labels (`year_label`, `year_label_ar`), score ceilings
   (`max_score`), source links and notes. Every year label shown in the UI comes from here.
-- `cutoffs-federal-<year>.json` — Federal (MOHESR) central admission minimums
+- `cutoffs-federal-<year>.json` — Federal (MOHESR) central admission minimums, general channel
+- `cutoffs-federal-<year>-distinguished.json` — the same year's distinguished-schools channel
+  (listed under `meta.json → federal.extra_files` and merged into the checker; the channel filter switches between them)
+- Prior years listed under `federal.history` are loaded after the main data and power the trend badges
+  (programmes are matched across years by name, see `src/lib/history.ts`)
+- `rules-federal-<year>.json` — minimum averages to apply for evening / private routes (`federal.rules`)
 - `cutoffs-krg-<year>.json` — KRG (Zankoline) minimum composite scores
 - `scholarships.json` — scholarship listings
 
@@ -62,15 +72,22 @@ Kurdish translations** — if it reports one, add it to `src/lib/places.ts`.
 
 ### New Federal year (every October)
 
-1. Download the new *الحدود الدنيا للقبول المركزي* PDF from the MOHESR download center
-   (https://dirasat.mohesr.gov.iq/download-center.html).
+1. Download the new *الحدود الدنيا للقبول المركزي* PDFs (general channel and المتميزين) from the MOHESR download
+   center (https://dirasat.mohesr.gov.iq/download-center.html). Older years move to
+   `assets/documents/Docs-<year>/Guides/` on the same host (the Wayback Machine keeps copies when a link breaks).
 2. `pip install pypdf`, then:
    ```bash
    npm run import:federal -- /path/to/limits.pdf 2027 "https://dirasat.mohesr.gov.iq/download-center.html" 2027-10-15
+   npm run import:federal -- /path/to/distinguished.pdf 2027 "https://dirasat.mohesr.gov.iq/download-center.html" 2027-10-15 --channel=distinguished
    ```
-   The script prints any university/college/department name it does not know — add it to
-   `scripts/federal-names.json` (English + Sorani + governorate) and re-run until it is clean.
-3. Point `meta.json → federal.file / year / year_label / published` at the new file, run `npm test`, deploy.
+   The script understands both PDF layouts the ministry has used (2024-2026) and prints any university/college
+   name it does not know — add it to `scripts/federal-names.json` (English + Sorani + governorate) and re-run
+   until it is clean.
+3. In `meta.json`: point `federal.file / year / year_label / published` at the new general file, put the
+   distinguished file under `extra_files`, and move the previous year's files into `history`. Run `npm test`
+   (it reports how many programmes matched a prior year), deploy.
+4. When the ministry publishes the new private-colleges guide (usually September), update
+   `rules-federal-<year>.json` from its chapter-3 tables and point `federal.rules` at it.
 
 Federal averages can exceed 100 (8% of the foreign-language mark is added to the total), so
 `meta.json → federal.max_score` is 110; the checker accepts scores up to that ceiling for the Federal system only.

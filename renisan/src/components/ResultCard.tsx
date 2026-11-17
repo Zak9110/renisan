@@ -4,6 +4,7 @@ import type { FederalCutoff, KRGCutoff } from '../lib/types';
 import { localizePlace } from '../lib/places';
 import { isWishlisted, toggleWishlist, onWishlistChange } from '../lib/wishlist';
 import { fillTemplate, formatAverage } from '../lib/format';
+import type { Trend } from '../lib/history';
 
 interface ResultCardProps {
   item: FederalCutoff | KRGCutoff;
@@ -11,9 +12,11 @@ interface ResultCardProps {
   studentScore?: number | null;
   /** Academic-year label of the dataset this row comes from (e.g. "2026-2027") */
   yearLabel?: string;
+  /** Prior-year cutoffs for the same programme (Federal only; null while loading) */
+  trend?: Trend | null;
 }
 
-export function ResultCard({ item, type, studentScore, yearLabel }: ResultCardProps) {
+export function ResultCard({ item, type, studentScore, yearLabel, trend }: ResultCardProps) {
   const { lang, t } = useI18n();
   const [bookmarked, setBookmarked] = useState(() => isWishlisted(item.id));
 
@@ -131,6 +134,30 @@ export function ResultCard({ item, type, studentScore, yearLabel }: ResultCardPr
               <bdi>{scoreDiff.toFixed(1)}%</bdi> · {t('scoreDeltaReach')}
             </span>
           )}
+        </div>
+      )}
+
+      {/* Year-over-year: how this programme's cutoff moved */}
+      {fed && trend && (
+        <div class="result-card__trend" aria-label={t('trendLabel')}>
+          {trend.previous && trend.delta != null ? (() => {
+            const prevLabel = (lang === 'ar' && trend.previous.year_label_ar) || trend.previous.year_label;
+            const dir = trend.delta > 0 ? 'up' : trend.delta < 0 ? 'down' : 'same';
+            const text = dir === 'up' ? t('trendUp') : dir === 'down' ? t('trendDown') : t('trendSame');
+            return (
+              <span class={`trend-badge trend-badge--${dir}`}>
+                <span aria-hidden="true">{dir === 'up' ? '▲' : dir === 'down' ? '▼' : '▬'}</span>
+                {' '}{fillTemplate(text, { delta: Math.abs(trend.delta).toFixed(2), year: prevLabel })}
+              </span>
+            );
+          })() : (
+            <span class="trend-chip trend-chip--new">{t('trendNew')}</span>
+          )}
+          {trend.series.map((p) => (
+            <span class="trend-chip" key={p.year}>
+              <bdi>{fillTemplate(t('trendPrev'), { year: (lang === 'ar' && p.year_label_ar) || p.year_label, score: formatAverage(p.value) })}</bdi>
+            </span>
+          ))}
         </div>
       )}
 

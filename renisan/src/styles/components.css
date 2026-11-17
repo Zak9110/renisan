@@ -1899,3 +1899,131 @@ button.composite-box__header:focus-visible {
   color: var(--color-text-tertiary);
   line-height: var(--leading-normal);
 }
+
+
+/* ============================================
+ * Year-over-year trend (Federal result cards)
+ * ============================================ */
+.result-card__trend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.trend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+}
+.trend-badge--up { background: var(--color-danger-bg); border-color: var(--color-danger-border); color: var(--color-danger); }
+.trend-badge--down { background: var(--color-success-bg); border-color: var(--color-success-border); color: var(--color-success); }
+.trend-badge--same { background: var(--color-surface-glass); border-color: var(--color-border); color: var(--color-text-secondary); }
+.trend-chip {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-glass);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-2xs);
+  font-variant-numeric: tabular-nums;
+}
+.trend-chip--new { color: var(--color-info); border-color: var(--color-info-border); background: var(--color-info-bg); }
+
+.results-more {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4) 0 var(--space-2);
+}
+
+/* ============================================
+ * Other admission routes (evening / private)
+ * ============================================ */
+.routes-box { margin-top: var(--space-4); }
+.routes-box__subtitle {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+.routes-box__toggle { margin-bottom: var(--space-3); }
+.routes-box__heading {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+}
+.routes-box__source {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+.routes-box__source a { color: var(--color-text-accent); }
+.routes-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.routes-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  min-width: 420px;
+}
+.routes-table th,
+.routes-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+  text-align: start;
+  vertical-align: middle;
+}
+.routes-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  white-space: nowrap;
+}
+.routes-table tbody th {
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+  background: var(--color-bg-card);
+}
+.routes-table tbody tr:last-child th,
+.routes-table tbody tr:last-child td { border-bottom: none; }
+.routes-table__cell {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.routes-table__cell--ok { color: var(--color-success); background: var(--color-success-bg); }
+.routes-table__cell--no { color: var(--color-text-tertiary); }
+.routes-table__cell--na { color: var(--color-text-tertiary); text-align: center; }
+.routes-table__mark { margin-inline-start: var(--space-1); font-size: var(--text-xs); }
+
+/* Wishlist ordering (mirror the official preference form) */
+.wishlist-hero__hint {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+.wishlist-order-btns { display: inline-flex; gap: var(--space-1); }
+.wishlist-order-btn {
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-glass);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+.wishlist-order-btn:hover:not(:disabled) { color: var(--color-text-accent); border-color: var(--color-border-hover); }
+.wishlist-order-btn:disabled { opacity: 0.35; cursor: default; }

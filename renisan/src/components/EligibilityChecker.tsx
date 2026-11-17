@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
-import type { AdmissionSystem, FederalCutoff, KRGCutoff, CheckerFilters, DatasetMeta, Gender, ProgramLevel } from '../lib/types';
+import type { AdmissionSystem, FederalCutoff, KRGCutoff, CheckerFilters, DatasetMeta, Gender, ProgramLevel, FederalRules } from '../lib/types';
 import { normalizeDigits, validateScore, computeKRGComposite, MAX_SCORE_FEDERAL, MAX_SCORE_KRG } from '../lib/normalizer';
 import { fillTemplate } from '../lib/format';
 import { filterFederalCutoffs, filterKRGCutoffs, getUniqueGovernorates, getUniqueCities } from '../lib/search';
@@ -9,6 +9,9 @@ import { localizePlace } from '../lib/places';
 import type { TranslationKeys } from '../lib/i18n';
 import { SystemSelector } from './SystemSelector';
 import { ResultsList } from './ResultsList';
+import { OtherRoutes } from './OtherRoutes';
+import { loadFederalHistory, loadFederalRules } from '../lib/data-loader';
+import { getTrend, type FederalHistory } from '../lib/history';
 
 interface EligibilityCheckerProps {
   federalData: FederalCutoff[];
@@ -74,6 +77,17 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'cutoff_desc' | 'cutoff_asc' | 'closest' | 'alpha'>('cutoff_desc');
   const [showReach, setShowReach] = useState<boolean>(false);
+
+  // Prior-year cutoffs and rule-based routes load after the main data so the
+  // checker never waits for them; cards fill in trends when they arrive.
+  const [history, setHistory] = useState<FederalHistory | null>(null);
+  const [rules, setRules] = useState<FederalRules | null>(null);
+  useEffect(() => {
+    let alive = true;
+    loadFederalHistory().then((h) => { if (alive) setHistory(h); }).catch(() => {});
+    loadFederalRules().then((r) => { if (alive) setRules(r); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
 
   // KRG Composite Calculator state
   const [showCompositeCalc, setShowCompositeCalc] = useState(false);
@@ -164,8 +178,10 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
   useEffect(() => {
     if (studyType !== 'all' && !availableStudyTypes.includes(studyType)) setStudyType('all');
   }, [availableStudyTypes, studyType]);
+  // Channels are mutually exclusive for a student (a distinguished-school graduate
+  // competes on that list), so an unavailable or "all" choice falls back to general.
   useEffect(() => {
-    if (channel !== 'all' && !availableChannels.includes(channel)) setChannel('all');
+    if (availableChannels.length > 0 && !availableChannels.includes(channel)) setChannel('general');
   }, [availableChannels, channel]);
   useEffect(() => {
     const locs: string[] = system === 'federal' ? federalGovernorates : krgCities;
@@ -473,7 +489,6 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
                 value={channel}
                 onChange={(e) => setChannel((e.target as HTMLSelectElement).value)}
               >
-                <option value="all">{t('scholarshipFilterAll')}</option>
                 {availableChannels.map((c) => (
                   <option key={c} value={c}>{t(CHANNEL_LABELS[c])}</option>
                 ))}
@@ -611,6 +626,11 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
         </div>
       </form>
 
+      {/* Rule-based routes (evening / private) the cutoff list does not cover */}
+      {system === 'federal' && rules && score !== null && (
+        <OtherRoutes rules={rules} score={score} stream={stream} yearLabel={yearLabel} />
+      )}
+
       {/* Results List */}
       <div id="results-anchor" class="results-anchor" />
       {score === null ? (
@@ -626,6 +646,7 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
           system={system}
           studentScore={score}
           yearLabel={yearLabel}
+          trendFor={(item) => getTrend(item, history)}
           emptyHelp={{
             nearestCutoff,
             onClearSearch: searchQuery.trim() ? () => setSearchQuery('') : undefined,

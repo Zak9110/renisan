@@ -27,7 +27,7 @@ export const DEFAULT_CHECKER_STATE: CheckerUrlState = {
   subStream: undefined,
   location: 'all',
   studyType: 'all',
-  channel: 'all',
+  channel: 'general',
   gender: 'both',
   level: 'all'
 };

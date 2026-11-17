@@ -4,7 +4,8 @@
 // year is a data-only change (drop in the file, edit meta.json, run npm test).
 // ============================================
 
-import type { FederalCutoff, KRGCutoff, Scholarship, DatasetMeta } from './types';
+import type { FederalCutoff, KRGCutoff, Scholarship, DatasetMeta, FederalRules } from './types';
+import { buildHistory, type FederalHistory } from './history.ts';
 
 const FETCH_TIMEOUT_MS = 15000;
 
@@ -72,6 +73,13 @@ function isScholarships(v: unknown): v is Scholarship[] {
     && isStr(r.status) && Array.isArray(r.degree_levels) && isObj(r.eligibility));
 }
 
+function isRules(v: unknown): v is FederalRules {
+  return isObj(v) && isNum(v.year) && Array.isArray(v.routes) && Array.isArray(v.private_medical)
+    && v.routes.every((r) => isObj(r) && isStr(r.id) && isStr(r.ar) && isObj(r.gov_evening)
+      && isObj(r.private_morning) && isObj(r.private_evening))
+    && v.private_medical.every((r) => isObj(r) && isStr(r.id) && isStr(r.ar) && isNum(r.morning));
+}
+
 // ---- Public API ----
 
 export async function loadMeta(): Promise<DatasetMeta> {
@@ -80,10 +88,41 @@ export async function loadMeta(): Promise<DatasetMeta> {
   return metaCache;
 }
 
-/** Federal (MOHESR central admission) minimum averages for the year named in meta.json. */
+/**
+ * Federal (MOHESR central admission) minimum averages for the year named in
+ * meta.json: the general-channel file plus any `extra_files` (other channels of
+ * the same year, e.g. distinguished schools), merged into one list.
+ */
 export async function loadFederalCutoffs(): Promise<FederalCutoff[]> {
   const meta = await loadMeta();
-  return fetchJson(`data/${meta.federal.file}`, isFederalRows);
+  const [main, ...extras] = await Promise.all([
+    fetchJson(`data/${meta.federal.file}`, isFederalRows),
+    ...(meta.federal.extra_files ?? []).map((e) => fetchJson(`data/${e.file}`, isFederalRows))
+  ]);
+  return extras.length ? main.concat(...extras) : main;
+}
+
+/**
+ * Prior-year Federal datasets listed under meta.federal.history, folded into a
+ * programme → year → cutoff lookup. Returns null when no history is configured.
+ * Loaded separately from the main data so the checker renders without waiting for it.
+ */
+export async function loadFederalHistory(): Promise<FederalHistory | null> {
+  const meta = await loadMeta();
+  const list = meta.federal.history ?? [];
+  if (list.length === 0) return null;
+  const datasets = await Promise.all(list.map(async (h) => ({
+    info: { year: h.year, year_label: h.year_label, year_label_ar: h.year_label_ar },
+    rows: await fetchJson(`data/${h.file}`, isFederalRows)
+  })));
+  return buildHistory(datasets);
+}
+
+/** Rule-based application minimums (evening study, private colleges). Null when not configured. */
+export async function loadFederalRules(): Promise<FederalRules | null> {
+  const meta = await loadMeta();
+  if (!meta.federal.rules) return null;
+  return fetchJson(`data/${meta.federal.rules.file}`, isRules);
 }
 
 /** KRG (Zankoline) minimum composite scores for the year named in meta.json. */
