@@ -264,6 +264,10 @@ export interface TranslationKeys {
   wishlistMoveUp: string;
   wishlistMoveDown: string;
   wishlistOrderHint: string;
+  filtersMore: string;
+  filtersHide: string;
+  chanceSummaryLabel: string;
+  chanceSummaryHint: string;
 }
 
 // Default language

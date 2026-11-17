@@ -12,6 +12,7 @@ import { ResultsList } from './ResultsList';
 import { OtherRoutes } from './OtherRoutes';
 import { loadFederalHistory, loadFederalRules } from '../lib/data-loader';
 import { getTrend, type FederalHistory } from '../lib/history';
+import { chanceBand, countBands, type ChanceBand } from '../lib/chance';
 
 interface EligibilityCheckerProps {
   federalData: FederalCutoff[];
@@ -77,6 +78,10 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'cutoff_desc' | 'cutoff_asc' | 'closest' | 'alpha'>('cutoff_desc');
   const [showReach, setShowReach] = useState<boolean>(false);
+  // Results summary: tap a band (safe / competitive / reach) to show only those
+  const [bandFilter, setBandFilter] = useState<ChanceBand | 'all'>('all');
+  // Phones: secondary filters fold away so results start higher on the screen
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Prior-year cutoffs and rule-based routes load after the main data so the
   // checker never waits for them; cards fill in trends when they arrive.
@@ -216,6 +221,27 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
     [krgData, filters, system]
   );
 
+  // Chance bands over the full result set, then the optional band filter on top
+  const cutoffOf = (r: FederalCutoff | KRGCutoff) => ('min_average' in r ? r.min_average : r.min_composite_score);
+  const bandCounts = useMemo(() => {
+    if (score === null) return null;
+    const rows: (FederalCutoff | KRGCutoff)[] = system === 'federal' ? federalResults : krgResults;
+    return countBands(rows.map((r) => score - cutoffOf(r)));
+  }, [system, federalResults, krgResults, score]);
+  const inBand = (r: FederalCutoff | KRGCutoff) => score !== null && chanceBand(score - cutoffOf(r)) === bandFilter;
+  const shownFederal = useMemo(
+    () => (bandFilter === 'all' ? federalResults : federalResults.filter(inBand)),
+    [federalResults, bandFilter, score]
+  );
+  const shownKrg = useMemo(
+    () => (bandFilter === 'all' ? krgResults : krgResults.filter(inBand)),
+    [krgResults, bandFilter, score]
+  );
+  // A band that no longer has results (e.g. reach turned off) falls back to all
+  useEffect(() => {
+    if (bandFilter !== 'all' && bandCounts && bandCounts[bandFilter] === 0) setBandFilter('all');
+  }, [bandCounts, bandFilter]);
+
   const resultCount = system === 'federal' ? federalResults.length : krgResults.length;
 
   // For the "no results" screen: the lowest cutoff above the student's score
@@ -231,6 +257,8 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
   }, [filters, resultCount, system, federalData, krgData, maxScore]);
 
   const hasNarrowingFilters = governorate !== 'all' || studyType !== 'all' || channel !== 'all' || subStream !== undefined || gender !== 'both' || level !== 'all';
+  // Count of folded-away filters that are not at their default (shown on the phone toggle)
+  const advancedActive = [governorate !== 'all', studyType !== 'all', channel !== 'all' && channel !== 'general', gender !== 'both', level !== 'all'].filter(Boolean).length;
   const clearNarrowingFilters = () => {
     setGovernorate('all');
     setStudyType('all');
@@ -277,7 +305,7 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
         </p>
       )}
 
-      <form class="checker-form" onSubmit={(e) => e.preventDefault()}>
+      <form class={`checker-form ${filtersOpen ? 'checker-form--filters-open' : ''}`} onSubmit={(e) => e.preventDefault()}>
         <div class="form-grid">
           {/* Score input with quick clear and +/- step controls */}
           <div class="form-group score-form-group">
@@ -411,9 +439,24 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
             </div>
           )}
 
+          {/* Phones only: reveal the secondary filters */}
+          <button
+            type="button"
+            class="filters-toggle"
+            aria-expanded={filtersOpen}
+            aria-controls="advanced-filters"
+            onClick={() => setFiltersOpen(!filtersOpen)}
+          >
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M7 12h10M10 18h4" />
+            </svg>
+            <span>{filtersOpen ? t('filtersHide') : t('filtersMore')}</span>
+            {advancedActive > 0 && <span class="filters-toggle__count">{advancedActive}</span>}
+          </button>
+
           {/* Gender — single-sex programmes (nursing, women's colleges) */}
           {hasSingleSex && (
-            <div class="form-group">
+            <div class="form-group form-group--advanced">
               <span class="form-label" id="gender-label">{t('genderLabel')}</span>
               <div class="pill-group pill-group--compact" role="radiogroup" aria-labelledby="gender-label">
                 {(['both', 'male', 'female'] as const).map((g) => (
@@ -427,7 +470,7 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
 
           {/* Programme level — bachelor colleges vs. technical institutes */}
           {hasInstitutes && (
-            <div class="form-group">
+            <div class="form-group form-group--advanced">
               <span class="form-label" id="level-label">{t('levelLabel')}</span>
               <div class="pill-group pill-group--compact" role="radiogroup" aria-labelledby="level-label">
                 {(['all', 'college', 'institute'] as const).map((l) => (
@@ -440,7 +483,7 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
           )}
 
           {/* Location */}
-          <div class="form-group">
+          <div class="form-group form-group--advanced" id="advanced-filters">
             <label class="form-label" for="location-select">
               {t('governorateLabel')}
             </label>
@@ -460,7 +503,7 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
           </div>
 
           {/* Study Type */}
-          <div class="form-group">
+          <div class="form-group form-group--advanced">
             <label class="form-label" for="study-type-select">
               {t('studyTypeLabel')}
             </label>
@@ -479,7 +522,7 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
 
           {/* Federal Channel — only shown when the data has more than one channel */}
           {system === 'federal' && availableChannels.length > 1 && (
-            <div class="form-group">
+            <div class="form-group form-group--advanced">
               <label class="form-label" for="channel-select">
                 {t('channelLabel')}
               </label>
@@ -633,6 +676,39 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
 
       {/* Results List */}
       <div id="results-anchor" class="results-anchor" />
+      {score !== null && bandCounts && resultCount > 0 && (
+        <div class="chance-summary" role="group" aria-label={t('chanceSummaryLabel')}>
+          <div class="chance-summary__bar" aria-hidden="true">
+            {(['safe', 'target', 'reach'] as const).map((b) => bandCounts[b] > 0 && (
+              <span key={b} class={`chance-summary__seg chance-summary__seg--${b}`} style={{ flexGrow: bandCounts[b] }} />
+            ))}
+          </div>
+          <div class="chance-summary__chips">
+            <button
+              type="button"
+              class={`chance-chip ${bandFilter === 'all' ? 'chance-chip--active' : ''}`}
+              aria-pressed={bandFilter === 'all'}
+              onClick={() => setBandFilter('all')}
+            >
+              {t('scholarshipFilterAll')} <strong>{resultCount}</strong>
+            </button>
+            {(['safe', 'target', 'reach'] as const).map((b) => bandCounts[b] > 0 && (
+              <button
+                key={b}
+                type="button"
+                class={`chance-chip chance-chip--${b} ${bandFilter === b ? 'chance-chip--active' : ''}`}
+                aria-pressed={bandFilter === b}
+                onClick={() => setBandFilter(bandFilter === b ? 'all' : b)}
+              >
+                <span class="chance-chip__dot" aria-hidden="true" />
+                {t(b === 'safe' ? 'scoreDeltaSafe' : b === 'target' ? 'scoreDeltaTarget' : 'scoreDeltaReach')}
+                <strong>{bandCounts[b]}</strong>
+              </button>
+            ))}
+          </div>
+          <p class="chance-summary__hint">{t('chanceSummaryHint')}</p>
+        </div>
+      )}
       {score === null ? (
         <div class="empty-state">
           <span class="empty-state__icon" aria-hidden="true">✍️</span>
@@ -641,8 +717,8 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
         </div>
       ) : (
         <ResultsList
-          federalResults={federalResults}
-          krgResults={krgResults}
+          federalResults={shownFederal}
+          krgResults={shownKrg}
           system={system}
           studentScore={score}
           yearLabel={yearLabel}

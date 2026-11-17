@@ -257,6 +257,11 @@ export function filterScholarships(
     .sort((a, b) => {
       const diff = (statusWeight[statusOf(a)] ?? 9) - (statusWeight[statusOf(b)] ?? 9);
       if (diff !== 0) return diff;
+      const bachelor = Number(b.degree_levels.includes('bachelor')) - Number(a.degree_levels.includes('bachelor'));
+      if (bachelor !== 0) return bachelor;
+      const da = a.deadline ?? '9999-12-31';
+      const db = b.deadline ?? '9999-12-31';
+      if (da !== db) return da < db ? -1 : 1;
       return a.name.localeCompare(b.name);
     });
 }

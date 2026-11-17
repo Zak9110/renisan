@@ -21,7 +21,9 @@ export function Header({ isOfflineReady }: HeaderProps) {
           <div class="header__logo" aria-hidden="true">
             <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
               <circle cx="16" cy="16" r="14" stroke="url(#logo-grad)" stroke-width="2.5" />
-              <path d="M10 20l3-8h2l3 8M11.5 16h5M22 12v8" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M6.5 13.5 16 9l9.5 4.5L16 18z" fill="url(#logo-grad)" />
+              <path d="M10.5 15.8v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M25.5 13.5v5" stroke="url(#logo-grad)" stroke-width="1.8" stroke-linecap="round" />
               <defs>
                 <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32">
                   <stop offset="0%" stop-color="#f59e0b" />

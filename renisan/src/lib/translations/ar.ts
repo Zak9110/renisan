@@ -144,8 +144,8 @@ export const ar: TranslationKeys = {
   sortClosest: 'الأقرب لمعدلي',
   sortAlpha: 'أبجدياً (الجامعة)',
   scoreDeltaSafe: 'مضمون نسبياً',
-  scoreDeltaTarget: 'تنافسي / حرج',
-  scoreDeltaReach: 'فرصة طموحة',
+  scoreDeltaTarget: 'تنافسي',
+  scoreDeltaReach: 'طموح',
   showReachLabel: 'عرض الخيارات القريبة (أعلى مني بـ 2% كحد أقصى)',
   reachTag: 'فرصة طموحة',
   saveToWishlist: 'حفظ في قائمتي',
@@ -224,5 +224,9 @@ export const ar: TranslationKeys = {
   routesEvening: 'مسائي',
   wishlistMoveUp: 'رفع الأولوية',
   wishlistMoveDown: 'خفض الأولوية',
-  wishlistOrderHint: 'رتّب القائمة بترتيب رغباتك في استمارة التقديم: الخيار #1 هو الأهم.'
+  wishlistOrderHint: 'رتّب القائمة بترتيب رغباتك في استمارة التقديم: الخيار #1 هو الأهم.',
+  filtersMore: 'المزيد من الفلاتر',
+  filtersHide: 'إخفاء الفلاتر',
+  chanceSummaryLabel: 'توزيع النتائج حسب فرصة القبول',
+  chanceSummaryHint: 'مضمون نسبياً: معدلك أعلى بدرجتين أو أكثر من حد العام الماضي. تنافسي: أعلى بأقل من درجتين. الحدود تتغير كل عام.'
 };

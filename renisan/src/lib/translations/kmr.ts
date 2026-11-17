@@ -143,11 +143,11 @@ export const kmr: TranslationKeys = {
   sortCutoffAsc: 'Nîmre (ji nizm ber bi bilind)',
   sortClosest: 'Yên herî nêzîkî nîmreya min',
   sortAlpha: 'Elfabeyî (Navê zanîngehê)',
-  scoreDeltaSafe: 'Asta ewle',
-  scoreDeltaTarget: 'Hevrikiya bilind',
-  scoreDeltaReach: 'Şansê zêde',
+  scoreDeltaSafe: 'Ewle',
+  scoreDeltaTarget: 'Pêşbazî',
+  scoreDeltaReach: 'Armanca bilind',
   showReachLabel: 'Vebijarkên nêzîk nîşan bide (heta 2% li ser nîmreya min)',
-  reachTag: 'Şansê zêde',
+  reachTag: 'Armanca bilind',
   saveToWishlist: 'Li vebijarkên min zêde bike',
   removeFromWishlist: 'Ji vebijarkên min rake',
   wishlistTitle: 'Lîsteya Vebijarkên Min',
@@ -224,5 +224,9 @@ export const kmr: TranslationKeys = {
   routesEvening: 'Êvarê',
   wishlistMoveUp: 'Pêşîniyê bilind bike',
   wishlistMoveDown: 'Pêşîniyê daxîne',
-  wishlistOrderHint: 'Lîsteyê li gorî rêza bijareyên xwe di forma serlêdanê de rêz bike: bijareya #1 ya herî girîng e.'
+  wishlistOrderHint: 'Lîsteyê li gorî rêza bijareyên xwe di forma serlêdanê de rêz bike: bijareya #1 ya herî girîng e.',
+  filtersMore: 'Fîltreyên zêdetir',
+  filtersHide: 'Fîltreyan veşêre',
+  chanceSummaryLabel: 'Belavbûna encaman li gorî derfeta wergirtinê',
+  chanceSummaryHint: 'Ewle: nîmreya te 2 pûan an zêdetir ji sînorê par bilindtir e. Pêşbazî: kêmtir ji 2 pûan bilindtir e. Sînor her sal diguherin.'
 };

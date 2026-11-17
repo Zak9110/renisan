@@ -3,7 +3,8 @@ import { useI18n } from '../hooks/useI18n';
 import type { FederalCutoff, KRGCutoff } from '../lib/types';
 import { localizePlace } from '../lib/places';
 import { isWishlisted, toggleWishlist, onWishlistChange } from '../lib/wishlist';
-import { fillTemplate, formatAverage } from '../lib/format';
+import { fillTemplate, formatAverage, formatDelta } from '../lib/format';
+import { chanceBand, type ChanceBand } from '../lib/chance';
 import type { Trend } from '../lib/history';
 
 interface ResultCardProps {
@@ -15,6 +16,35 @@ interface ResultCardProps {
   /** Prior-year cutoffs for the same programme (Federal only; null while loading) */
   trend?: Trend | null;
 }
+
+/** Tiny inline chart of this programme's cutoff over the years (oldest → current). */
+function Sparkline({ values, title }: { values: number[]; title: string }) {
+  if (values.length < 2) return null;
+  const w = 48;
+  const h = 18;
+  const pad = 2.5;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;
+  const pts = values.map((v, i) => [
+    pad + (i * (w - 2 * pad)) / (values.length - 1),
+    h - pad - ((v - min) / span) * (h - 2 * pad)
+  ]);
+  const [lx, ly] = pts[pts.length - 1];
+  return (
+    <svg class="sparkline" viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" aria-label={title} dir="ltr">
+      <title>{title}</title>
+      <polyline points={pts.map((p) => p.join(',')).join(' ')} fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+      <circle cx={lx} cy={ly} r="2.25" fill="currentColor" />
+    </svg>
+  );
+}
+
+const BAND_LABEL: Record<ChanceBand, 'scoreDeltaSafe' | 'scoreDeltaTarget' | 'scoreDeltaReach'> = {
+  safe: 'scoreDeltaSafe',
+  target: 'scoreDeltaTarget',
+  reach: 'scoreDeltaReach'
+};
 
 export function ResultCard({ item, type, studentScore, yearLabel, trend }: ResultCardProps) {
   const { lang, t } = useI18n();
@@ -50,9 +80,10 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
 
   const notes = krg ? (lang === 'ar' ? krg.notes_ar : krg.notes_ckb || krg.notes_ar) : null;
 
-  // Delta calculation relative to student score
   const scoreDiff = studentScore != null ? Number((studentScore - score).toFixed(2)) : null;
-  const isReach = scoreDiff != null && scoreDiff < 0;
+  const band = scoreDiff != null ? chanceBand(scoreDiff) : null;
+
+  const yearText = (label: string, labelAr?: string) => (lang === 'ar' && labelAr) || label;
 
   const handleToggleWishlist = () => {
     toggleWishlist({
@@ -69,13 +100,42 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
     });
   };
 
+  // Trend line: direction vs last year + sparkline of all known years
+  let trendNode = null;
+  if (fed && trend) {
+    if (trend.previous && trend.delta != null) {
+      const dir = trend.delta > 0.004 ? 'up' : trend.delta < -0.004 ? 'down' : 'same';
+      const prevLabel = yearText(trend.previous.year_label, trend.previous.year_label_ar);
+      const text = dir === 'up' ? t('trendUp') : dir === 'down' ? t('trendDown') : t('trendSame');
+      const history = trend.series
+        .map((p) => fillTemplate(t('trendPrev'), { year: yearText(p.year_label, p.year_label_ar), score: formatAverage(p.value) }))
+        .join(' · ');
+      const sentence = fillTemplate(text, { delta: Math.abs(trend.delta).toFixed(2), year: prevLabel });
+      trendNode = (
+        <span class={`trend trend--${dir}`} title={`${sentence} — ${history}`}>
+          <Sparkline values={[...trend.series.map((p) => p.value), score]} title={`${t('trendLabel')}: ${history}`} />
+          <span class="trend__text" aria-label={sentence}>
+            <span aria-hidden="true">{dir === 'up' ? '▲' : dir === 'down' ? '▼' : '='}{' '}<bdi dir="ltr">{dir === 'same' ? '0' : Math.abs(trend.delta).toFixed(2)}</bdi></span>
+          </span>
+          <span class="trend__prev">
+            <bdi>{fillTemplate(t('trendPrev'), { year: prevLabel, score: formatAverage(trend.previous.value) })}</bdi>
+          </span>
+        </span>
+      );
+    } else {
+      trendNode = <span class="trend trend--new">{t('trendNew')}</span>;
+    }
+  }
+
   return (
-    <div class={`result-card ${isReach ? 'result-card--reach' : ''}`}>
+    <article class={`result-card ${band ? `result-card--${band}` : ''}`}>
       <div class="result-card__top">
         <div class="result-card__institution">
-          <div class="result-card__meta-bar">
-            <span class="result-card__uni">{uniName} • {location}</span>
-          </div>
+          <span class="result-card__uni">
+            {uniName}
+            <span class="result-card__sep" aria-hidden="true"> · </span>
+            {location}
+          </span>
           <h3 class="result-card__college">{collegeName}</h3>
           {deptName && <span class="result-card__dept">{deptName}</span>}
           {campus && (
@@ -90,11 +150,11 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
           <div class="result-card__score-badge">
             <span class="result-card__score-label">{t('resultMinScore')}</span>
             <span class="result-card__score-val">
-              <bdi>{formatAverage(score)}%</bdi>
+              <bdi>{formatAverage(score)}</bdi>
             </span>
             {fed?.min_score != null && (
               <span class="result-card__score-sub">
-                {t('resultTotalScore')}: <bdi>{formatAverage(fed.min_score)}</bdi>
+                {t('resultTotalScore')} <bdi>{formatAverage(fed.min_score)}</bdi>
               </span>
             )}
           </div>
@@ -103,6 +163,7 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
             type="button"
             class={`bookmark-btn ${bookmarked ? 'bookmark-btn--active' : ''}`}
             onClick={handleToggleWishlist}
+            aria-pressed={bookmarked}
             aria-label={bookmarked ? t('removeFromWishlist') : t('saveToWishlist')}
             title={bookmarked ? t('removeFromWishlist') : t('saveToWishlist')}
           >
@@ -113,73 +174,21 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
         </div>
       </div>
 
-      {/* Delta pill showing safety margin */}
-      {scoreDiff != null && (
-        <div class="result-card__delta-row">
-          {scoreDiff >= 2.0 && (
-            <span class="delta-badge delta-badge--safe">
-              <span class="delta-badge__dot" />
-              <bdi>+{scoreDiff.toFixed(1)}%</bdi> · {t('scoreDeltaSafe')}
-            </span>
-          )}
-          {scoreDiff >= 0 && scoreDiff < 2.0 && (
-            <span class="delta-badge delta-badge--target">
-              <span class="delta-badge__dot" />
-              <bdi>+{scoreDiff.toFixed(1)}%</bdi> · {t('scoreDeltaTarget')}
-            </span>
-          )}
-          {scoreDiff < 0 && (
-            <span class="delta-badge delta-badge--reach">
-              <span class="delta-badge__dot" />
-              <bdi>{scoreDiff.toFixed(1)}%</bdi> · {t('scoreDeltaReach')}
-            </span>
-          )}
-        </div>
-      )}
+      <div class="result-card__meta">
+        {band && scoreDiff != null && (
+          <span class={`delta-badge delta-badge--${band}`}>
+            <span class="delta-badge__dot" aria-hidden="true" />
+            <bdi dir="ltr">{formatDelta(scoreDiff)}</bdi>
+            <span>{t(BAND_LABEL[band])}</span>
+          </span>
+        )}
 
-      {/* Year-over-year: how this programme's cutoff moved */}
-      {fed && trend && (
-        <div class="result-card__trend" aria-label={t('trendLabel')}>
-          {trend.previous && trend.delta != null ? (() => {
-            const prevLabel = (lang === 'ar' && trend.previous.year_label_ar) || trend.previous.year_label;
-            const dir = trend.delta > 0 ? 'up' : trend.delta < 0 ? 'down' : 'same';
-            const text = dir === 'up' ? t('trendUp') : dir === 'down' ? t('trendDown') : t('trendSame');
-            return (
-              <span class={`trend-badge trend-badge--${dir}`}>
-                <span aria-hidden="true">{dir === 'up' ? '▲' : dir === 'down' ? '▼' : '▬'}</span>
-                {' '}{fillTemplate(text, { delta: Math.abs(trend.delta).toFixed(2), year: prevLabel })}
-              </span>
-            );
-          })() : (
-            <span class="trend-chip trend-chip--new">{t('trendNew')}</span>
-          )}
-          {trend.series.map((p) => (
-            <span class="trend-chip" key={p.year}>
-              <bdi>{fillTemplate(t('trendPrev'), { year: (lang === 'ar' && p.year_label_ar) || p.year_label, score: formatAverage(p.value) })}</bdi>
-            </span>
-          ))}
-        </div>
-      )}
+        {trendNode}
 
-      <div class="result-card__tags">
-        <span class={`tag tag--${confidence}`}>
-          {confidence === 'official' && t('resultConfidenceOfficial')}
-          {confidence === 'verified_third_party' && t('resultConfidenceVerified')}
-          {confidence === 'unverified' && t('resultConfidenceUnverified')}
-        </span>
-
-        <span class="tag">
-          {item.study_type === 'morning' && t('studyTypeMorning')}
-          {item.study_type === 'evening' && t('studyTypeEvening')}
-          {item.study_type === 'parallel' && t('studyTypeParallel')}
-          {item.study_type === 'government' && t('studyTypeGovernment')}
-        </span>
-
+        {/* Only tags that tell programmes apart; dataset-wide facts live in the note above the form */}
         {isInstitute && <span class="tag tag--institute">{t('levelInstitute')}</span>}
-
         {item.gender === 'female' && <span class="tag tag--female">{t('tagFemaleOnly')}</span>}
         {item.gender === 'male' && <span class="tag tag--male">{t('tagMaleOnly')}</span>}
-
         {fed && fed.channel && fed.channel !== 'general' && (
           <span class="tag tag--verified">
             {fed.channel === 'martyrs' && t('channelMartyrs')}
@@ -188,14 +197,23 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
             {fed.channel === 'medical_free' && t('channelMedicalFree')}
           </span>
         )}
-
-        {item.seats != null && item.seats > 0 && (
+        {krg && (
           <span class="tag">
-            {t('resultSeats')}: {item.seats}
+            {item.study_type === 'parallel' ? t('studyTypeParallel') : item.study_type === 'evening' ? t('studyTypeEvening') : t('studyTypeGovernment')}
           </span>
         )}
-
-        {yearLabel && <span class="tag tag--year">{fillTemplate(t('dataYearTag'), { year: yearLabel })}</span>}
+        {fed && fed.study_type !== 'morning' && (
+          <span class="tag">{fed.study_type === 'evening' ? t('studyTypeEvening') : t('studyTypeParallel')}</span>
+        )}
+        {confidence !== 'official' && (
+          <span class={`tag tag--${confidence}`}>
+            {confidence === 'verified_third_party' ? t('resultConfidenceVerified') : t('resultConfidenceUnverified')}
+          </span>
+        )}
+        {item.seats != null && item.seats > 0 && (
+          <span class="tag">{t('resultSeats')}: {item.seats}</span>
+        )}
+        {krg && yearLabel && <span class="tag tag--year">{fillTemplate(t('dataYearTag'), { year: yearLabel })}</span>}
       </div>
 
       {notes && (
@@ -203,6 +221,6 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
           <span aria-hidden="true">ℹ️</span> <bdi>{notes}</bdi>
         </div>
       )}
-    </div>
+    </article>
   );
 }

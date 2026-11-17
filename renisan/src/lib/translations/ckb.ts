@@ -143,11 +143,11 @@ export const ckb: TranslationKeys = {
   sortCutoffAsc: 'نمرە (لە نزمەوە بۆ بەرز)',
   sortClosest: 'نزیکترین لە نمرەکەم',
   sortAlpha: 'ئەلفوبێ (ناوی زانکۆ)',
-  scoreDeltaSafe: 'ئاستی سەلامەت',
-  scoreDeltaTarget: 'سنوری / کێبڕکێی بەرز',
-  scoreDeltaReach: 'شانسی زیاتر',
+  scoreDeltaSafe: 'سەلامەت',
+  scoreDeltaTarget: 'کێبڕکێ',
+  scoreDeltaReach: 'ئامانجی بەرز',
   showReachLabel: 'پیشاندانی بژاردە سنورییەکان (تا ٢٪ لەسەرووی نمرەکەم)',
-  reachTag: 'شانسی زیاتر',
+  reachTag: 'ئامانجی بەرز',
   saveToWishlist: 'پاشەکەوتکردن لە دڵخوازەکان',
   removeFromWishlist: 'سڕینەوە لە دڵخوازەکان',
   wishlistTitle: 'لیستی بەشە دڵخوازەکانم',
@@ -224,5 +224,9 @@ export const ckb: TranslationKeys = {
   routesEvening: 'ئێواران',
   wishlistMoveUp: 'بەرزکردنەوەی پێشینە',
   wishlistMoveDown: 'دابەزاندنی پێشینە',
-  wishlistOrderHint: 'لیستەکە بە ڕیزبەندی هەڵبژاردنەکانت لە فۆڕمی پێشکەشکردن ڕێک بخە: هەڵبژاردەی #1 گرنگترینە.'
+  wishlistOrderHint: 'لیستەکە بە ڕیزبەندی هەڵبژاردنەکانت لە فۆڕمی پێشکەشکردن ڕێک بخە: هەڵبژاردەی #1 گرنگترینە.',
+  filtersMore: 'فلتەری زیاتر',
+  filtersHide: 'شاردنەوەی فلتەرەکان',
+  chanceSummaryLabel: 'دابەشبوونی ئەنجامەکان بەپێی دەرفەتی وەرگیران',
+  chanceSummaryHint: 'سەلامەت: نمرەکەت 2 نمرە یان زیاتر لە سنووری پار بەرزترە. کێبڕکێ: کەمتر لە 2 نمرە بەرزترە. سنوورەکان هەموو ساڵێک دەگۆڕێن.'
 };
