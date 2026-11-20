@@ -88,14 +88,14 @@ export async function listPublicOpportunities(
 
   const hasProfile = Boolean(
     profile &&
-      (profile.educationLevel ||
-        profile.gpaPercent != null ||
-        profile.birthYear != null ||
-        profile.englishScore != null ||
-        profile.workExperienceYears != null ||
-        profile.fieldOfStudy ||
-        profile.currentCountry ||
-        profile.idpSelfDeclared != null),
+    (profile.educationLevel ||
+      profile.gpaPercent != null ||
+      profile.birthYear != null ||
+      profile.englishScore != null ||
+      profile.workExperienceYears != null ||
+      profile.fieldOfStudy ||
+      profile.currentCountry ||
+      profile.idpSelfDeclared != null),
   );
 
   const verdictOrder = { GO: 0, MAYBE: 1, NO_GO: 2 };

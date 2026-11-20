@@ -69,10 +69,7 @@ export async function addItemToList(
     .onConflictDoNothing();
 
   // Also ensure the opportunity is tracked as "saved" if not already tracked
-  await db
-    .insert(userOpportunity)
-    .values({ userId, opportunityId, state: "saved" })
-    .onConflictDoNothing();
+  await db.insert(userOpportunity).values({ userId, opportunityId, state: "saved" }).onConflictDoNothing();
 
   return true;
 }
@@ -211,11 +208,7 @@ export async function getUserDeadlines(
 }
 
 function escapeIcs(text: string): string {
-  return text
-    .replace(/\\/g, "\\\\")
-    .replace(/;/g, "\\;")
-    .replace(/,/g, "\\,")
-    .replace(/\r?\n/g, "\\n");
+  return text.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
 }
 
 /** Generates a personal subscribable RFC 5545 .ics calendar feed for a user's saved deadlines. */
@@ -226,7 +219,10 @@ export async function buildUserCalendarIcs(
   now: Date = new Date(),
 ): Promise<string> {
   const deadlines = await getUserDeadlines(db, userId, now);
-  const stamp = now.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const stamp = now
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}/, "");
 
   const events: string[] = [];
   for (const d of deadlines) {

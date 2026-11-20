@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { pickText, type Locale } from "@/i18n/config";
 
@@ -47,8 +47,8 @@ export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [notice, setNotice] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
+  useEffect(() => {
+    let active = true;
     const params = new URLSearchParams();
     if (q.trim()) params.set("q", q.trim());
     if (typeFilter) params.set("type", typeFilter);
@@ -57,17 +57,20 @@ export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
     if (guestGpa) params.set("gpaPercent", guestGpa);
     if (guestBirthYear) params.set("birthYear", guestBirthYear);
 
-    const res = await fetch(`/api/opportunities?${params.toString()}`);
-    if (res.ok) {
-      const data = (await res.json()) as { items: OpportunityItemDto[] };
-      setItems(data.items);
-    }
-    setLoading(false);
+    fetch(`/api/opportunities?${params.toString()}`)
+      .then((res) => (res.ok ? (res.json() as Promise<{ items: OpportunityItemDto[] }>) : null))
+      .then((data) => {
+        if (!active) return;
+        if (data) setItems(data.items);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [q, typeFilter, eligibleOnly, guestLevel, guestGpa, guestBirthYear]);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
 
   const handleSave = async (opportunityId: string) => {
     setNotice(null);
@@ -129,9 +132,7 @@ export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
               type="button"
               onClick={() => setEligibleOnly(mode)}
               className={`min-h-11 rounded-full border px-4 text-sm font-medium ${
-                eligibleOnly === mode
-                  ? "border-accent bg-accent text-white"
-                  : "border-border bg-bg text-text"
+                eligibleOnly === mode ? "border-accent bg-accent text-white" : "border-border bg-bg text-text"
               }`}
             >
               {mode === "all" ? t("eligibleAll") : mode === "go" ? t("eligibleGo") : t("eligibleGoMaybe")}

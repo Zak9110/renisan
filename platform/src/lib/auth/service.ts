@@ -1,11 +1,13 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import {
   notificationPrefs,
   otpCodes,
   profiles,
   sessions,
+  telegramLinkCodes,
+  telegramLinks,
   userListItems,
   userLists,
   userOpportunity,
@@ -75,6 +77,14 @@ export async function requestOtp(
   const codeHash = hmacHex(`${targetHash}:${code}`, deps.secret);
   const expiresAt = new Date(now.getTime() + OTP_TTL_MS);
 
+  // Invalidate any earlier unused OTPs for this target so only the newest code is ever active
+  await deps.db
+    .update(otpCodes)
+    .set({ usedAt: now })
+    .where(
+      and(eq(otpCodes.targetHash, targetHash), eq(otpCodes.channel, input.channel), isNull(otpCodes.usedAt)),
+    );
+
   await deps.db.insert(otpCodes).values({
     channel: input.channel,
     purpose: "login",
@@ -99,7 +109,13 @@ export type VerifyOtpResult =
 
 export async function verifyOtp(
   deps: Pick<AuthDeps, "db" | "secret">,
-  input: { channel: "sms" | "email"; target: string; code: string; locale?: "ar" | "ckb" | "kmr" | "en"; now?: Date },
+  input: {
+    channel: "sms" | "email";
+    target: string;
+    code: string;
+    locale?: "ar" | "ckb" | "kmr" | "en";
+    now?: Date;
+  },
 ): Promise<VerifyOtpResult> {
   const now = input.now ?? new Date();
   const normalized =
@@ -112,7 +128,9 @@ export async function verifyOtp(
   const rows = await deps.db
     .select()
     .from(otpCodes)
-    .where(and(eq(otpCodes.targetHash, targetHash), eq(otpCodes.channel, input.channel), isNull(otpCodes.usedAt)))
+    .where(
+      and(eq(otpCodes.targetHash, targetHash), eq(otpCodes.channel, input.channel), isNull(otpCodes.usedAt)),
+    )
     .orderBy(desc(otpCodes.createdAt))
     .limit(1);
 
@@ -130,7 +148,10 @@ export async function verifyOtp(
   if (!matches) {
     const nextAttempts = Math.min(OTP_MAX_ATTEMPTS, otp.attempts + 1);
     await deps.db.update(otpCodes).set({ attempts: nextAttempts }).where(eq(otpCodes.id, otp.id));
-    return { ok: false, error: nextAttempts >= OTP_MAX_ATTEMPTS ? "too_many_attempts" : "invalid_or_expired" };
+    return {
+      ok: false,
+      error: nextAttempts >= OTP_MAX_ATTEMPTS ? "too_many_attempts" : "invalid_or_expired",
+    };
   }
 
   // Mark code consumed so it can never be replayed
@@ -210,10 +231,7 @@ export async function loginWithTelegramUser(
     userId = existing[0].id;
   } else {
     isNewUser = true;
-    const [created] = await db
-      .insert(users)
-      .values({ telegramUserId, locale })
-      .returning({ id: users.id });
+    const [created] = await db.insert(users).values({ telegramUserId, locale }).returning({ id: users.id });
     userId = created!.id;
     await db.insert(notificationPrefs).values({ userId }).onConflictDoNothing();
   }
@@ -278,11 +296,10 @@ export async function exportUserData(db: Db, userId: string) {
   const tracked = await db.select().from(userOpportunity).where(eq(userOpportunity.userId, userId));
   const lists = await db.select().from(userLists).where(eq(userLists.userId, userId));
   const listIds = lists.map((l) => l.id);
-  const listItems =
+  const ownedItems =
     listIds.length > 0
-      ? await db.select().from(userListItems)
+      ? await db.select().from(userListItems).where(inArray(userListItems.listId, listIds))
       : [];
-  const ownedItems = listItems.filter((i) => listIds.includes(i.listId));
 
   return {
     exportedAt: new Date().toISOString(),
@@ -307,8 +324,12 @@ export async function exportUserData(db: Db, userId: string) {
 
 /** Hard rule: account delete removes sessions, personal contact, profile, lists & tracked rows. */
 export async function deleteUserAccount(db: Db, userId: string): Promise<void> {
+  // The user row is soft-deleted, so FK cascades never fire: remove every personal row explicitly.
   await db.delete(sessions).where(eq(sessions.userId, userId));
-  await db.delete(userLists).where(eq(userLists.userId, userId));
+  await db.delete(telegramLinks).where(eq(telegramLinks.userId, userId));
+  await db.delete(telegramLinkCodes).where(eq(telegramLinkCodes.userId, userId));
+  await db.delete(notificationPrefs).where(eq(notificationPrefs.userId, userId));
+  await db.delete(userLists).where(eq(userLists.userId, userId)); // cascades to user_list_items
   await db.delete(userOpportunity).where(eq(userOpportunity.userId, userId));
   await db.delete(profiles).where(eq(profiles.userId, userId));
   await db

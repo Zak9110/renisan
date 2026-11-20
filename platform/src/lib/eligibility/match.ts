@@ -64,7 +64,10 @@ export interface MatchOutput {
   preferenceScore: number;
 }
 
-export function isOpportunityExpired(opp: Pick<MatchOpportunityInput, "status" | "deadline" | "deadlineStatus" | "rolling">, now: Date = new Date()): boolean {
+export function isOpportunityExpired(
+  opp: Pick<MatchOpportunityInput, "status" | "deadline" | "deadlineStatus" | "rolling">,
+  now: Date = new Date(),
+): boolean {
   if (opp.status === "expired") return true;
   if (opp.rolling) return false;
   if (opp.deadline && opp.deadlineStatus === "confirmed") {

@@ -6,7 +6,9 @@ import { listPublicOpportunities } from "@/lib/opportunities/service";
 import type { MatchProfile } from "@/lib/eligibility/match";
 
 const querySchema = z.object({
-  type: z.enum(["scholarship", "exchange", "fellowship", "internship", "competition", "training", "job"]).optional(),
+  type: z
+    .enum(["scholarship", "exchange", "fellowship", "internship", "competition", "training", "job"])
+    .optional(),
   level: z.string().max(40).optional(),
   country: z.string().max(60).optional(),
   fundingType: z.enum(["full", "partial", "stipend", "none"]).optional(),

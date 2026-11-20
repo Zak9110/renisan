@@ -21,6 +21,7 @@ Work one milestone at a time. Each milestone ends with: all checks green (`pnpm 
 - Server sessions, logout, account export and delete.
 - Profile wizard (level required, rest optional), minor detection from `birthYear`.
   **Done when:** OTP tests pass (rate limit, expiry, reuse), no PII in logs.
+  **Status (2026-11-20): done** (OTP service + rate limits + OTPIQ provider + Telegram Login HMAC verifier + sessions + account export/delete + `/[locale]/account` UI + `tests/db/auth-lists.test.ts`).
 
 ## M2 — Opportunities and matching engine
 
@@ -29,6 +30,7 @@ Work one milestone at a time. Each milestone ends with: all checks green (`pnpm 
 - Public list and detail pages with filters, SEO metadata, expiry banner.
 - Saved/applied/got_it tracker.
   **Done when:** engine unit tests cover: mandatory fail, unknown field -> MAYBE, ranges, age at deadline, multiple rules, expired exclusion.
+  **Status (2026-11-20): core done** (`src/lib/eligibility/match.ts`, `src/lib/opportunities/service.ts`, `src/lib/lists/service.ts` custom lists + deadlines + subscribable `.ics` WebCal feed, `src/lib/ingestion/daily.ts` + `/api/cron/daily` 24h sync, `/[locale]/opportunities` and `/[locale]/lists` pages, unit + DB tests green). Detail pages, sitemap, and report flow remain for M2/M3 polish.
 
 ## M3 — Editor console
 

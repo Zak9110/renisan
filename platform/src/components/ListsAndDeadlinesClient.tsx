@@ -56,8 +56,29 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
   }, []);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    let active = true;
+    Promise.all([fetch("/api/lists"), fetch("/api/deadlines")])
+      .then(async ([lRes, dRes]) => {
+        if (!active) return;
+        if (lRes.status === 401 || dRes.status === 401) {
+          setUnauth(true);
+          return;
+        }
+        setUnauth(false);
+        if (lRes.ok) {
+          const data = (await lRes.json()) as { lists: CustomListDto[] };
+          if (active) setLists(data.lists);
+        }
+        if (dRes.ok) {
+          const data = (await dRes.json()) as { deadlines: DeadlineDto[] };
+          if (active) setDeadlines(data.deadlines);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleCreateList = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,10 +139,7 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
             placeholder={t("newListPlaceholder")}
             className="min-h-11 flex-1 rounded-lg border border-border bg-bg px-3 text-sm"
           />
-          <button
-            type="submit"
-            className="min-h-11 rounded-lg bg-accent px-4 text-sm font-medium text-white"
-          >
+          <button type="submit" className="min-h-11 rounded-lg bg-accent px-4 text-sm font-medium text-white">
             {t("createList")}
           </button>
         </form>
@@ -221,9 +239,7 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
                     type="text"
                     defaultValue={d.privateNote ?? ""}
                     placeholder={t("notePlaceholder")}
-                    onBlur={(e) =>
-                      void handleUpdateTracker(d.opportunityId, d.state, e.target.value)
-                    }
+                    onBlur={(e) => void handleUpdateTracker(d.opportunityId, d.state, e.target.value)}
                     className="min-h-11 flex-1 rounded-md border border-border bg-surface px-3 text-xs"
                   />
                 </div>

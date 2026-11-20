@@ -35,32 +35,44 @@ export function AccountClient({ locale }: { locale: string }) {
   const [workExp, setWorkExp] = useState("");
   const [fieldOfStudy, setFieldOfStudy] = useState("");
 
+  const applyUserData = useCallback((u: UserDto | null) => {
+    setUser(u);
+    if (u) {
+      setBirthYear(u.birthYear ? String(u.birthYear) : "");
+      if (u.profile) {
+        setEduLevel(u.profile.educationLevel);
+        setGpa(u.profile.gpaPercent != null ? String(u.profile.gpaPercent) : "");
+        setWorkExp(u.profile.workExperienceYears != null ? String(u.profile.workExperienceYears) : "");
+        setFieldOfStudy(u.profile.fieldOfStudy ?? "");
+      }
+    }
+  }, []);
+
   const loadMe = useCallback(async () => {
-    setLoading(true);
     const res = await fetch("/api/auth/me");
     if (res.ok) {
       const data = (await res.json()) as { user: UserDto | null };
-      setUser(data.user);
-      if (data.user) {
-        setBirthYear(data.user.birthYear ? String(data.user.birthYear) : "");
-        if (data.user.profile) {
-          setEduLevel(data.user.profile.educationLevel);
-          setGpa(data.user.profile.gpaPercent != null ? String(data.user.profile.gpaPercent) : "");
-          setWorkExp(
-            data.user.profile.workExperienceYears != null
-              ? String(data.user.profile.workExperienceYears)
-              : "",
-          );
-          setFieldOfStudy(data.user.profile.fieldOfStudy ?? "");
-        }
-      }
+      applyUserData(data.user);
     }
     setLoading(false);
-  }, []);
+  }, [applyUserData]);
 
   useEffect(() => {
-    void loadMe();
-  }, [loadMe]);
+    let active = true;
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? (res.json() as Promise<{ user: UserDto | null }>) : null))
+      .then((data) => {
+        if (!active) return;
+        if (data) applyUserData(data.user);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [applyUserData]);
 
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,6 +133,20 @@ export function AccountClient({ locale }: { locale: string }) {
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
+  };
+
+  const handleExport = async () => {
+    const res = await fetch("/api/account/export");
+    if (!res.ok) return;
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "renisan-account-export.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const handleDelete = async () => {
@@ -207,9 +233,7 @@ export function AccountClient({ locale }: { locale: string }) {
         <div className="text-start">
           <p className="text-sm text-muted">{t("signedInAs")}</p>
           <strong>{user.email || user.phoneE164 || user.id}</strong>
-          {user.isMinor && (
-            <p className="mt-1 text-xs font-medium text-accent">🛡️ {t("minorBadge")}</p>
-          )}
+          {user.isMinor && <p className="mt-1 text-xs font-medium text-accent">🛡️ {t("minorBadge")}</p>}
         </div>
         <button
           type="button"
@@ -227,9 +251,7 @@ export function AccountClient({ locale }: { locale: string }) {
             <span>{t("educationLevel")}</span>
             <select
               value={eduLevel}
-              onChange={(e) =>
-                setEduLevel(e.target.value as "grade12" | "undergrad" | "graduate" | "other")
-              }
+              onChange={(e) => setEduLevel(e.target.value as "grade12" | "undergrad" | "graduate" | "other")}
               className="min-h-11 rounded-lg border border-border bg-bg px-3"
             >
               <option value="grade12">{t("levelGrade12")}</option>
@@ -299,12 +321,13 @@ export function AccountClient({ locale }: { locale: string }) {
       </section>
 
       <section className="flex flex-wrap gap-3">
-        <a
-          href="/api/account/export"
+        <button
+          type="button"
+          onClick={() => void handleExport()}
           className="inline-flex min-h-11 items-center rounded-lg border border-border bg-surface px-4 text-sm"
         >
           {t("exportData")}
-        </a>
+        </button>
         <button
           type="button"
           onClick={() => void handleDelete()}

@@ -2,7 +2,15 @@ import { createHash, createHmac } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createDb, type Db } from "@/db/client";
 import { runMigrations } from "@/db/migrate";
-import { eligibilityRules, opportunities, profiles, users } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import {
+  eligibilityRules,
+  notificationPrefs,
+  opportunities,
+  profiles,
+  telegramLinks,
+  users,
+} from "@/db/schema";
 import {
   deleteUserAccount,
   exportUserData,
@@ -54,25 +62,50 @@ describe("auth, OTP security, Telegram Login, accounts, lists & deadlines", () =
     const deps = { db, secret: SECRET, sms: new ConsoleSmsProvider(), email: new ConsoleEmailProvider() };
     const t0 = new Date("2026-11-20T10:00:00Z");
 
-    const req = await requestOtp(deps, { channel: "email", target: "student@example.org", ip: "10.0.0.1", now: t0 });
+    const req = await requestOtp(deps, {
+      channel: "email",
+      target: "student@example.org",
+      ip: "10.0.0.1",
+      now: t0,
+    });
     expect(req.ok).toBe(true);
     if (!req.ok) return;
     expect(req.devCode).toMatch(/^\d{6}$/);
 
     // Wrong code increments attempts up to 5 and locks out
     for (let i = 0; i < 4; i++) {
-      const bad = await verifyOtp(deps, { channel: "email", target: "student@example.org", code: "000000", now: t0 });
+      const bad = await verifyOtp(deps, {
+        channel: "email",
+        target: "student@example.org",
+        code: "000000",
+        now: t0,
+      });
       expect(bad.ok).toBe(false);
     }
-    const fifth = await verifyOtp(deps, { channel: "email", target: "student@example.org", code: "000000", now: t0 });
+    const fifth = await verifyOtp(deps, {
+      channel: "email",
+      target: "student@example.org",
+      code: "000000",
+      now: t0,
+    });
     expect(fifth).toEqual({ ok: false, error: "too_many_attempts" });
 
     // Even the real code is rejected after 5 failed attempts
-    const locked = await verifyOtp(deps, { channel: "email", target: "student@example.org", code: req.devCode!, now: t0 });
+    const locked = await verifyOtp(deps, {
+      channel: "email",
+      target: "student@example.org",
+      code: req.devCode!,
+      now: t0,
+    });
     expect(locked).toEqual({ ok: false, error: "too_many_attempts" });
 
     // Request a fresh OTP and verify within 5 minutes
-    const req2 = await requestOtp(deps, { channel: "email", target: "student@example.org", ip: "10.0.0.1", now: t0 });
+    const req2 = await requestOtp(deps, {
+      channel: "email",
+      target: "student@example.org",
+      ip: "10.0.0.1",
+      now: t0,
+    });
     expect(req2.ok).toBe(true);
     if (!req2.ok) return;
 
@@ -86,12 +119,22 @@ describe("auth, OTP security, Telegram Login, accounts, lists & deadlines", () =
     expect(late).toEqual({ ok: false, error: "invalid_or_expired" });
 
     // Valid verification creates user + session
-    const ok = await verifyOtp(deps, { channel: "email", target: "student@example.org", code: req2.devCode!, now: t0 });
+    const ok = await verifyOtp(deps, {
+      channel: "email",
+      target: "student@example.org",
+      code: req2.devCode!,
+      now: t0,
+    });
     expect(ok.ok).toBe(true);
     if (!ok.ok) return;
 
     // Replay of the same OTP is blocked
-    const replay = await verifyOtp(deps, { channel: "email", target: "student@example.org", code: req2.devCode!, now: t0 });
+    const replay = await verifyOtp(deps, {
+      channel: "email",
+      target: "student@example.org",
+      code: req2.devCode!,
+      now: t0,
+    });
     expect(replay).toEqual({ ok: false, error: "invalid_or_expired" });
 
     // Session resolves and logs out cleanly
@@ -101,9 +144,19 @@ describe("auth, OTP security, Telegram Login, accounts, lists & deadlines", () =
     expect(await getSessionUser(db, ok.sessionToken, t0)).toBeNull();
 
     // Per-target rate limit: 3rd request allowed, 4th within 10 minutes blocked
-    const req3 = await requestOtp(deps, { channel: "email", target: "student@example.org", ip: "10.0.0.1", now: t0 });
+    const req3 = await requestOtp(deps, {
+      channel: "email",
+      target: "student@example.org",
+      ip: "10.0.0.1",
+      now: t0,
+    });
     expect(req3.ok).toBe(true);
-    const req4 = await requestOtp(deps, { channel: "email", target: "student@example.org", ip: "10.0.0.1", now: t0 });
+    const req4 = await requestOtp(deps, {
+      channel: "email",
+      target: "student@example.org",
+      ip: "10.0.0.1",
+      now: t0,
+    });
     expect(req4.ok).toBe(false);
     if (!req4.ok) expect(req4.error).toBe("rate_limited");
   });
@@ -229,7 +282,19 @@ describe("auth, OTP security, Telegram Login, accounts, lists & deadlines", () =
     expect(await removeItemFromList(db, student!.id, list.id, oppGo!.id)).toBe(true);
     expect(await deleteUserList(db, student!.id, list.id)).toBe(true);
 
+    await db.insert(telegramLinks).values({
+      userId: student!.id,
+      chatIdHash: "a".repeat(64),
+      chatIdEncrypted: "SAMPLE-encrypted",
+    });
     await deleteUserAccount(db, student!.id);
     expect(await exportUserData(db, student!.id)).toBeNull();
+    // Soft delete must still remove linked personal rows (cascades don't fire on soft delete)
+    expect(await db.select().from(telegramLinks).where(eq(telegramLinks.userId, student!.id))).toHaveLength(
+      0,
+    );
+    expect(
+      await db.select().from(notificationPrefs).where(eq(notificationPrefs.userId, student!.id)),
+    ).toHaveLength(0);
   });
 });

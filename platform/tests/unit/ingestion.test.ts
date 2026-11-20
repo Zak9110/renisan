@@ -26,8 +26,12 @@ afterAll(async () => close());
 
 describe("daily 24h ingestion engine", () => {
   it("detects scam red flags (fees, guarantees, upfront bank info)", () => {
-    expect(checkScamRedFlags("Pay a $50 processing fee to claim your 100% guaranteed scholarship").flagged).toBe(true);
-    expect(checkScamRedFlags("Fully funded Master's scholarship in Germany for Iraqi students").flagged).toBe(false);
+    expect(
+      checkScamRedFlags("Pay a $50 processing fee to claim your 100% guaranteed scholarship").flagged,
+    ).toBe(true);
+    expect(checkScamRedFlags("Fully funded Master's scholarship in Germany for Iraqi students").flagged).toBe(
+      false,
+    );
   });
 
   it("parses RSS 2.0, Atom, and ReliefWeb v2 JSON cleanly", () => {
@@ -76,29 +80,14 @@ describe("daily 24h ingestion engine", () => {
       .returning();
 
     const mockFetch: SourceFetcher = async (url) => {
-      if (url.includes("api.reliefweb.int")) {
+      if (url.includes("reliefweb.int")) {
         return {
           ok: true,
           status: 200,
-          text: JSON.stringify({
-            data: [
-              {
-                fields: {
-                  title: "SAMPLE — Youth Tech Fellowship Iraq",
-                  url: "https://example.org/rw-fellowship-1",
-                  body: "Free fellowship for Iraqi students",
-                  source: [{ name: "SAMPLE — UN Partner" }],
-                },
-              },
-              {
-                fields: {
-                  title: "100% Guaranteed Scholarship with processing fee",
-                  url: "https://example.org/scam-1",
-                  body: "Pay a processing fee now",
-                },
-              },
-            ],
-          }),
+          text: `<rss><channel>
+            <item><title>SAMPLE — Youth Tech Fellowship Iraq</title><link>https://example.org/rw-fellowship-1</link><description>Free fellowship for Iraqi students</description></item>
+            <item><title>100% Guaranteed Scholarship with processing fee</title><link>https://example.org/scam-1</link><description>Pay a processing fee now</description></item>
+          </channel></rss>`,
         };
       }
       return {
@@ -118,6 +107,8 @@ describe("daily 24h ingestion engine", () => {
 
     const inReview = await db.select().from(opportunities).where(eq(opportunities.status, "in_review"));
     expect(inReview.length).toBeGreaterThanOrEqual(2);
+    const rwItem = inReview.find((o) => o.sourceUrl === "https://example.org/rw-fellowship-1");
+    expect(rwItem?.type).toBe("training");
 
     // Running a second time deduplicates already-queued URLs
     const second = await runDailyIngestion(db, mockFetch, now);

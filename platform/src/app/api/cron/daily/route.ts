@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { env } from "@/lib/env";
 import { getDb } from "@/lib/db-singleton";
@@ -5,9 +6,10 @@ import { runDailyIngestion } from "@/lib/ingestion/daily";
 import { pruneRateLimits } from "@/lib/auth/rate-limit";
 
 function authorized(req: NextRequest): boolean {
-  const expected = env().CRON_SECRET;
-  const auth = req.headers.get("authorization");
-  return auth === `Bearer ${expected}`;
+  const expected = Buffer.from(`Bearer ${env().CRON_SECRET}`);
+  const provided = Buffer.from(req.headers.get("authorization") ?? "");
+  // Constant-time compare so the secret can't be recovered through response timing
+  return provided.length === expected.length && timingSafeEqual(provided, expected);
 }
 
 async function handle(req: NextRequest) {

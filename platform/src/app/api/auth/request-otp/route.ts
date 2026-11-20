@@ -24,10 +24,7 @@ export async function POST(req: NextRequest) {
 
   if (!result.ok) {
     const status = result.error === "rate_limited" ? 429 : result.error === "invalid_target" ? 400 : 502;
-    return NextResponse.json(
-      { error: result.error, retryAfterSec: result.retryAfterSec },
-      { status },
-    );
+    return NextResponse.json({ error: result.error, retryAfterSec: result.retryAfterSec }, { status });
   }
 
   // Only expose devCode when running locally with console providers
