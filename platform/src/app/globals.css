@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* Colors as tokens; dark mode follows the system. Logical properties only (RTL + LTR). */
+:root {
+  --color-bg: #fbfaf7;
+  --color-surface: #ffffff;
+  --color-text: #1c1b19;
+  --color-muted: #5c5a55;
+  --color-accent: #0f6b5c;
+  --color-border: #e4e1da;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #141513;
+    --color-surface: #1d1f1c;
+    --color-text: #ecebe6;
+    --color-muted: #a8a69f;
+    --color-accent: #5cc4ae;
+    --color-border: #2f322d;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-accent: var(--color-accent);
+  --color-border: var(--color-border);
+  --font-arabic: var(--font-noto-arabic), "Noto Sans Arabic", Tahoma, sans-serif;
+  --font-latin: var(--font-inter), system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+html[dir="rtl"] body {
+  font-family: var(--font-arabic);
+}
+html[dir="ltr"] body {
+  font-family: var(--font-latin);
+}
+/* Arabic-script snippets inside LTR pages (e.g. the glyph test) still get the Arabic font. */
+:lang(ar),
+:lang(ckb) {
+  font-family: var(--font-arabic);
+}

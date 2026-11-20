@@ -1,0 +1,98 @@
+name: Opportunity watch & daily harvest
+
+# Daily (every 24h at 03:00 Asia/Baghdad):
+#   1. Watch every listed scholarship's official page and auto-close confirmed passed deadlines.
+#   2. Harvest free official APIs (ReliefWeb Iraq, US Embassy Iraq) + RSS lead feeds into review/leads.json.
+#   3. When ANTHROPIC_API_KEY is configured:
+#      - Daily: verify & extract ONLY newly harvested leads (--from-leads) at minimal API cost.
+#      - Mondays (or manual dispatch with focus): also run broad web discovery.
+# New candidates always land in a pull request for human review before going live.
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Daily 03:00 Asia/Baghdad (00:00 UTC)
+  workflow_dispatch:
+    inputs:
+      focus:
+        description: 'Optional research focus (e.g. "master''s in Germany", "bachelor''s in Asia")'
+        required: false
+        default: ''
+      deep_discover:
+        description: 'Run broad web discovery even if not Monday'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: opportunity-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    env:
+      # Exposed at job level so LLM extraction steps can be skipped when no key is configured
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    defaults:
+      run:
+        working-directory: renisan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: renisan/package-lock.json
+      - run: npm ci
+
+      - name: Check listed opportunities & auto-expire confirmed passed deadlines
+        run: npm run opps:watch -- --auto-expire
+
+      - name: Harvest free official APIs & RSS lead feeds
+        run: npm run opps:harvest
+
+      - name: Verify newly harvested leads (daily, low-cost)
+        if: ${{ env.ANTHROPIC_API_KEY != '' }}
+        run: npm run opps:discover -- --from-leads
+
+      - name: Weekly broad discovery (Mondays or manual)
+        if: ${{ env.ANTHROPIC_API_KEY != '' && (github.event_name == 'workflow_dispatch' && (github.event.inputs.focus != '' || github.event.inputs.deep_discover == 'true') || github.event_name == 'schedule') }}
+        env:
+          FOCUS: ${{ github.event.inputs.focus }}
+          DEEP: ${{ github.event.inputs.deep_discover }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          DOW=$(date -u +%u)
+          if [ -n "$FOCUS" ]; then
+            npm run opps:discover -- --focus "$FOCUS"
+          elif [ "$DEEP" = "true" ] || [ "$EVENT_NAME" = "schedule" -a "$DOW" = "1" ]; then
+            npm run opps:discover
+          else
+            echo "Skipping broad web discovery today (runs Mondays or on manual dispatch)."
+          fi
+
+      - name: Verify data integrity before opening PR
+        run: npm test
+
+      - name: Open or update daily opportunity review PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: bot/opportunity-review
+          commit-message: 'data: daily opportunity check & harvest'
+          title: 'Opportunity review — daily sync'
+          add-paths: |
+            renisan/review/**
+            renisan/public/data/scholarships.json
+          body: |
+            Automated 24-hour opportunity check and harvest.
+
+            - `renisan/review/watch-report.md` — listings whose page changed, moved, broke, or were auto-expired.
+            - `renisan/review/harvest-report.md` & `review/leads.json` — new leads harvested from official APIs (ReliefWeb Iraq, U.S. Embassy Iraq) and RSS feeds.
+            - `renisan/review/candidates.json` — newly verified opportunities waiting for 1-click review (if API key is configured).
+
+            To publish a candidate: confirm its official page, then run
+            `npm run opps:review -- accept <cid>` (or `reject <cid> "reason"`) in `renisan/`, run `npm test`, and merge.
