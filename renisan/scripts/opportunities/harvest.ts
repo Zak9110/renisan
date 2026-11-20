@@ -14,6 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import https from 'node:https';
 import { urlKey, nameSimilarity, type ListingRef } from './validate.ts';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
@@ -56,9 +57,11 @@ export interface LeadsFile {
 export const HARVEST_SOURCES: HarvestSource[] = [
   {
     id: 'reliefweb-iraq-training',
-    name: 'ReliefWeb Iraq Trainings & Courses (UN OCHA)',
-    url: 'https://api.reliefweb.int/v2/training?appname=renisan-opp-watch&filter[field]=country.iso3&filter[value]=IRQ&limit=20&preset=latest&fields[include][]=title&fields[include][]=url&fields[include][]=date&fields[include][]=source&fields[include][]=body',
-    kind: 'reliefweb_api',
+    // Iraq-filtered feed (ReliefWeb country C122). The unfiltered feed is worldwide, but this
+    // source is trusted as Iraq-scoped in isIraqRelevantLead. The v2 API now needs an approved appname (403).
+    name: 'ReliefWeb Iraq Trainings & Courses (UN OCHA RSS)',
+    url: 'https://reliefweb.int/training/rss.xml?advanced-search=%28C122%29',
+    kind: 'rss',
     tier: 'official'
   },
   {
@@ -83,9 +86,9 @@ export const HARVEST_SOURCES: HarvestSource[] = [
     tier: 'lead'
   },
   {
-    id: 'youthop-rss',
-    name: 'Youth Opportunities (Leads Only)',
-    url: 'https://www.youthop.com/feed/',
+    id: 'opportunitiescorners-rss',
+    name: 'Opportunities Corners (Leads Only)',
+    url: 'https://opportunitiescorners.com/feed/',
     kind: 'rss',
     tier: 'lead'
   }
@@ -101,6 +104,8 @@ function decodeXmlEntities(raw: string): string {
     .replace(/&quot;/g, '"')
     .replace(/&#39;|&apos;/g, "'")
     .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    // Feeds often entity-escape their HTML (&lt;div&gt;), so strip tags again after decoding
+    .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -249,19 +254,73 @@ function readJson<T>(file: string, fallback: T): T {
   }
 }
 
-async function fetchSource(source: HarvestSource): Promise<{ ok: boolean; items: RawFeedItem[]; error?: string }> {
+type FetchResult = { ok: boolean; status: number; body: string; error?: string };
+
+function requestHeaders(source: HarvestSource, ua: string): Record<string, string> {
+  return {
+    'user-agent': ua,
+    accept: source.kind === 'reliefweb_api' ? 'application/json' : 'application/rss+xml,application/xml,text/xml,*/*',
+    'accept-language': 'en-US,en;q=0.9,ar;q=0.8'
+  };
+}
+
+async function fetchWithUa(source: HarvestSource, ua: string): Promise<FetchResult> {
   try {
     const res = await fetch(source.url, {
       redirect: 'follow',
-      headers: {
-        'user-agent': 'Mozilla/5.0 (compatible; RenisanHarvester/1.0)',
-        accept: source.kind === 'reliefweb_api' ? 'application/json' : 'application/rss+xml,application/xml,text/xml,*/*'
-      },
+      headers: requestHeaders(source, ua),
       signal: AbortSignal.timeout(20_000)
     });
-    if (!res.ok) return { ok: false, items: [], error: `HTTP ${res.status}` };
-    const body = await res.text();
-    const items = source.kind === 'reliefweb_api' ? parseReliefWebResponse(JSON.parse(body)) : parseRssFeed(body);
+    return { ok: res.ok, status: res.status, body: res.ok ? await res.text() : '' };
+  } catch (err) {
+    return { ok: false, status: 0, body: '', error: (err as Error).message };
+  }
+}
+
+/**
+ * Plain node:https GET fallback. reliefweb.int's firewall intermittently answers Node's fetch
+ * (undici) with 406 while node:https gets 200, and node:https allows large response headers
+ * (iq.usembassy.gov overflows fetch's 16 KB limit).
+ */
+function httpsGet(url: string, headers: Record<string, string>, redirectsLeft = 3): Promise<FetchResult> {
+  return new Promise((resolve) => {
+    const req = https.request(url, { method: 'GET', headers, maxHeaderSize: 64 * 1024, timeout: 20_000 }, (res) => {
+      const status = res.statusCode ?? 0;
+      const location = res.headers.location;
+      if (status >= 300 && status < 400 && location && redirectsLeft > 0) {
+        res.resume();
+        const next = new URL(location, url).toString();
+        if (!next.startsWith('https://')) return resolve({ ok: false, status, body: '', error: 'non-https redirect' });
+        return resolve(httpsGet(next, headers, redirectsLeft - 1));
+      }
+      const ok = status >= 200 && status < 300;
+      const chunks: Buffer[] = [];
+      res.on('data', (c: Buffer) => chunks.push(c));
+      res.on('end', () => resolve({ ok, status, body: ok ? Buffer.concat(chunks).toString('utf8') : '' }));
+      res.on('error', (err) => resolve({ ok: false, status, body: '', error: err.message }));
+    });
+    req.on('timeout', () => req.destroy(new Error('timeout')));
+    req.on('error', (err) => resolve({ ok: false, status: 0, body: '', error: err.message }));
+    req.end();
+  });
+}
+
+async function fetchSource(source: HarvestSource): Promise<{ ok: boolean; items: RawFeedItem[]; error?: string }> {
+  const ownUa = 'Mozilla/5.0 (compatible; RenisanHarvester/1.0)';
+  let res = await fetchWithUa(source, ownUa);
+  // Retry through node:https when fetch is rejected (406/429/503) or fails at network level (e.g. header overflow)
+  if (!res.ok && (res.status === 0 || [406, 429, 503].includes(res.status)) && source.url.startsWith('https://')) {
+    res = await httpsGet(source.url, requestHeaders(source, ownUa));
+  }
+  if (!res.ok && (res.status === 403 || res.status === 412)) {
+    res = await fetchWithUa(
+      source,
+      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+    );
+  }
+  if (!res.ok) return { ok: false, items: [], error: res.error ?? `HTTP ${res.status}` };
+  try {
+    const items = source.kind === 'reliefweb_api' ? parseReliefWebResponse(JSON.parse(res.body)) : parseRssFeed(res.body);
     return { ok: true, items };
   } catch (err) {
     return { ok: false, items: [], error: (err as Error).message };

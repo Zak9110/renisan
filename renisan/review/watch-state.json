@@ -1,67 +1,92 @@
 {
   "sch-001": {
-    "hash": "5814e52e35c9b608",
+    "hash": "116fabc7a103634a",
     "finalUrl": "https://www.turkiyeburslari.gov.tr/",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-002": {
-    "hash": "3b2ffb96537b2677",
+    "hash": "bf34731c0c986f86",
     "finalUrl": "https://stipendiumhungaricum.hu/",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-004": {
-    "hash": "59d4b4d53e2392e8",
+    "hash": "976e77d8f5c19796",
     "finalUrl": "https://auis.edu.krd/auis-national-scholarship",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-005": {
-    "hash": "63a39feed2e27444",
+    "hash": "27f0d9e160855ec7",
     "finalUrl": "https://auis.edu.krd/presidential-scholarship",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-006": {
-    "hash": "fedd77a08d729a28",
+    "hash": "7cd2cb1b9820be83",
     "finalUrl": "https://auib.edu.iq/admissions/builders-of-iraq/",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-007": {
-    "hash": "4ea75b5684e9cd54",
+    "hash": "af8196b449423b30",
     "finalUrl": "https://www.iylep.org/apply/",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-008": {
-    "hash": "55b986793f370044",
+    "hash": "41a57eba85f4d238",
     "finalUrl": "https://www.worldlearning.org/program/global-undergraduate-exchange-program/",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
+  },
+  "sch-009": {
+    "hash": "",
+    "finalUrl": "https://www.campuschina.org",
+    "checked": "2026-11-20",
+    "consecutiveFailures": 2
   },
   "sch-010": {
-    "hash": "4d4663d0238aaaa5",
+    "hash": "65ce00868846e5e9",
     "finalUrl": "https://www.isdb.org/scholarships",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-011": {
-    "hash": "58305191de2887f6",
+    "hash": "eb0ab5443975669b",
     "finalUrl": "https://spark.ngo/higher-education-across-borders-iraqi-government-ministers-and-university-professors-visit-turkiye/",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-012": {
-    "hash": "cbad8792b0bd9a90",
+    "hash": "4776c95457819007",
     "finalUrl": "https://www.daad.de/en/studying-in-germany/scholarships/daad-funding-programmes/hilde-domin-programme/",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-013": {
-    "hash": "557ac918ceae715a",
+    "hash": "ddebc0130e3fc476",
     "finalUrl": "https://www.chevening.org/scholarship/iraq/",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
+  },
+  "sch-014": {
+    "hash": "bb37e6c6d74b1ddb",
+    "finalUrl": "https://www.amideast.org/our-work/find-a-scholarship/graduate-study/fulbright/how-to-apply/fulbright-foreign-student-program-for-iraq",
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-015": {
-    "hash": "fd5cba2945b9dbe9",
+    "hash": "52f04527295de642",
     "finalUrl": "https://www.iraq.emb-japan.go.jp/itpr_en/culture.html",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   },
   "sch-016": {
-    "hash": "a4819b5f749323ec",
+    "hash": "c5af09f893dbe8a1",
     "finalUrl": "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "consecutiveFailures": 0
   }
 }

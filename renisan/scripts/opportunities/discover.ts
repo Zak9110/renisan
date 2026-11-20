@@ -25,7 +25,7 @@ const REVIEW = path.join(ROOT, 'review');
 export const CANDIDATES = path.join(REVIEW, 'candidates.json');
 export const REJECTED = path.join(REVIEW, 'rejected.json');
 
-const MODEL = process.env.RENISAN_DISCOVER_MODEL || 'claude-sonnet-4-5';
+const MODEL = process.env.RENISAN_DISCOVER_MODEL || 'claude-sonnet-5-5';
 
 export interface Candidate {
   cid: string;

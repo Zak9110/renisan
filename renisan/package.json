@@ -13,8 +13,8 @@
     "typecheck": "tsc --noEmit",
     "check": "tsc && node tests/verify.js",
     "import:federal": "python3 scripts/import-federal-cutoffs.py",
-    "opps:watch": "node scripts/opportunities/watch.ts",
-    "opps:harvest": "node scripts/opportunities/harvest.ts",
+    "opps:watch": "node --max-http-header-size=65536 scripts/opportunities/watch.ts",
+    "opps:harvest": "node --max-http-header-size=65536 scripts/opportunities/harvest.ts",
     "opps:discover": "node scripts/opportunities/discover.ts",
     "opps:review": "node scripts/opportunities/review.ts",
     "typecheck:scripts": "tsc --noEmit -p scripts/tsconfig.json"
