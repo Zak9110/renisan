@@ -2,6 +2,7 @@ import { useState, useMemo } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
 import type { FederalRules, RouteMinimum, RouteStream } from '../lib/types';
 import { fillTemplate, formatAverage } from '../lib/format';
+import { pickLocalized } from '../lib/i18n';
 
 interface OtherRoutesProps {
   rules: FederalRules;
@@ -27,8 +28,7 @@ export function OtherRoutes({ rules, score, stream, yearLabel }: OtherRoutesProp
   const column: RouteStream = stream === 'literary' ? 'literary' : 'scientific';
   const bump = stream === 'vocational' ? 2 : 0;
 
-  const name = (r: { ar: string; en: string; ckb: string; kmr: string }) =>
-    lang === 'ckb' ? r.ckb : lang === 'kmr' ? r.kmr : r.ar;
+  const name = (r: { ar: string; en: string; ckb: string; kmr: string }) => pickLocalized(lang, r) ?? r.ar;
   const routeLabel: Record<RouteKey, string> = {
     gov_evening: t('routesGovEvening'),
     private_morning: t('routesPrivateMorning'),

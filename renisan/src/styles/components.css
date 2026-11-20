@@ -1417,6 +1417,17 @@ button.composite-box__header:focus-visible {
   line-height: var(--leading-relaxed);
 }
 
+.composite-note-banner--warning {
+  margin-top: 0;
+  margin-block-end: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-text-primary);
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: var(--radius-md, 8px);
+}
+
 /* Scholarship Card Enhancements */
 .scholarship-card__actions-top {
   display: flex;
@@ -2209,6 +2220,582 @@ button.composite-box__header:focus-visible {
 }
 
 @media print {
-  .chance-summary, .filters-toggle, .routes-box { display: none !important; }
+  .chance-summary, .filters-toggle, .routes-box, .scholarship-match-callout, .wishlist-advisor, .details-toggle-btn { display: none !important; }
   .result-card { break-inside: avoid; }
+}
+
+/* =====================================================================
+ * System Upgrade: Federal Calculator, Details Drawer, Form Advisor & Calendar
+ * ===================================================================== */
+
+.install-app-btn {
+  border-color: var(--color-accent);
+  color: var(--color-text-accent);
+  background: var(--color-accent-glow);
+}
+
+.total-detected-btn {
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow);
+  color: var(--color-text-accent);
+  text-align: start;
+}
+
+.scholarship-match-callout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius-xl);
+}
+
+.scholarship-match-callout__text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+}
+
+.details-toggle-btn {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-glass);
+  color: var(--color-text-accent);
+  font: inherit;
+  font-size: var(--text-2xs);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.details-toggle-btn:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow);
+}
+
+.result-card__details {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.details-row--marks {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-medium);
+}
+
+.details-block__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-2xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.details-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.details-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.details-chip strong {
+  color: var(--color-text-primary);
+}
+
+.details-chip--current {
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow);
+}
+
+.scholarship-personal-filters {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.scholarship-mini-input {
+  width: 125px;
+  cursor: text;
+}
+
+.scholarship-card__footer-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.calendar-reminder-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.wishlist-advisor {
+  padding: var(--space-4);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-inline-start: 4px solid var(--color-accent);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.wishlist-advisor__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+
+.wishlist-advisor__msg {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+}
+
+.wishlist-advisor__msg--warn {
+  color: var(--color-warning);
+}
+
+.wishlist-advisor__msg--ok {
+  color: var(--color-success);
+}
+
+.wishlist-stats {
+  flex-wrap: wrap;
+}
+
+/* =====================================================================
+ * Plans, official form checks, saved-profile note
+ * ===================================================================== */
+.plan-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  margin-block-end: var(--space-3);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+.plan-bar__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+.plan-bar__select {
+  flex: 1 1 10rem;
+  min-width: 0;
+  min-height: 44px;
+}
+
+.plan-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.plan-bar__hint {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  line-height: var(--leading-relaxed);
+}
+
+.form-check {
+  padding: var(--space-4);
+  margin-block-end: var(--space-3);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-inline-start: 4px solid var(--color-warning);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-check__progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-check__bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.form-check__bar > span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: inherit;
+}
+
+.form-check__source {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+.wishlist-priority-badge--btn {
+  min-width: 44px;
+  min-height: 32px;
+  padding: 2px 8px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md, 8px);
+  background: transparent;
+  cursor: pointer;
+}
+
+.wishlist-priority-badge--btn:hover,
+.wishlist-priority-badge--btn:focus-visible {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+.profile-note {
+  display: block;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--color-accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media print {
+  .plan-bar, .form-check, .profile-note { display: none !important; }
+}
+
+/* =====================================================================
+ * Explainable Eligibility Profile, Verdict Pills, Deadlines Hub & Tracker
+ * ===================================================================== */
+.eligibility-profile-card {
+  padding: var(--space-4);
+  margin-block-end: var(--space-4);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-inline-start: 4px solid var(--color-accent);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.eligibility-profile-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.eligibility-profile-card__title {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+.eligibility-profile-card__hint {
+  margin: 4px 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+.view-switcher {
+  display: inline-flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.eligibility-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.eligible-only-bar {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.eligible-mode-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.verdict-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.verdict-pill--go {
+  background: var(--color-success-bg);
+  border-color: var(--color-success-border);
+  color: var(--color-success);
+}
+
+.verdict-pill--maybe {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning);
+}
+
+.verdict-pill--no_go {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+
+.scholarship-card--verdict-go {
+  border-inline-start: 4px solid var(--color-success);
+}
+
+.scholarship-card--verdict-maybe {
+  border-inline-start: 4px solid var(--color-warning);
+}
+
+.scholarship-card--verdict-no_go {
+  border-inline-start: 4px solid var(--color-danger);
+  opacity: 0.85;
+}
+
+.match-reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block: var(--space-2);
+}
+
+.match-reason {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-2xs);
+  font-weight: var(--font-medium);
+  border: 1px solid transparent;
+}
+
+.match-reason--pass {
+  background: var(--color-success-bg);
+  border-color: var(--color-success-border);
+  color: var(--color-success);
+}
+
+.match-reason--missing {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning);
+}
+
+.match-reason--fail {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+
+.results-count-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-block-end: var(--space-3);
+}
+
+.deadlines-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.deadline-group {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+}
+
+.deadline-group--urgent { border-inline-start: 4px solid var(--color-danger); }
+.deadline-group--soon { border-inline-start: 4px solid var(--color-warning); }
+.deadline-group--upcoming { border-inline-start: 4px solid var(--color-success); }
+.deadline-group--estimated { border-inline-start: 4px solid var(--color-info); }
+
+.deadline-group__title {
+  margin: 0 0 var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+.deadline-group__count {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-glass);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.deadline-group__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.deadline-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.deadline-row__date {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+
+.deadline-row__info {
+  flex: 1 1 220px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.deadline-row__title-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+
+.deadline-row__sub {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+.deadline-row__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.deadline-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-2xs);
+  font-weight: var(--font-semibold);
+  width: fit-content;
+}
+
+.deadline-countdown--urgent { background: var(--color-danger-bg); color: var(--color-danger); }
+.deadline-countdown--soon { background: var(--color-warning-bg); color: var(--color-warning); }
+.deadline-countdown--upcoming { background: var(--color-success-bg); color: var(--color-success); }
+.deadline-countdown--estimated,
+.deadline-countdown--tba { background: var(--color-info-bg); color: var(--color-info); }
+.deadline-countdown--closed { background: var(--color-surface-glass); color: var(--color-text-tertiary); }
+
+.wishlist-sch-tracker {
+  margin-block-start: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.wishlist-sch-tracker__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.wishlist-stage-select {
+  min-height: 36px;
+  padding-block: 4px;
+  font-size: var(--text-xs);
+}
+
+.wishlist-note-input {
+  flex: 1 1 180px;
+  min-height: 36px;
+  padding-block: 4px;
+  font-size: var(--text-xs);
 }

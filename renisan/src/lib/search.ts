@@ -14,7 +14,12 @@ import { matchesQuery } from './text.ts';
 import { localizePlace } from './places.ts';
 
 /** A place name in every language, so searches match whatever the student sees on screen. */
-const allPlaceNames = (name: string) => [name, localizePlace(name, 'ckb'), localizePlace(name, 'kmr')];
+const allPlaceNames = (name: string) => [
+  name,
+  localizePlace(name, 'ckb'),
+  localizePlace(name, 'kmr'),
+  localizePlace(name, 'en')
+];
 
 /**
  * Filter Federal (Central Admissions) cutoffs by student score, stream, governorate, study type, channel.
@@ -163,6 +168,11 @@ export function filterKRGCutoffs(
         return false;
       }
 
+      // Programme level: bachelor colleges vs. 2-year technical institutes
+      if (filters.level && (item.level ?? 'college') !== filters.level) {
+        return false;
+      }
+
       // Keyword search (Arabic/Kurdish/Latin-insensitive)
       if (q && !matchesQuery(q, [
         item.university, item.university_en, item.university_ku,
@@ -243,11 +253,32 @@ export function filterScholarships(
         return false;
       }
 
-      // Search keyword filter (Arabic/Kurdish/Latin-insensitive)
+      // Student GPA filter (only hides scholarships whose min_gpa exceeds student_gpa)
+      if (
+        typeof filters.student_gpa === 'number' &&
+        Number.isFinite(filters.student_gpa) &&
+        typeof item.eligibility.min_gpa === 'number' &&
+        filters.student_gpa < item.eligibility.min_gpa
+      ) {
+        return false;
+      }
+
+      // Student Age filter (only hides scholarships whose max_age is below student_age)
+      if (
+        typeof filters.student_age === 'number' &&
+        Number.isFinite(filters.student_age) &&
+        typeof item.eligibility.max_age === 'number' &&
+        filters.student_age > item.eligibility.max_age
+      ) {
+        return false;
+      }
+
+      // Search keyword filter (Arabic/Kurdish/Latin/English-insensitive)
       if (q && !matchesQuery(q, [
         item.name, item.name_ar, item.name_ckb, item.name_kmr, item.provider,
         ...allPlaceNames(item.country),
-        ...item.covers, ...(item.covers_ckb ?? []), ...(item.covers_kmr ?? [])
+        ...item.covers, ...(item.covers_ckb ?? []), ...(item.covers_kmr ?? []), ...(item.covers_en ?? []),
+        item.notes_ar, item.notes_ckb, item.notes_kmr, item.notes_en
       ])) {
         return false;
       }

@@ -23,6 +23,16 @@
       "source_name": "MOHESR — Private Higher Education admission guide 2026-2027",
       "source_url": "https://mohesr.gov.iq/ar/assets/img/uploaded_files/17092026.pdf",
       "published": "2026-09-17"
+    },
+    "form": {
+      "year_label": "2026-2027",
+      "year_label_ar": "٢٠٢٦-٢٠٢٧",
+      "min_choices": { "scientific": 50, "literary": 25 },
+      "min_technical": 10,
+      "source_name": "MOHESR statement on the central admission form (reported by 964 network, 9 Sep 2026)",
+      "source_url": "https://964media.com/715292/",
+      "published": "2026-09-09",
+      "note": "Scientific stream fills 50 choices, literary at least 25; at least 10 must be institutes or polytechnic (technical) colleges. Distinguished-school graduates use the same general-channel form. Applied through the Qaddim app. Update from the official student guide each September."
     }
   },
   "krg": {

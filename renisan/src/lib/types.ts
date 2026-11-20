@@ -53,6 +53,8 @@ export interface KRGCutoff {
   department_en: string | null;
   department_ku: string | null;
   city: string;
+  level?: ProgramLevel;
+  program_length?: string | null;
   stream: 'scientific' | 'literary' | 'vocational';
   sub_stream?: 'bio' | 'applied';
   gender: Gender;
@@ -66,6 +68,7 @@ export interface KRGCutoff {
   confidence: Confidence;
   notes_ar?: string;
   notes_ckb?: string;
+  notes_en?: string;
 }
 
 /** public/data/meta.json — which dataset files to load and how to label them. */
@@ -86,6 +89,22 @@ export interface DatasetInfo {
   history?: HistoryFileInfo[];
   /** Rule-based application minimums (Federal only) */
   rules?: { file: string; source_name: string; source_url: string; published: string };
+  /** The application form's own rules for the coming round (Federal only) */
+  form?: FormRules;
+}
+
+/** How many choices the official application form needs, per stream. */
+export interface FormRules {
+  year_label: string;
+  year_label_ar?: string;
+  /** Minimum number of choices per stream. Streams not listed have no known rule. */
+  min_choices: Partial<Record<'scientific' | 'literary' | 'vocational', number>>;
+  /** Minimum number of technical institutes or polytechnic (technical-university) colleges among them */
+  min_technical: number;
+  source_name: string;
+  source_url: string;
+  published: string;
+  note?: string;
 }
 
 /** A prior-year (or other-channel) Federal file listed in meta.json */
@@ -165,6 +184,8 @@ export interface Scholarship {
     gender_restriction?: 'male' | 'female' | null;
     work_experience_years?: number;
     must_return?: boolean;
+    /** True when applicants must already be enrolled as undergrads (not Grade-12 leavers). */
+    requires_enrolled_undergrad?: boolean;
   };
   application_url: string;
   deadline?: string;
@@ -173,16 +194,20 @@ export interface Scholarship {
   deadline_note?: string;
   deadline_note_ckb?: string;
   deadline_note_kmr?: string;
+  deadline_note_en?: string;
   covers: string[];
   covers_ckb?: string[];
   covers_kmr?: string[];
+  covers_en?: string[];
   acceptance_rate?: string;
+  acceptance_rate_en?: string;
   status: 'open' | 'closed' | 'upcoming' | 'discontinued';
   last_verified: string;
   verified_by: string;
   notes_ar?: string;
   notes_ckb?: string;
   notes_kmr?: string;
+  notes_en?: string;
 }
 
 export type AdmissionSystem = 'federal' | 'krg';
@@ -208,4 +233,10 @@ export interface ScholarshipFilters {
   country?: string;
   refugee_eligible?: boolean;
   search?: string;
+  /** Student's GPA/average (0-100) — hides scholarships requiring a higher GPA */
+  student_gpa?: number;
+  /** Student's age — hides scholarships whose max_age is lower than student_age */
+  student_age?: number;
+  /** Explainable eligibility filter mode */
+  eligible_only?: 'all' | 'go' | 'go_maybe';
 }

@@ -1,10 +1,11 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
-import type { AdmissionSystem, FederalCutoff, KRGCutoff, CheckerFilters, DatasetMeta, Gender, ProgramLevel, FederalRules } from '../lib/types';
-import { normalizeDigits, validateScore, computeKRGComposite, MAX_SCORE_FEDERAL, MAX_SCORE_KRG } from '../lib/normalizer';
+import type { AdmissionSystem, FederalCutoff, KRGCutoff, CheckerFilters, DatasetMeta, Gender, ProgramLevel, FederalRules, Scholarship } from '../lib/types';
+import { normalizeDigits, validateScore, computeKRGComposite, computeFederalScore, detectFederalTotalScore, MAX_SCORE_FEDERAL, MAX_SCORE_KRG } from '../lib/normalizer';
 import { fillTemplate } from '../lib/format';
-import { filterFederalCutoffs, filterKRGCutoffs, getUniqueGovernorates, getUniqueCities } from '../lib/search';
-import { parseCheckerState, serializeCheckerState, type Stream, type SubStream } from '../lib/url-state';
+import { filterFederalCutoffs, filterKRGCutoffs, filterScholarships, getUniqueGovernorates, getUniqueCities } from '../lib/search';
+import { getEffectiveStatus } from '../lib/status';
+import { parseCheckerState, serializeCheckerState, type Stream, type SubStream, type SortBy } from '../lib/url-state';
 import { localizePlace } from '../lib/places';
 import type { TranslationKeys } from '../lib/i18n';
 import { SystemSelector } from './SystemSelector';
@@ -13,11 +14,15 @@ import { OtherRoutes } from './OtherRoutes';
 import { loadFederalHistory, loadFederalRules } from '../lib/data-loader';
 import { getTrend, type FederalHistory } from '../lib/history';
 import { chanceBand, countBands, type ChanceBand } from '../lib/chance';
+import { getProfile, updateProfile, clearProfile, hasProfile, onProfileChange } from '../lib/profile';
 
 interface EligibilityCheckerProps {
   federalData: FederalCutoff[];
   krgData: KRGCutoff[];
+  scholarships?: Scholarship[];
   meta: DatasetMeta | null;
+  onScoreChange?: (score: number | null) => void;
+  onOpenScholarshipsWithScore?: (score: number) => void;
 }
 
 const STUDY_TYPES_FEDERAL = ['morning', 'evening', 'parallel'];
@@ -48,14 +53,32 @@ function parseScore(raw: string, max: number = MAX_SCORE_FEDERAL): number | null
   return validateScore(val, max) ? val : null;
 }
 
-export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCheckerProps) {
-  const { t, lang } = useI18n();
+export function EligibilityChecker({
+  federalData,
+  krgData,
+  scholarships = [],
+  meta,
+  onScoreChange,
+  onOpenScholarshipsWithScore
+}: EligibilityCheckerProps) {
+  const { t, tf, lang } = useI18n();
 
-  // Initial state comes from the URL so shared links reopen with the same inputs
-  const initial = useMemo(
-    () => parseCheckerState(typeof window !== 'undefined' ? window.location.search : ''),
-    []
-  );
+  // Initial state comes from the URL so shared links reopen with the same inputs.
+  // With no student inputs in the link, reopen with the details saved on this device.
+  const initial = useMemo(() => {
+    const search = typeof window !== 'undefined' ? window.location.search : '';
+    const state = parseCheckerState(search);
+    if (/[?&](sys|score|stream|sub|loc|ch|g)=/.test(search)) return state;
+    const p = getProfile();
+    if (p.system) state.system = p.system;
+    if (p.score) state.score = p.score;
+    if (p.stream) state.stream = p.stream;
+    state.subStream = state.stream === 'scientific' ? p.subStream : undefined;
+    if (p.location) state.location = p.location;
+    if (p.channel) state.channel = p.channel;
+    if (p.gender) state.gender = p.gender;
+    return state;
+  }, []);
 
   const [system, setSystemState] = useState<AdmissionSystem>(initial.system);
   const [rawScore, setRawScore] = useState<string>(initial.score);
@@ -74,10 +97,10 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
   const info = meta ? (system === 'federal' ? meta.federal : meta.krg) : null;
   const yearLabel = info ? (lang === 'ar' && info.year_label_ar) || info.year_label : '';
 
-  // New search, sort and reach state
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortBy, setSortBy] = useState<'cutoff_desc' | 'cutoff_asc' | 'closest' | 'alpha'>('cutoff_desc');
-  const [showReach, setShowReach] = useState<boolean>(false);
+  // Search, sort and reach state (initialized from URL if present)
+  const [searchQuery, setSearchQuery] = useState<string>(initial.search ?? '');
+  const [sortBy, setSortBy] = useState<SortBy>(initial.sortBy ?? 'cutoff_desc');
+  const [showReach, setShowReach] = useState<boolean>(initial.showReach ?? false);
   // Results summary: tap a band (safe / competitive / reach) to show only those
   const [bandFilter, setBandFilter] = useState<ChanceBand | 'all'>('all');
   // Phones: secondary filters fold away so results start higher on the screen
@@ -100,6 +123,12 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
   const [g11, setG11] = useState<string>('80');
   const [g10, setG10] = useState<string>('75');
 
+  // Federal Competitive Score Calculator state
+  const [showFederalCalc, setShowFederalCalc] = useState(false);
+  const [fedBase, setFedBase] = useState<string>('85');
+  const [fedFirstRound, setFedFirstRound] = useState<boolean>(true);
+  const [fedForeignLang, setFedForeignLang] = useState<string>('');
+
   // Location / study-type values differ between systems, so reset them on switch
   const setSystem = (next: AdmissionSystem) => {
     if (next === system) return;
@@ -109,27 +138,79 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
     setChannel('all');
     setLevel('all');
     setShowCompositeCalc(false);
+    setShowFederalCalc(false);
   };
 
   const score = useMemo(() => parseScore(rawScore, maxScore), [rawScore, maxScore]);
   const hasScoreInput = normalizeDigits(rawScore) !== '';
   const scoreError = hasScoreInput && score === null;
+  const detectedTotal = useMemo(
+    () => (system === 'federal' && scoreError ? detectFederalTotalScore(rawScore) : null),
+    [system, scoreError, rawScore]
+  );
 
-  // Composite score — uses the same best-of rule as the library (G10/G11 can only help)
+  useEffect(() => {
+    onScoreChange?.(score);
+  }, [score, onScoreChange]);
+
+  // KRG Composite score — uses the same best-of rule as the library (G10/G11 can only help)
   const compositeScore = useMemo(() => {
-    const n12 = parseScore(g12);
+    const n12 = parseScore(g12, MAX_SCORE_KRG);
     if (n12 === null) return null;
-    const n11 = parseScore(g11);
-    const n10 = parseScore(g10);
+    const n11 = parseScore(g11, MAX_SCORE_KRG);
+    const n10 = parseScore(g10, MAX_SCORE_KRG);
     return computeKRGComposite(n12, n11 ?? undefined, n10 ?? undefined);
   }, [g12, g11, g10]);
 
-  // While the calculator is open, it drives the main score field
+  // Federal Competitive score
+  const federalCalcResult = useMemo(() => {
+    const base = parseScore(fedBase, 100);
+    if (base === null) return null;
+    const foreign = parseScore(fedForeignLang, 100);
+    return computeFederalScore(base, fedFirstRound, foreign ?? undefined);
+  }, [fedBase, fedFirstRound, fedForeignLang]);
+
+  // While a calculator is open, it drives the main score field
   useEffect(() => {
     if (system === 'krg' && showCompositeCalc && compositeScore !== null) {
       setRawScore(compositeScore.toFixed(2));
     }
   }, [system, showCompositeCalc, compositeScore]);
+
+  useEffect(() => {
+    if (system === 'federal' && showFederalCalc && federalCalcResult !== null) {
+      setRawScore(federalCalcResult.average.toFixed(2));
+    }
+  }, [system, showFederalCalc, federalCalcResult]);
+
+  // Remember the student's details on this device (cleared with "Forget my details")
+  const [profileSaved, setProfileSaved] = useState<boolean>(() => hasProfile());
+  useEffect(() => onProfileChange(() => setProfileSaved(hasProfile())), []);
+  useEffect(() => {
+    if (normalizeDigits(rawScore) === '') {
+      updateProfile({ score: undefined });
+      return;
+    }
+    updateProfile({
+      system,
+      score: rawScore,
+      stream,
+      subStream: stream === 'scientific' ? subStream : undefined,
+      location: governorate,
+      channel,
+      gender
+    });
+  }, [system, rawScore, stream, subStream, governorate, channel, gender]);
+
+  const forgetProfile = () => {
+    clearProfile();
+    setRawScore('');
+    setStream('scientific');
+    setSubStream(undefined);
+    setGovernorate('all');
+    setChannel('general');
+    setGender('both');
+  };
 
   // Keep the URL in sync so the Share button shares these exact inputs
   useEffect(() => {
@@ -143,13 +224,16 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
       studyType,
       channel,
       gender,
-      level
+      level,
+      search: searchQuery,
+      sortBy,
+      showReach
     });
     const next = `${window.location.pathname}${qs}${window.location.hash}`;
     if (next !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
       window.history.replaceState(null, '', next);
     }
-  }, [system, rawScore, stream, subStream, governorate, studyType, channel, gender, level]);
+  }, [system, rawScore, stream, subStream, governorate, studyType, channel, gender, level, searchQuery, sortBy, showReach]);
 
   // Unique locations
   const federalGovernorates = useMemo(() => getUniqueGovernorates(federalData), [federalData]);
@@ -174,10 +258,39 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
   // Sub-stream (bio/applied) and institute filters only appear when the dataset uses them
   const hasSubStreams = useMemo(() => rowsForStream.some((r) => !!r.sub_stream), [rowsForStream]);
   const hasInstitutes = useMemo(
-    () => system === 'federal' && (rowsForStream as FederalCutoff[]).some((r) => r.level === 'institute'),
-    [system, rowsForStream]
+    () => rowsForStream.some((r) => r.level === 'institute'),
+    [rowsForStream]
   );
   const hasSingleSex = useMemo(() => rowsForStream.some((r) => r.gender !== 'both'), [rowsForStream]);
+
+  // Sibling lookup: maps (university, college, department) -> all rows for that programme in this stream
+  const siblingGroupKey = (r: FederalCutoff | KRGCutoff) =>
+    `${r.university}|${r.college}|${r.department ?? ''}|${('campus' in r && r.campus) ? r.campus : ''}`;
+  const siblingMap = useMemo(() => {
+    const map = new Map<string, (FederalCutoff | KRGCutoff)[]>();
+    for (const r of rowsForStream) {
+      const k = siblingGroupKey(r);
+      const list = map.get(k);
+      if (list) list.push(r);
+      else map.set(k, [r]);
+    }
+    return map;
+  }, [rowsForStream]);
+  const getSiblings = (item: FederalCutoff | KRGCutoff) => {
+    const list = siblingMap.get(siblingGroupKey(item));
+    return list ? list.filter((x) => x.id !== item.id) : [];
+  };
+
+  // Matching open/upcoming bachelor scholarships for this student's score
+  const matchingScholarshipsCount = useMemo(() => {
+    if (score === null || scholarships.length === 0) return 0;
+    const cappedGpa = Math.min(100, score);
+    return filterScholarships(scholarships, { degree_level: 'bachelor', student_gpa: cappedGpa })
+      .filter((s) => {
+        const st = getEffectiveStatus(s);
+        return st === 'open' || st === 'upcoming';
+      }).length;
+  }, [score, scholarships]);
 
   // If a selection is no longer available (e.g. after changing stream), fall back to "all"
   useEffect(() => {
@@ -335,8 +448,8 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
                 value={rawScore}
                 onInput={(e) => setRawScore((e.target as HTMLInputElement).value)}
                 placeholder={t('scorePlaceholder')}
-                readOnly={system === 'krg' && showCompositeCalc}
-                aria-invalid={scoreError}
+                readOnly={(system === 'krg' && showCompositeCalc) || (system === 'federal' && showFederalCalc)}
+                aria-invalid={scoreError && !detectedTotal}
                 aria-describedby={scoreError ? 'score-error' : undefined}
               />
               <div class="score-stepper-buttons">
@@ -363,19 +476,33 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
               </div>
             </div>
 
-            {scoreError && (
+            {detectedTotal ? (
+              <button
+                type="button"
+                class="jump-to-results total-detected-btn"
+                onClick={() => setRawScore(String(detectedTotal.average))}
+              >
+                <span>✨ {fillTemplate(t('federalTotalDetected'), { total: detectedTotal.total, average: detectedTotal.average })}</span>
+              </button>
+            ) : scoreError ? (
               <span id="score-error" class="form-error" role="status">
                 {fillTemplate(t('scoreOutOfRange'), { max: maxScore })}
               </span>
-            )}
+            ) : null}
             {system === 'federal' && score !== null && score > 100 && (
               <span class="form-hint" role="status">{t('scoreAbove100Hint')}</span>
+            )}
+            {profileSaved && (
+              <span class="form-hint profile-note">
+                🔒 {t('profileSaved')}{' '}
+                <button type="button" class="link-btn" onClick={forgetProfile}>{t('profileForget')}</button>
+              </span>
             )}
 
             {/* Instant feedback: on phones the results are far below the form */}
             {score !== null && resultCount > 0 && (
               <button type="button" class="jump-to-results" onClick={scrollToResults} aria-live="polite">
-                <span>{t('resultsCount').replace('{count}', String(resultCount))}</span>
+                <span>{tf('resultsCount', { count: String(resultCount) })}</span>
                 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
@@ -540,6 +667,81 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
           )}
         </div>
 
+        {/* Federal Competitive Score Calculator Toggle */}
+        {system === 'federal' && (
+          <div class="composite-box">
+            <button
+              type="button"
+              class="composite-box__header"
+              aria-expanded={showFederalCalc}
+              aria-controls="federal-calc-panel"
+              onClick={() => setShowFederalCalc(!showFederalCalc)}
+            >
+              <span class="composite-box__title">
+                <span aria-hidden="true">{showFederalCalc ? '▼' : '▶'}</span> {t('federalCalcTitle')}
+              </span>
+              <span class="composite-box__toggle-text">
+                {showFederalCalc ? t('compositeHide') : t('compositeShow')}
+              </span>
+            </button>
+
+            {showFederalCalc && (
+              <div id="federal-calc-panel" class="fade-in composite-box__panel">
+                <div class="composite-box__grid">
+                  <div class="form-group">
+                    <label class="form-label" for="fed-base-input">{t('federalBaseAverage')}</label>
+                    <input
+                      id="fed-base-input"
+                      class="form-input"
+                      type="text"
+                      inputMode="decimal"
+                      autoComplete="off"
+                      value={fedBase}
+                      aria-invalid={normalizeDigits(fedBase) !== '' && parseScore(fedBase, 100) === null}
+                      onInput={(e) => setFedBase((e.target as HTMLInputElement).value)}
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="fed-foreign-input">{t('federalForeignLang')}</label>
+                    <input
+                      id="fed-foreign-input"
+                      class="form-input"
+                      type="text"
+                      inputMode="decimal"
+                      autoComplete="off"
+                      placeholder={t('federalForeignPlaceholder')}
+                      value={fedForeignLang}
+                      aria-invalid={normalizeDigits(fedForeignLang) !== '' && parseScore(fedForeignLang, 100) === null}
+                      onInput={(e) => setFedForeignLang((e.target as HTMLInputElement).value)}
+                    />
+                  </div>
+
+                  <div class="form-group" style={{ justifyContent: 'center' }}>
+                    <label class="filter-checkbox" style={{ marginTop: 'auto', paddingBottom: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={fedFirstRound}
+                        onChange={(e) => setFedFirstRound((e.target as HTMLInputElement).checked)}
+                      />
+                      <span>{t('federalFirstRound')}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="composite-result-badge" aria-live="polite">
+                  <span>{t('federalCalcResult')}</span>
+                  <strong>
+                    {federalCalcResult !== null
+                      ? `${federalCalcResult.average.toFixed(2)}% (${t('resultTotalScore')}: ${federalCalcResult.total.toFixed(1)})`
+                      : '—'}
+                  </strong>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* KRG Composite Calculator Toggle */}
         {system === 'krg' && (
           <div class="composite-box">
@@ -560,6 +762,9 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
 
             {showCompositeCalc && (
               <div id="composite-panel" class="fade-in composite-box__panel">
+                <p class="composite-note-banner composite-note-banner--warning" role="note">
+                  <span aria-hidden="true">⚠️ </span>{t('compositeEstimateNote')}
+                </p>
                 <div class="composite-box__grid">
                   {([
                     ['g12-input', 'krgGrade12', g12, setG12],
@@ -599,15 +804,12 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
                     </div>
                     {bestOfApplied && (
                       <p class="composite-breakdown-card__bestof">
-                        {t('compositeBestOfApplied').replace('{score}', compositeScore.toFixed(2))}
+                        {tf('compositeBestOfApplied', { score: compositeScore.toFixed(2) })}
                       </p>
                     )}
                   </div>
                 )}
 
-                <p class="composite-note-banner">
-                  ℹ️ {t('compositeEstimateNote')}
-                </p>
               </div>
             )}
           </div>
@@ -674,6 +876,23 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
         <OtherRoutes rules={rules} score={score} stream={stream} yearLabel={yearLabel} />
       )}
 
+      {/* Cross-Tab Smart Scholarship Match Callout */}
+      {score !== null && matchingScholarshipsCount > 0 && onOpenScholarshipsWithScore && (
+        <div class="scholarship-match-callout fade-in">
+          <div class="scholarship-match-callout__text">
+            <span aria-hidden="true">🎓</span>
+            <span>{fillTemplate(t('scholarshipMatchBanner'), { score: score.toFixed(1), count: matchingScholarshipsCount })}</span>
+          </div>
+          <button
+            type="button"
+            class="pill-btn pill-btn--active"
+            onClick={() => onOpenScholarshipsWithScore(Math.min(100, Number(score.toFixed(1))))}
+          >
+            {t('scholarshipMatchAction')}
+          </button>
+        </div>
+      )}
+
       {/* Results List */}
       <div id="results-anchor" class="results-anchor" />
       {score !== null && bandCounts && resultCount > 0 && (
@@ -723,6 +942,7 @@ export function EligibilityChecker({ federalData, krgData, meta }: EligibilityCh
           studentScore={score}
           yearLabel={yearLabel}
           trendFor={(item) => getTrend(item, history)}
+          siblingsFor={getSiblings}
           emptyHelp={{
             nearestCutoff,
             onClearSearch: searchQuery.trim() ? () => setSearchQuery('') : undefined,

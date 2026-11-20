@@ -10,7 +10,7 @@ export function SystemSelector({ selected, onSelect }: SystemSelectorProps) {
   const { t } = useI18n();
 
   return (
-    <div class="system-selector" role="radiogroup" aria-label="Admission System">
+    <div class="system-selector" role="radiogroup" aria-label={t('systemSelectorLabel')}>
       <button
         type="button"
         class={`system-card ${selected === 'federal' ? 'system-card--active' : ''}`}

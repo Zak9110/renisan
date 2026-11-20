@@ -2,6 +2,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
 import type { FederalCutoff, KRGCutoff } from '../lib/types';
 import { localizePlace } from '../lib/places';
+import { pickLocalized } from '../lib/i18n';
 import { isWishlisted, toggleWishlist, onWishlistChange } from '../lib/wishlist';
 import { fillTemplate, formatAverage, formatDelta } from '../lib/format';
 import { chanceBand, type ChanceBand } from '../lib/chance';
@@ -15,6 +16,8 @@ interface ResultCardProps {
   yearLabel?: string;
   /** Prior-year cutoffs for the same programme (Federal only; null while loading) */
   trend?: Trend | null;
+  /** Sibling channels or study types for the same university + college + department */
+  siblings?: (FederalCutoff | KRGCutoff)[];
 }
 
 /** Tiny inline chart of this programme's cutoff over the years (oldest → current). */
@@ -46,9 +49,10 @@ const BAND_LABEL: Record<ChanceBand, 'scoreDeltaSafe' | 'scoreDeltaTarget' | 'sc
   reach: 'scoreDeltaReach'
 };
 
-export function ResultCard({ item, type, studentScore, yearLabel, trend }: ResultCardProps) {
+export function ResultCard({ item, type, studentScore, yearLabel, trend, siblings = [] }: ResultCardProps) {
   const { lang, t } = useI18n();
   const [bookmarked, setBookmarked] = useState(() => isWishlisted(item.id));
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     return onWishlistChange(() => {
@@ -60,30 +64,44 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
   const fed = isFederal ? (item as FederalCutoff) : null;
   const krg = !isFederal ? (item as KRGCutoff) : null;
 
-  // Localized naming:
-  //  - Sorani (Arabic script): Kurdish names where the dataset has them, else Arabic
-  //  - Kurmanji (Latin script, LTR): English/Latin names so text direction stays consistent
-  const pickName = (ar: string | null, en: string | null, ku: string | null | undefined): string | null => {
-    if (lang === 'kmr') return en || ku || ar;
-    if (lang === 'ckb') return ku || ar;
-    return ar;
-  };
+  // Localized naming: datasets carry Arabic, Sorani ("ku") and English/Latin names.
+  // Kurmanji readers get the Latin names so text direction stays consistent.
+  const pickName = (ar: string | null, en: string | null, ku: string | null | undefined): string | null =>
+    pickLocalized(lang, { ar, ckb: ku, kmr: en, en }) ?? null;
   const uniName = pickName(item.university, item.university_en, item.university_ku);
   const collegeName = pickName(item.college, item.college_en, item.college_ku);
   const deptName = pickName(item.department, item.department_en, krg?.department_ku);
-  const campus = fed ? (lang === 'kmr' ? fed.campus_en || fed.campus : fed.campus) : null;
+  const campus = fed ? pickName(fed.campus ?? null, fed.campus_en ?? null, null) : null;
 
   const score = fed ? fed.min_average : krg ? krg.min_composite_score : 0;
   const location = localizePlace(fed ? fed.governorate : krg ? krg.city : '', lang);
   const confidence = item.confidence || 'verified_third_party';
   const isInstitute = fed?.level === 'institute';
 
-  const notes = krg ? (lang === 'ar' ? krg.notes_ar : krg.notes_ckb || krg.notes_ar) : null;
+  const notes = krg
+    ? pickLocalized(lang, { ar: krg.notes_ar, ckb: krg.notes_ckb, en: krg.notes_en }) ?? null
+    : null;
 
   const scoreDiff = studentScore != null ? Number((studentScore - score).toFixed(2)) : null;
   const band = scoreDiff != null ? chanceBand(scoreDiff) : null;
+  const totalMarksDiff = isFederal && scoreDiff != null ? Number((scoreDiff * 7).toFixed(1)) : null;
+  const hasDetails = (trend && trend.series.length > 0) || siblings.length > 0 || totalMarksDiff != null;
 
   const yearText = (label: string, labelAr?: string) => (lang === 'ar' && labelAr) || label;
+
+  const siblingLabel = (s: FederalCutoff | KRGCutoff) => {
+    if ('min_average' in s) {
+      const ch =
+        s.channel === 'distinguished' ? t('channelDistinguished') :
+        s.channel === 'martyrs' ? t('channelMartyrs') :
+        s.channel === 'survivors' ? t('channelSurvivors') :
+        s.channel === 'medical_free' ? t('channelMedicalFree') :
+        t('channelGeneral');
+      const st = s.study_type === 'evening' ? t('studyTypeEvening') : s.study_type === 'parallel' ? t('studyTypeParallel') : t('studyTypeMorning');
+      return `${ch} · ${st}`;
+    }
+    return s.study_type === 'parallel' ? t('studyTypeParallel') : s.study_type === 'evening' ? t('studyTypeEvening') : t('studyTypeGovernment');
+  };
 
   const handleToggleWishlist = () => {
     toggleWishlist({
@@ -214,7 +232,63 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend }: Resul
           <span class="tag">{t('resultSeats')}: {item.seats}</span>
         )}
         {krg && yearLabel && <span class="tag tag--year">{fillTemplate(t('dataYearTag'), { year: yearLabel })}</span>}
+
+        {hasDetails && (
+          <button
+            type="button"
+            class="details-toggle-btn"
+            aria-expanded={detailsOpen}
+            onClick={() => setDetailsOpen(!detailsOpen)}
+          >
+            <span>{detailsOpen ? t('detailsHide') : t('detailsShow')}</span>
+            <span aria-hidden="true">{detailsOpen ? '▲' : '▼'}</span>
+          </button>
+        )}
       </div>
+
+      {detailsOpen && hasDetails && (
+        <div class="result-card__details fade-in">
+          {totalMarksDiff != null && (
+            <div class="details-row details-row--marks">
+              <span>📊 {fillTemplate(t('detailsTotalDiff'), { marks: formatDelta(totalMarksDiff) })}</span>
+            </div>
+          )}
+
+          {trend && trend.series.length > 0 && (
+            <div class="details-block">
+              <h4 class="details-block__title">{t('detailsHistoryTitle')}</h4>
+              <div class="details-chips">
+                {trend.series.map((p) => (
+                  <span key={p.year} class="details-chip">
+                    <bdi>{yearText(p.year_label, p.year_label_ar)}</bdi>: <strong><bdi>{formatAverage(p.value)}%</bdi></strong>
+                  </span>
+                ))}
+                {yearLabel && (
+                  <span class="details-chip details-chip--current">
+                    <bdi>{yearLabel}</bdi>: <strong><bdi>{formatAverage(score)}%</bdi></strong>
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {siblings.length > 0 && (
+            <div class="details-block">
+              <h4 class="details-block__title">{t('detailsSiblingsTitle')}</h4>
+              <div class="details-chips">
+                {siblings.map((sib) => {
+                  const sibScore = 'min_average' in sib ? sib.min_average : sib.min_composite_score;
+                  return (
+                    <span key={sib.id} class="details-chip">
+                      <span>{siblingLabel(sib)}:</span> <strong><bdi>{formatAverage(sibScore)}%</bdi></strong>
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {notes && (
         <div class="result-card__notes" dir="auto">

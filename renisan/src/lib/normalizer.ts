@@ -80,6 +80,45 @@ export function computeKRGComposite(
 }
 
 /**
+ * Computes the Federal (MOHESR) competitive average and total marks.
+ * - Base score: 7-subject average (0–100)
+ * - First-round pass bonus (درجة الدور الأول): +1 point to average (+7 to total)
+ * - Foreign language bonus (اللغة الأجنبية): +8% of the foreign language mark (0–100) added to the 700-point total
+ */
+export function computeFederalScore(
+  baseAverage: number,
+  firstRoundPass: boolean = false,
+  foreignLanguageScore?: number
+): { average: number; total: number; bonusAverage: number; bonusTotal: number } {
+  const baseTotal = baseAverage * 7;
+  const roundBonusTotal = firstRoundPass ? 7 : 0;
+  const langValid =
+    foreignLanguageScore !== undefined &&
+    Number.isFinite(foreignLanguageScore) &&
+    foreignLanguageScore >= 50 &&
+    foreignLanguageScore <= 100;
+  const langBonusTotal = langValid ? foreignLanguageScore * 0.08 : 0;
+  const bonusTotal = Number((roundBonusTotal + langBonusTotal).toFixed(2));
+  const total = Number((baseTotal + bonusTotal).toFixed(2));
+  const average = Number((total / 7).toFixed(2));
+  const bonusAverage = Number((average - baseAverage).toFixed(2));
+  return { average, total, bonusAverage, bonusTotal };
+}
+
+/**
+ * If a student enters their 7-subject total (e.g. 650 out of 700) into the Federal average input,
+ * returns the corresponding average (total / 7), or null if the input is not a plausible 7-subject total.
+ */
+export function detectFederalTotalScore(raw: string): { total: number; average: number } | null {
+  const cleaned = normalizeScoreInput(raw);
+  if (cleaned === '') return null;
+  const val = parseFloat(cleaned);
+  if (!Number.isFinite(val) || val < 280 || val > MAX_SCORE_FEDERAL * 7) return null;
+  const average = Number((val / 7).toFixed(2));
+  return validateScore(average, MAX_SCORE_FEDERAL) ? { total: val, average } : null;
+}
+
+/**
  * Formats a score for display with proper decimal places.
  */
 export function formatScore(score: number): string {

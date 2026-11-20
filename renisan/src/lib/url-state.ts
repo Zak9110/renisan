@@ -7,6 +7,7 @@ import type { AdmissionSystem, Gender, ProgramLevel } from './types';
 
 export type Stream = 'scientific' | 'literary' | 'vocational';
 export type SubStream = 'bio' | 'applied';
+export type SortBy = 'cutoff_desc' | 'cutoff_asc' | 'closest' | 'alpha';
 
 export interface CheckerUrlState {
   system: AdmissionSystem;
@@ -18,6 +19,9 @@ export interface CheckerUrlState {
   channel: string;
   gender: Gender;
   level: ProgramLevel | 'all';
+  search?: string;
+  sortBy?: SortBy;
+  showReach?: boolean;
 }
 
 export const DEFAULT_CHECKER_STATE: CheckerUrlState = {
@@ -37,6 +41,7 @@ const STREAMS: readonly Stream[] = ['scientific', 'literary', 'vocational'];
 const SUB_STREAMS: readonly SubStream[] = ['bio', 'applied'];
 const GENDERS: readonly Gender[] = ['both', 'male', 'female'];
 const LEVELS: readonly (ProgramLevel | 'all')[] = ['all', 'college', 'institute'];
+const SORTS: readonly SortBy[] = ['cutoff_desc', 'cutoff_asc', 'closest', 'alpha'];
 
 function pick<T extends string>(value: string | null, allowed: readonly T[]): T | undefined {
   return value !== null && (allowed as readonly string[]).includes(value) ? (value as T) : undefined;
@@ -47,7 +52,10 @@ export function parseCheckerState(search: string): CheckerUrlState {
   const p = new URLSearchParams(search);
   const d = DEFAULT_CHECKER_STATE;
   const stream = pick(p.get('stream'), STREAMS) ?? d.stream;
-  return {
+  const q = p.get('q')?.trim().slice(0, 60);
+  const sort = pick(p.get('sort'), SORTS);
+  const reach = p.get('reach') === '1';
+  const result: CheckerUrlState = {
     system: pick(p.get('sys'), SYSTEMS) ?? d.system,
     score: (p.get('score') ?? d.score).slice(0, 12),
     stream,
@@ -58,6 +66,10 @@ export function parseCheckerState(search: string): CheckerUrlState {
     gender: pick(p.get('g'), GENDERS) ?? d.gender,
     level: pick(p.get('lvl'), LEVELS) ?? d.level
   };
+  if (q) result.search = q;
+  if (sort && sort !== 'cutoff_desc') result.sortBy = sort;
+  if (reach) result.showReach = true;
+  return result;
 }
 
 /** Serializes state, omitting defaults to keep shared links short. */
@@ -73,6 +85,9 @@ export function serializeCheckerState(state: CheckerUrlState): string {
   if (state.channel !== d.channel) p.set('ch', state.channel);
   if (state.gender !== d.gender) p.set('g', state.gender);
   if (state.level !== d.level) p.set('lvl', state.level);
+  if (state.search && state.search.trim() !== '') p.set('q', state.search.trim().slice(0, 60));
+  if (state.sortBy && state.sortBy !== 'cutoff_desc') p.set('sort', state.sortBy);
+  if (state.showReach) p.set('reach', '1');
   const qs = p.toString();
   return qs ? `?${qs}` : '';
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'preact/hooks';
 import type { Language, TranslationKeys } from '../lib/i18n';
-import { getLanguage, setLanguage, onLanguageChange, LANG_CONFIG } from '../lib/i18n';
+import { getLanguage, setLanguage, onLanguageChange, LANG_CONFIG, languageChain } from '../lib/i18n';
+import { fillTemplate } from '../lib/format';
 
 // Lazy load translations to keep initial bundle small
 let translationsCache: Record<Language, TranslationKeys> | null = null;
@@ -33,10 +34,21 @@ export function useI18n() {
 
   const t = useCallback((key: keyof TranslationKeys): string => {
     if (!translations) return key;
-    return translations[lang]?.[key] ?? key;
+    // A missing or empty string falls back through the language chain instead of showing the raw key
+    for (const l of languageChain(lang)) {
+      const v = translations[l]?.[key];
+      if (v) return v;
+    }
+    return key;
   }, [lang, translations]);
+
+  /** Translation with `{placeholder}` values filled in. */
+  const tf = useCallback(
+    (key: keyof TranslationKeys, values: Record<string, string | number>): string => fillTemplate(t(key), values),
+    [t]
+  );
 
   const config = LANG_CONFIG[lang];
 
-  return { lang, t, switchLanguage, config, isLoaded: !!translations };
+  return { lang, t, tf, switchLanguage, config, isLoaded: !!translations };
 }

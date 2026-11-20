@@ -10,11 +10,13 @@ import type { ComponentChildren } from 'preact';
 import type { FederalCutoff, KRGCutoff, Scholarship, DatasetMeta } from '../lib/types';
 import { loadMeta, loadFederalCutoffs, loadKRGCutoffs, loadScholarships, clearDataCache } from '../lib/data-loader';
 import { getWishlist, onWishlistChange } from '../lib/wishlist';
+import { getProfile } from '../lib/profile';
+import { normalizeDigits } from '../lib/normalizer';
 
 type Tab = 'checker' | 'scholarships' | 'wishlist';
 
 export function App() {
-  const { t, isLoaded } = useI18n();
+  const { t, lang, config, isLoaded } = useI18n();
   const [activeTab, setActiveTabState] = useState<Tab>(() => {
     if (typeof window === 'undefined') return 'checker';
     const tabParam = new URLSearchParams(window.location.search).get('tab');
@@ -24,6 +26,20 @@ export function App() {
 
   const [wishlistCount, setWishlistCount] = useState<number>(() => getWishlist().length);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [studentScore, setStudentScore] = useState<number | null>(() => {
+    if (typeof window === 'undefined') return null;
+    // A shared link wins; otherwise fall back to the score saved on this device
+    const raw = new URLSearchParams(window.location.search).get('score') ?? getProfile().score ?? null;
+    const n = raw ? parseFloat(normalizeDigits(raw)) : NaN;
+    return Number.isFinite(n) && n >= 0 && n <= 110 ? n : null;
+  });
+
+  // Keep the tab title and meta description in the reader's language (helps sharing, bookmarks, screen readers)
+  useEffect(() => {
+    if (!isLoaded) return;
+    document.title = `${t('appName')} | ${t('appTagline')}`;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', t('appTagline'));
+  }, [lang, isLoaded, t]);
 
   useEffect(() => {
     return onWishlistChange(() => {
@@ -123,7 +139,7 @@ export function App() {
 
   if (!isLoaded) {
     return (
-      <div class="app-loading" role="status" aria-label="Loading">
+      <div class="app-loading" role="status" aria-label={config.loadingLabel}>
         <div class="loading-spinner" />
       </div>
     );
@@ -183,17 +199,30 @@ export function App() {
       <main>
         {activeTab === 'checker' && (
           <div id="panel-checker" role="tabpanel" aria-labelledby="tab-checker" class="fade-in">
-            {renderPanel(<EligibilityChecker federalData={federalData} krgData={krgData} meta={meta} />)}
+            {renderPanel(
+              <EligibilityChecker
+                federalData={federalData}
+                krgData={krgData}
+                scholarships={scholarships}
+                meta={meta}
+                onScoreChange={setStudentScore}
+                onOpenScholarshipsWithScore={(gpa) => {
+                  setStudentScore(gpa);
+                  setActiveTab('scholarships');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            )}
           </div>
         )}
         {activeTab === 'scholarships' && (
           <div id="panel-scholarships" role="tabpanel" aria-labelledby="tab-scholarships" class="fade-in">
-            {renderPanel(<ScholarshipDirectory scholarships={scholarships} />)}
+            {renderPanel(<ScholarshipDirectory scholarships={scholarships} initialStudentScore={studentScore} />)}
           </div>
         )}
         {activeTab === 'wishlist' && (
           <div id="panel-wishlist" role="tabpanel" aria-labelledby="tab-wishlist" class="fade-in">
-            {renderPanel(<Wishlist onGoToChecker={() => setActiveTab('checker')} />)}
+            {renderPanel(<Wishlist onGoToChecker={() => setActiveTab('checker')} studentScore={studentScore} meta={meta} />)}
           </div>
         )}
       </main>

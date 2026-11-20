@@ -1,7 +1,7 @@
 # ڕێنیسان · Renisan
 
 University eligibility checker and scholarship directory for Grade-12 students in Iraq and the Kurdistan Region.
-Works in Sorani Kurdish, Arabic and Kurmanji, installs as an app (PWA), works offline after the first visit,
+Works in Sorani Kurdish, Arabic, Kurmanji and English, installs as an app (PWA), works offline after the first visit,
 and has dark / light / system themes.
 
 **Data (as of 2026-11-17)**
@@ -12,8 +12,8 @@ and has dark / light / system themes.
   each programme's year-over-year trend on its card.
 - Federal rules: the ministry's **2026-2027** minimum averages to *apply* for government evening study and private
   colleges per field (`rules-federal-2026.json`), shown as an "other admission routes" panel under the checker.
-- KRG: Zankoline **2024-2025** reported minimums (the KRG ministry publishes no official cut-off table).
-- Scholarships: 16 listings, each verified against the provider's site with estimated next-cycle deadlines.
+- KRG: Zankoline **2024-2025** reported minimums — **96 programmes** across 16 KRG public universities and polytechnic institutes (government, parallel and evening study; colleges and technical institutes).
+- Scholarships: 16 listings, each verified against the provider's site with estimated next-cycle deadlines, personal GPA/age matching, and offline `.ics` calendar reminders.
 
 ## Develop
 
@@ -57,6 +57,8 @@ All content lives in `public/data/`, and **`meta.json` says which files the app 
 
 - `meta.json` — dataset file names, academic-year labels (`year_label`, `year_label_ar`), score ceilings
   (`max_score`), source links and notes. Every year label shown in the UI comes from here.
+  `federal.form` holds the central form's rules (choices per stream, minimum institutes / polytechnic colleges)
+  that the wishlist checks against — update it each September from the ministry's student guide.
 - `cutoffs-federal-<year>.json` — Federal (MOHESR) central admission minimums, general channel
 - `cutoffs-federal-<year>-distinguished.json` — the same year's distinguished-schools channel
   (listed under `meta.json → federal.extra_files` and merged into the checker; the channel filter switches between them)
@@ -104,6 +106,25 @@ Notes:
   `program_length`; the gender / institute filters appear automatically when the data uses them.
 
 Each deploy ships a new service worker; returning visitors get the new data automatically.
+
+## Finding new opportunities
+
+Scholarships are kept fresh by a three-step pipeline in `scripts/opportunities/`. Nothing it finds goes live
+until an editor accepts it.
+
+| Step | Command | What it does | Needs |
+|---|---|---|---|
+| Watch | `npm run opps:watch` | Visits every listing's official page; reports pages that changed, moved or broke, deadlines that passed, expected deadlines coming up, and listings not re-checked in 45 days → `review/watch-report.md` | nothing |
+| Discover | `npm run opps:discover` (optional `-- --focus "master's in Germany"`) | Claude searches the web for opportunities Iraqi students can apply to, confirms each on the provider's own site, and writes records in all four languages to `review/candidates.json` as *pending*. Duplicates, repost sites and rejected items are skipped | `ANTHROPIC_API_KEY` |
+| Review | `npm run opps:review` · `show <cid>` · `accept <cid>` · `reject <cid> "reason"` | Accept validates the record again and adds it to `public/data/scholarships.json` with today's `last_verified`; reject remembers it so discovery never suggests it again | an editor |
+
+Before accepting: open the official link, confirm the dates and that Iraqis are eligible, and edit the candidate in
+`review/candidates.json` if anything is off. Sorani and Kurmanji text is machine-written: have a native speaker check it.
+Then `npm test` and deploy.
+
+`.github/workflows/opportunities.yml` runs watch (and discover, when the `ANTHROPIC_API_KEY` repository secret is set)
+every Monday and opens a pull request with the results. It can also be run by hand with a research focus.
+A discovery run costs roughly a few US dollars of API usage, depending on how much it reads.
 
 ## Project layout
 

@@ -6,14 +6,17 @@ interface ShareButtonProps {
 }
 
 export function ShareButton({ resultsCount }: ShareButtonProps) {
-  const { t } = useI18n();
+  const { t, tf, lang } = useI18n();
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
-    const url = window.location.href;
+    // Shared links open in the sender's language (the recipient can still switch)
+    const shareUrl = new URL(window.location.href);
+    shareUrl.searchParams.set('lang', lang);
+    const url = shareUrl.toString();
     const shareData = {
       title: t('shareTitle'),
-      text: `${t('appName')} — ${t('resultsCount').replace('{count}', String(resultsCount ?? 0))}`,
+      text: `${t('appName')} — ${tf('resultsCount', { count: String(resultsCount ?? 0) })}`,
       url: url
     };
 

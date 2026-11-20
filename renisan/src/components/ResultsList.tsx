@@ -17,6 +17,8 @@ interface ResultsListProps {
   yearLabel?: string;
   /** Year-over-year history for a Federal row (null while history is still loading) */
   trendFor?: (item: FederalCutoff) => Trend | null;
+  /** Other channels / study types for the same programme */
+  siblingsFor?: (item: FederalCutoff | KRGCutoff) => (FederalCutoff | KRGCutoff)[];
   /** Context for a helpful "no results" screen */
   emptyHelp?: {
     nearestCutoff: number | null;
@@ -26,8 +28,8 @@ interface ResultsListProps {
   };
 }
 
-export function ResultsList({ federalResults, krgResults, system, studentScore, yearLabel, trendFor, emptyHelp }: ResultsListProps) {
-  const { t } = useI18n();
+export function ResultsList({ federalResults, krgResults, system, studentScore, yearLabel, trendFor, siblingsFor, emptyHelp }: ResultsListProps) {
+  const { t, tf } = useI18n();
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const isFederal = system === 'federal';
@@ -45,7 +47,7 @@ export function ResultsList({ federalResults, krgResults, system, studentScore, 
         <h3 class="empty-state__title">{t('resultsEmpty')}</h3>
         {emptyHelp?.nearestCutoff != null ? (
           <p class="empty-state__hint">
-            {t('nearestProgram').replace('{score}', emptyHelp.nearestCutoff.toFixed(1))}
+            {tf('nearestProgram', { score: emptyHelp.nearestCutoff.toFixed(1) })}
           </p>
         ) : (
           <p class="empty-state__hint">{t('resultsEmptyHint')}</p>
@@ -72,7 +74,7 @@ export function ResultsList({ federalResults, krgResults, system, studentScore, 
     <section class="results-section" aria-label={t('resultsTitle')}>
       <div class="results-header">
         <div class="results-count">
-          <strong>{t('resultsTitle')}</strong> • {t('resultsCount').replace('{count}', String(count))}
+          <strong>{t('resultsTitle')}</strong> • {tf('resultsCount', { count: String(count) })}
         </div>
         <ShareButton resultsCount={count} />
       </div>
@@ -87,10 +89,18 @@ export function ResultsList({ federalResults, krgResults, system, studentScore, 
                 studentScore={studentScore}
                 yearLabel={yearLabel}
                 trend={trendFor ? trendFor(item) : null}
+                siblings={siblingsFor ? siblingsFor(item) : undefined}
               />
             ))
           : krgResults.slice(0, visible).map((item) => (
-              <ResultCard key={item.id} item={item} type="krg" studentScore={studentScore} yearLabel={yearLabel} />
+              <ResultCard
+                key={item.id}
+                item={item}
+                type="krg"
+                studentScore={studentScore}
+                yearLabel={yearLabel}
+                siblings={siblingsFor ? siblingsFor(item) : undefined}
+              />
             ))}
       </div>
 

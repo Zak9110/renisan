@@ -5,7 +5,8 @@ import { getLanguage } from '../lib/i18n';
 const MESSAGES = {
   ar: { title: 'حدث خطأ غير متوقع', action: 'إعادة تحميل التطبيق' },
   ckb: { title: 'هەڵەیەکی چاوەڕواننەکراو ڕوویدا', action: 'دووبارە بارکردنەوەی بەرنامە' },
-  kmr: { title: 'Çewtiyek neçaverêkirî çêbû', action: 'Sepanê ji nû ve bar bike' }
+  kmr: { title: 'Çewtiyek neçaverêkirî çêbû', action: 'Sepanê ji nû ve bar bike' },
+  en: { title: 'An unexpected error occurred', action: 'Reload Application' }
 } as const;
 
 interface State {

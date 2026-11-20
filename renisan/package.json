@@ -12,13 +12,20 @@
     "test:build": "node tests/check-build.js",
     "typecheck": "tsc --noEmit",
     "check": "tsc && node tests/verify.js",
-    "import:federal": "python3 scripts/import-federal-cutoffs.py"
+    "import:federal": "python3 scripts/import-federal-cutoffs.py",
+    "opps:watch": "node scripts/opportunities/watch.ts",
+    "opps:harvest": "node scripts/opportunities/harvest.ts",
+    "opps:discover": "node scripts/opportunities/discover.ts",
+    "opps:review": "node scripts/opportunities/review.ts",
+    "typecheck:scripts": "tsc --noEmit -p scripts/tsconfig.json"
   },
   "dependencies": {
     "preact": "^10.25.0"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^1.11.0",
     "@preact/preset-vite": "^2.9.0",
+    "@types/node": "^22.20.5",
     "typescript": "~5.7.0",
     "vite": "^6.0.0",
     "vite-plugin-pwa": "^0.21.0"

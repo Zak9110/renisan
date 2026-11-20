@@ -62,7 +62,18 @@
       "Bîmeya tenduristiyê",
       "Salek amadekariyê ji bo fêrbûna Tirkî"
     ],
-    "notes_kmr": "Kêmtirîn nîmre ji bo bijîşkî, diranbijîşkî û dermansaziyê 90% û ji bo beşên din 70% e. Temen ji bo bakaloryosê divê ji 21 salî zêdetir nebe."
+    "covers_en": [
+      "Full tuition waiver",
+      "Monthly living stipend",
+      "State university dormitory",
+      "Round-trip flights",
+      "Comprehensive health insurance",
+      "1-year Turkish language preparatory course"
+    ],
+    "deadline_note_en": "The 2026 cycle opened Jan 10 and closed (after extension) Feb 25, 2026. The 2027 cycle is expected in the same window and has not been officially announced yet.",
+    "acceptance_rate_en": "3% - 4% (Highly competitive)",
+    "notes_kmr": "Kêmtirîn nîmre ji bo bijîşkî, diranbijîşkî û dermansaziyê 90% û ji bo beşên din 70% e. Temen ji bo bakaloryosê divê ji 21 salî zêdetir nebe.",
+    "notes_en": "Minimum required average is 90% for Medicine, Dentistry, and Pharmacy, and 70% for Engineering and Humanities. Bachelor's applicants must be under 21 years old."
   },
   {
     "id": "sch-002",
@@ -120,7 +131,16 @@
       "Xwendingeh an alîkariya kirêyê",
       "Bîmeya tenduristiyê"
     ],
-    "notes_kmr": "Girîng: pêdivî bi namzedkirina fermî ji Wezareta Xwendina Bilind a Iraqê an ya Herêma Kurdistanê heye."
+    "covers_en": [
+      "Full tuition exemption",
+      "Monthly living allowance",
+      "Dormitory place or monthly housing contribution",
+      "Health insurance"
+    ],
+    "deadline_note_en": "Applications for 2026/2027 closed Jan 15, 2026 (14:00 CET). The 2027/2028 call typically opens in November and closes mid-January.",
+    "acceptance_rate_en": "~16% globally",
+    "notes_kmr": "Girîng: pêdivî bi namzedkirina fermî ji Wezareta Xwendina Bilind a Iraqê an ya Herêma Kurdistanê heye.",
+    "notes_en": "Important: Requires official nomination by the Sending Partner in Iraq (either the Federal MOHESR in Baghdad or the KRG Ministry of Higher Education as separate partners)."
   },
   {
     "id": "sch-003",
@@ -165,7 +185,14 @@
       "Alîkariya veguhastin û debarê ya mehane",
       "Pereyê pirtûk û çavkaniyan"
     ],
-    "notes_kmr": "UNHCR ji sala xwendinê 2025-2026 ve li Iraqê xwendekarên nû ji bo bûrsa DAFI wernagire; tenê xwendekarên berê berdewam dikin. Ji bo derfetên din, platforma \"Overseas Opportunities\" ya UNHCR bibîne."
+    "covers_en": [
+      "University tuition fees",
+      "Monthly transport and living allowance",
+      "Books and study materials allowance"
+    ],
+    "deadline_note_en": "New student intake in Iraq was suspended starting from the 2025-2026 academic year",
+    "notes_kmr": "UNHCR ji sala xwendinê 2025-2026 ve li Iraqê xwendekarên nû ji bo bûrsa DAFI wernagire; tenê xwendekarên berê berdewam dikin. Ji bo derfetên din, platforma \"Overseas Opportunities\" ya UNHCR bibîne.",
+    "notes_en": "Official update: UNHCR stopped accepting new DAFI cohorts in Iraq starting from the 2025-2026 academic year, continuing funding only for previously enrolled scholars."
   },
   {
     "id": "sch-004",
@@ -205,9 +232,15 @@
       "Heqê xwendinê yê tevahî heta mezûnbûnê",
       "Heqê xwendingehê ji bo kesên hewce"
     ],
+    "covers_en": [
+      "Full tuition coverage until graduation",
+      "University housing fees for eligible students"
+    ],
     "deadline_note_ckb": "وادەکە لەگەڵ هەر خولێکی وەرگرتن ڕادەگەیەنرێت — پێش وادەکە دەبێت داواکاری بۆ زانکۆ پێشکەش بکەیت و تاقیکردنەوەی ئاست بدەیت",
     "deadline_note_kmr": "Dîrok bi her dora wergirtinê tê ragihandin — berî wê divê serlêdana zanîngehê bikî û azmûna astê ya belaş bidî",
+    "deadline_note_en": "Announced with each admission cycle — applicants must apply to AUIS and take the free placement exam before the deadline",
     "notes_kmr": "Dora dawî ya ragihandî li ser malpera AUIS ji bo wergirtina 2022-2023 bû (nîmreya 90% û jortir, heqê xwendinê û xwendingeh bi tevahî). Heta roja kontrolê doreke nû nehatiye ragihandin — rûpela alîkariya darayî ya AUIS bibîne an rasterast bi wergirtinê re têkilî deyne.",
+    "notes_en": "The last announced cycle on the AUIS website was for 2022-2023 admission (90%+ average, full tuition and housing). No new cycle was announced as of verification — check the AUIS Financial Aid page or contact Admissions directly.",
     "deadline": null
   },
   {
@@ -251,9 +284,14 @@
     "covers_kmr": [
       "50% daxistina heqê xwendinê"
     ],
+    "covers_en": [
+      "50% tuition fee waiver"
+    ],
+    "deadline_note_en": "Previous deadline was Sep 1, 2026 — next cycle is expected around the same time",
     "notes_ar": "لخريجي السادس الإعدادي بمعدل 95% فأعلى. يُختار طالب واحد وطالبة واحدة فقط. لا تشمل الصيدلة وطب الأسنان.",
     "notes_ckb": "بۆ دەرچووانی پۆلی 12 بە نمرەی 95% و زیاتر. تەنها یەک کوڕ و یەک کچ هەڵدەبژێردرێن. دەرمانسازی و ددانسازی ناگرێتەوە.",
-    "notes_kmr": "Ji bo mezûnên pola 12an bi nîmreya 95% û zêdetir. Tenê xwendekarek kur û yek keç tên hilbijartin. Dermansazî û diranbijîşkî nayên hesibandin."
+    "notes_kmr": "Ji bo mezûnên pola 12an bi nîmreya 95% û zêdetir. Tenê xwendekarek kur û yek keç tên hilbijartin. Dermansazî û diranbijîşkî nayên hesibandin.",
+    "notes_en": "For Grade 12 graduates with a 95%+ average. Only one male and one female student are selected. Excludes Pharmacy and Dentistry."
   },
   {
     "id": "sch-006",
@@ -291,12 +329,18 @@
       "Heqê xwendinê yê tevahî ji bo dema bernameyê",
       "Saleke zêde ji bo Îngilîzî eger hewce be"
     ],
+    "covers_en": [
+      "Full tuition and fees for the duration of the programme",
+      "Additional year for English language foundation if needed"
+    ],
     "deadline_note": "اختر AUIB في بوابة وزارة التعليم العالي للجامعات الأهلية ثم قدّم الاستمارة حضورياً — راجع الجامعة للموعد",
     "deadline_note_ckb": "AUIB لە پۆرتاڵی وەزارەت بۆ زانکۆ ئەهلییەکان هەڵبژێرە، پاشان فۆرمەکە بە ئامادەبوون پێشکەش بکە — بۆ وادە پەیوەندی بە زانکۆوە بکە",
     "deadline_note_kmr": "AUIB di portala wezaretê ya zanîngehên taybet de hilbijêre û form bi xwe pêşkêş bike — ji bo dîrokê bi zanîngehê re têkilî dayne",
+    "deadline_note_en": "Select AUIB on the MOHESR Private Universities portal and submit the form in person — contact the university for dates",
     "notes_ar": "الشروط حسب موقع AUIB: معدل 80% فأكثر، حاجة مالية مثبتة، دراسة صباحية، واختيار AUIB عبر بوابة الجامعات الأهلية في وزارة التعليم العالي. الصفحة الرسمية تشير إلى دورة 2024 — أكّد موعد الدورة الحالية بالبريد: student.awards@auib.edu.iq",
     "notes_ckb": "مەرجەکان بەپێی ماڵپەڕی AUIB: نمرەی 80% و سەرووتر، پێویستی دارایی سەلمێنراو، خوێندنی بەیانیان، و هەڵبژاردنی AUIB لە دەروازەی زانکۆ ئەهلییەکانی وەزارەت. لاپەڕە فەرمییەکە ئاماژە بە خولی 2024 دەکات — وادەی خولی ئێستا بە ئیمەیڵ دڵنیا بکەرەوە: student.awards@auib.edu.iq",
-    "notes_kmr": "Merc li gorî malpera AUIB: nîmreya 80% û jortir, hewcedariya darayî ya îspatkirî, xwendina sibehê, û hilbijartina AUIB di portala zanîngehên taybet a Wezaretê de. Rûpela fermî dora 2024 nîşan dide — dema dora niha bi e-nameyê piştrast bike: student.awards@auib.edu.iq"
+    "notes_kmr": "Merc li gorî malpera AUIB: nîmreya 80% û jortir, hewcedariya darayî ya îspatkirî, xwendina sibehê, û hilbijartina AUIB di portala zanîngehên taybet a Wezaretê de. Rûpela fermî dora 2024 nîşan dide — dema dora niha bi e-nameyê piştrast bike: student.awards@auib.edu.iq",
+    "notes_en": "Requirements per AUIB: 80%+ average, demonstrated financial need, morning study, and selecting AUIB via the MOHESR Private Universities portal. Confirm current cycle dates via email: student.awards@auib.edu.iq"
   },
   {
     "id": "sch-007",
@@ -349,7 +393,15 @@
       "Xwarin û veguhastina navxweyî",
       "Bîmeya tenduristiyê ya rêwîtiyê"
     ],
-    "notes_kmr": "Têbînî: ev bernameyeke guhertina serokatî û çandî ya 4 hefteyî li Amerîkayê ye, ne bûrsa bawernameya zanîngehê ye."
+    "covers_en": [
+      "Round-trip flights to the United States",
+      "Host family and university campus housing",
+      "Full meals and domestic transport",
+      "Travel health insurance"
+    ],
+    "deadline_note_en": "Not currently accepting new Iraqi high school applications (2025 selectees were deferred to 2026). The 2027 cycle is expected to open later — sign up under \"Request Information\" on iylep.org for updates.",
+    "notes_kmr": "Têbînî: ev bernameyeke guhertina serokatî û çandî ya 4 hefteyî li Amerîkayê ye, ne bûrsa bawernameya zanîngehê ye.",
+    "notes_en": "Note: This is a 4-week summer leadership and cultural exchange programme in the US, not a full bachelor's degree scholarship."
   },
   {
     "id": "sch-008",
@@ -370,6 +422,7 @@
       ],
       "refugee_idp_eligible": true,
       "survivor_eligible": true,
+      "requires_enrolled_undergrad": true,
       "language_requirements": [
         "TOEFL 48+ أو ما يعادله"
       ]
@@ -393,9 +446,15 @@
       "Semesterek xwendinê li zanîngeheke Amerîkî",
       "Bilêta balafirê, mana, xwarin û bîmeya tenduristiyê"
     ],
+    "covers_en": [
+      "One full academic semester at a US university",
+      "Flights, housing, meals, and health insurance"
+    ],
+    "deadline_note_en": "Announced annually between October and January via the US Embassy — previous cycle closed Dec 15, 2025",
     "notes_ar": "مخصص لطلبة الجامعات المسجلين حالياً (ليس لخريجي السادس الإعدادي مباشرة). فصل دراسي واحد بدون شهادة.",
     "notes_ckb": "بۆ خوێندکارانی ئێستای زانکۆیە (نەک ڕاستەوخۆ بۆ دەرچووانی پۆلی 12). یەک وەرز بەبێ بڕوانامە.",
-    "notes_kmr": "Ji bo xwendekarên niha yên zanîngehê ye (ne rasterast ji bo mezûnên pola 12an). Semesterek bê bawername."
+    "notes_kmr": "Ji bo xwendekarên niha yên zanîngehê ye (ne rasterast ji bo mezûnên pola 12an). Semesterek bê bawername.",
+    "notes_en": "For currently enrolled undergraduate university students (not directly for Grade 12 graduates). One non-degree semester."
   },
   {
     "id": "sch-009",
@@ -448,8 +507,16 @@
       "Mûçeya mehane",
       "Bîmeya tenduristiyê"
     ],
+    "covers_en": [
+      "Tuition waiver",
+      "University dormitory",
+      "Monthly stipend",
+      "Comprehensive medical insurance"
+    ],
+    "deadline_note_en": "Nomination is through the Scholarships Directorate at Iraqi MOHESR. The 2026-2027 deadline was Dec 13, 2025 (15 seats); the date shown for 2027-2028 is estimated.",
     "notes_ckb": "ساڵانە لەلایەن فەرمانگەی نێردراوەکان و پەیوەندییە ڕۆشنبیرییەکان لە وەزارەتی خوێندنی باڵا لە بەغدا ڕادەگەیەنرێت.",
-    "notes_kmr": "Salane ji aliyê Daîreya Şandiyan û Têkiliyên Çandî ya Wezareta Xwendina Bilind li Bexdayê tê ragihandin."
+    "notes_kmr": "Salane ji aliyê Daîreya Şandiyan û Têkiliyên Çandî ya Wezareta Xwendina Bilind li Bexdayê tê ragihandin.",
+    "notes_en": "Announced annually by the Directorate of Scholarships and Cultural Relations at the Federal MOHESR in Baghdad."
   },
   {
     "id": "sch-010",
@@ -502,8 +569,16 @@
       "Pereyê pirtûk û cilan",
       "Bîmeya tenduristiyê û bilêta rêwîtiyê"
     ],
+    "covers_en": [
+      "University tuition fees",
+      "Monthly living stipend",
+      "Books and clothing allowance",
+      "Health insurance and travel tickets"
+    ],
+    "deadline_note_en": "The 2026-2027 deadline was Jan 31, 2026 — next cycle is expected around the same time",
     "notes_ckb": "سکۆلارشیپێکی گەڕاندنەوەیی بێ سوود بۆ پسپۆڕییەکانی پزیشکی، ئەندازیاری، زانست و تەکنەلۆژیا.",
-    "notes_kmr": "Bûrseke vegerandinê ya bê faîz ji bo bijîşkî, endezyarî, zanist û teknolojiyê."
+    "notes_kmr": "Bûrseke vegerandinê ya bê faîz ji bo bijîşkî, endezyarî, zanist û teknolojiyê.",
+    "notes_en": "Interest-free repayable grant supporting development and specialized fields in Medicine, Engineering, Science, and Technology."
   },
   {
     "id": "sch-011",
@@ -547,8 +622,14 @@
       "Piştgiriya heqê xwendinê li enstîtû û zanîngehên teknîkî yên Herêmê û Neynewayê",
       "Perwerdeya jêhatîbûna dîjîtal û karsaziyê"
     ],
+    "covers_en": [
+      "Tuition support at technical institutes and universities in the Kurdistan Region and Nineveh",
+      "Digital skills and entrepreneurship training"
+    ],
+    "deadline_note_en": "Previous cycle closed in May 2026 — next cycle not yet announced. Primarily targets Syrian refugees in the Kurdistan Region",
     "notes_ckb": "ماڵپەڕی SPARK لە ئێستادا هیچ بەرنامەیەکی بورسی زانکۆ بۆ عێراق یان هەرێمی کوردستان پیشان نادات. تەنها بۆ بەدواداچوون هێڵراوەتەوە.",
-    "notes_kmr": "Malpera SPARK niha ti bernameyeke bursa zanîngehê ji bo Iraq an Herêma Kurdistanê nîşan nade. Tenê ji bo şopandinê hatiye hiştin."
+    "notes_kmr": "Malpera SPARK niha ti bernameyeke bursa zanîngehê ji bo Iraq an Herêma Kurdistanê nîşan nade. Tenê ji bo şopandinê hatiye hiştin.",
+    "notes_en": "SPARK's website currently lists no active higher-education scholarship programme in Iraq or the Kurdistan Region. Kept listed for monitoring."
   },
   {
     "id": "sch-012",
@@ -598,7 +679,14 @@
       "Bîmeya tenduristiyê",
       "Bilêta rêwîtiyê û kursên zimanê amadekariyê"
     ],
-    "notes_kmr": "Ji bo xwendekarên di bin metirsiya çewsandinê de an yên ji mafê xwendinê bêpar hatine hiştin."
+    "covers_en": [
+      "Monthly stipend (€934 for bachelor's students)",
+      "Health insurance",
+      "Travel allowance and preparatory language course costs"
+    ],
+    "deadline_note_en": "Direct application is not possible — you must be nominated by a German institution. Next expected nomination deadline: March 15, 2027",
+    "notes_kmr": "Ji bo xwendekarên di bin metirsiya çewsandinê de an yên ji mafê xwendinê bêpar hatine hiştin.",
+    "notes_en": "Dedicated to students at risk of persecution or denied the right to education for security, political, religious, or ethnic reasons. Requires nomination by a recognized institution."
   },
   {
     "id": "sch-013",
@@ -649,13 +737,22 @@
       "Bilêta balafirê çûn û hatin",
       "Heqê vîzeyê û alîkariya gihîştinê"
     ],
+    "covers_en": [
+      "Full tuition fees for a 1-year Master's degree",
+      "Monthly living stipend",
+      "Round-trip flights to the UK",
+      "Visa fee and arrival allowance"
+    ],
+    "deadline_note_en": "Applications for 2027-2028 closed Oct 6, 2026. Opens annually in August and closes in early October.",
     "acceptance_rate": "تنافسية عالية",
+    "acceptance_rate_en": "Highly competitive",
     "status": "upcoming",
     "last_verified": "2026-11-16",
     "verified_by": "Renisan",
     "notes_ar": "للخريجين فقط: يشترط إكمال البكالوريوس وخبرة عمل لا تقل عن سنتين (2,800 ساعة) والعودة إلى العراق لمدة سنتين بعد التخرج. غير مناسبة لطلبة الصف الثاني عشر الآن لكنها خيار مهم بعد التخرج.",
     "notes_ckb": "تەنها بۆ دەرچووان: پێویستە بەکالۆریۆس تەواو کرابێت و لانیکەم دوو ساڵ ئەزموونی کار (2,800 کاتژمێر) هەبێت و دوای تەواوبوون دوو ساڵ بگەڕێیتەوە عێراق. بۆ خوێندکارانی پۆلی 12 ئێستا نییە، بەڵام هەلێکی گرنگە دوای دەرچوون.",
-    "notes_kmr": "Tenê ji bo mezûnan: divê bakaloryos temam be, herî kêm du sal ezmûna kar (2,800 saet) hebe û piştî xwendinê du salan vegerî Iraqê. Niha ji bo xwendekarên pola 12 ne guncaw e lê piştî mezûnbûnê hilbijarkeke girîng e."
+    "notes_kmr": "Tenê ji bo mezûnan: divê bakaloryos temam be, herî kêm du sal ezmûna kar (2,800 saet) hebe û piştî xwendinê du salan vegerî Iraqê. Niha ji bo xwendekarên pola 12 ne guncaw e lê piştî mezûnbûnê hilbijarkeke girîng e.",
+    "notes_en": "For university graduates only: requires a bachelor's degree, at least 2 years (2,800 hours) of work experience, and returning to Iraq for 2 years after graduation."
   },
   {
     "id": "sch-014",
@@ -681,7 +778,7 @@
         "TOEFL iBT أو IELTS (الاختبار يُجرى بعد الترشيح الأولي)"
       ]
     },
-    "application_url": "https://www.amideast.org/our-work/find-a-scholarship/fulbright-program/iraq",
+    "application_url": "https://www.amideast.org/our-work/find-a-scholarship/graduate-study/fulbright/how-to-apply/fulbright-foreign-student-program-for-iraq",
     "deadline": "2027-05-01",
     "deadline_estimated": true,
     "deadline_note": "أُغلقت دورة 2027-2028 في 1 أيار 2026. الدورة التالية تُعلن عادةً في شباط/آذار وتُغلق مطلع أيار.",
@@ -708,13 +805,23 @@
       "Bîmeya tenduristiyê",
       "Piştgiriya akademîk û zimanî berî rêwîtiyê"
     ],
+    "covers_en": [
+      "Full tuition coverage",
+      "Monthly living stipend",
+      "Round-trip airfare",
+      "Health insurance",
+      "Pre-departure academic and language support"
+    ],
+    "deadline_note_en": "The 2027-2028 cycle closed May 1, 2026. The next cycle is typically announced in Feb/March and closes early May.",
     "acceptance_rate": "تنافسية عالية",
+    "acceptance_rate_en": "Highly competitive",
     "status": "upcoming",
-    "last_verified": "2026-11-16",
+    "last_verified": "2026-11-20",
     "verified_by": "Renisan",
     "notes_ar": "للخريجين (ماجستير) المقيمين في العراق وقت التقديم. يلتزم المستفيد بالعودة إلى العراق لمدة سنتين بعد إكمال الدراسة.",
     "notes_ckb": "بۆ دەرچووان (ماستەر) کە لە کاتی پێشکەشکردندا لە عێراق دەژین. وەرگیراو پابەندە دوای تەواوکردنی خوێندن دوو ساڵ بگەڕێتەوە عێراق.",
-    "notes_kmr": "Ji bo mezûnan (master) ku di dema serlêdanê de li Iraqê dijîn. Wergir piştî xwendinê divê du salan vegere Iraqê."
+    "notes_kmr": "Ji bo mezûnan (master) ku di dema serlêdanê de li Iraqê dijîn. Wergir piştî xwendinê divê du salan vegere Iraqê.",
+    "notes_en": "For graduate (Master's) applicants residing in Iraq at the time of application. Recipients must return to Iraq for two years after completing their degree."
   },
   {
     "id": "sch-015",
@@ -766,13 +873,22 @@
       "Bilêta balafirê çûn û hatin",
       "Salek amadekariyê ji bo zimanê Japonî"
     ],
+    "covers_en": [
+      "Full tuition exemption",
+      "Monthly stipend (~117,000 JPY)",
+      "Round-trip airfare",
+      "1-year Japanese language preparatory course"
+    ],
+    "deadline_note_en": "Apply via the Embassy of Japan in Baghdad (Embassy Recommendation) for study the following year; typically opens between April and June. Check the Embassy's Culture & Education page.",
     "acceptance_rate": "عدد محدود جداً من المقاعد لكل دولة",
+    "acceptance_rate_en": "Very limited seats per country",
     "status": "upcoming",
     "last_verified": "2026-11-16",
     "verified_by": "Renisan",
     "notes_ar": "للبكالوريوس: العمر بين 17 و24 عاماً عند بدء الدراسة، ومعدل مرتفع في الثانوية. يشمل سنة تحضيرية للغة اليابانية قبل الجامعة. المواعيد تختلف كل عام وتحددها السفارة.",
     "notes_ckb": "بۆ بەکالۆریۆس: تەمەن لە نێوان 17 و 24 ساڵ لە کاتی دەستپێکردنی خوێندن، و نمرەی بەرز لە ئامادەیی. ساڵێکی ئامادەیی زمانی ژاپۆنی پێش زانکۆ لەخۆدەگرێت. وادەکان هەموو ساڵێک دەگۆڕێن و باڵیۆزخانە دیاریان دەکات.",
-    "notes_kmr": "Ji bo bakaloryosê: temen di navbera 17 û 24 salî de di destpêka xwendinê de, û nîmreyeke bilind ya lîseyê. Salek amadekariya zimanê Japonî berî zanîngehê tê de ye. Dîrok her sal diguherin û balyozxane wan diyar dike."
+    "notes_kmr": "Ji bo bakaloryosê: temen di navbera 17 û 24 salî de di destpêka xwendinê de, û nîmreyeke bilind ya lîseyê. Salek amadekariya zimanê Japonî berî zanîngehê tê de ye. Dîrok her sal diguherin û balyozxane wan diyar dike.",
+    "notes_en": "For Bachelor's: age 17–24 at the start of study with a strong high school average. Includes a 1-year Japanese preparatory course prior to university. Dates are set annually by the Embassy."
   },
   {
     "id": "sch-016",
@@ -820,12 +936,21 @@
       "Mesrefên rêwîtî û vîzeyê",
       "Xwendin li herî kêm du zanîngehên Ewropî"
     ],
+    "covers_en": [
+      "Full tuition coverage",
+      "Monthly stipend (~€1,400)",
+      "Travel and visa costs",
+      "Study at a minimum of two European universities"
+    ],
+    "deadline_note_en": "Over 200 programmes, each with its own deadline; most 2027 intake deadlines fall between October 2026 and March 2027. Pick a programme from the official catalogue and verify its deadline.",
     "acceptance_rate": "تنافسية عالية",
+    "acceptance_rate_en": "Highly competitive",
     "status": "open",
     "last_verified": "2026-11-16",
     "verified_by": "Renisan",
     "notes_ar": "للخريجين (ماجستير). لا يوجد حد للعمر. التقديم مباشر إلى اتحاد الجامعات المنظِّم لكل برنامج، ولا يحتاج ترشيحاً حكومياً.",
     "notes_ckb": "بۆ دەرچووان (ماستەر). سنووری تەمەن نییە. پێشکەشکردن ڕاستەوخۆ بۆ کۆنسۆرتیۆمی زانکۆکانی هەر بەرنامەیەکە و پێویستی بە پاڵاوتنی حکومی نییە.",
-    "notes_kmr": "Ji bo mezûnan (master). Sînorê temenî tune. Serlêdan rasterast ji konsorsiyûma zanîngehên her bernameyê re ye û ne hewceyî pêşniyara hikûmetê ye."
+    "notes_kmr": "Ji bo mezûnan (master). Sînorê temenî tune. Serlêdan rasterast ji konsorsiyûma zanîngehên her bernameyê re ye û ne hewceyî pêşniyara hikûmetê ye.",
+    "notes_en": "For university graduates (Master's). No age limit. Apply directly to the university consortium running each programme; no government nomination required."
   }
 ]

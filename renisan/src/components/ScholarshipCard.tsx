@@ -4,13 +4,42 @@ import type { Scholarship } from '../lib/types';
 import { getEffectiveStatus, isDeadlinePassed } from '../lib/status';
 import { localizePlace } from '../lib/places';
 import { isWishlisted, toggleWishlist, onWishlistChange } from '../lib/wishlist';
+import { downloadScholarshipIcs } from '../lib/calendar';
+import { fillTemplate, formatDate } from '../lib/format';
+import { pickLocalized, type TranslationKeys } from '../lib/i18n';
+import type { MatchReason, MatchReasonCode, MatchResult } from '../lib/matcher';
 
 interface ScholarshipCardProps {
   scholarship: Scholarship;
+  studentGpa?: number;
+  match?: MatchResult | null;
 }
 
-export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
-  const { lang, t } = useI18n();
+const REASON_KEY: Record<MatchReasonCode, keyof TranslationKeys> = {
+  closed_or_discontinued: 'reasonDiscontinued',
+  degree_ok: 'reasonDegreeOk',
+  degree_fail: 'reasonDegreeFail',
+  undergrad_enrolled_required: 'reasonUndergradEnrolled',
+  gpa_ok: 'reasonGpaOk',
+  gpa_fail: 'reasonGpaFail',
+  gpa_missing: 'reasonGpaMissing',
+  age_ok: 'reasonAgeOk',
+  age_borderline: 'reasonAgeBorderline',
+  age_fail: 'reasonAgeFail',
+  age_missing: 'reasonAgeMissing',
+  work_exp_ok: 'reasonWorkExpOk',
+  work_exp_fail: 'reasonWorkExpFail',
+  work_exp_missing: 'reasonWorkExpMissing',
+  return_fail: 'reasonReturnFail',
+  gender_fail: 'reasonGenderFail',
+  english_ok: 'reasonEnglishOk',
+  english_check: 'reasonEnglishCheck',
+  refugee_fit: 'reasonRefugeeFit',
+  survivor_fit: 'reasonSurvivorFit'
+};
+
+export function ScholarshipCard({ scholarship, studentGpa, match }: ScholarshipCardProps) {
+  const { lang, t, tf } = useI18n();
   const [bookmarked, setBookmarked] = useState(() => isWishlisted(scholarship.id));
 
   useEffect(() => {
@@ -20,24 +49,23 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
   }, [scholarship.id]);
 
   // Name based on locale
-  const getLocalizedName = () => {
-    if (lang === 'ckb' && scholarship.name_ckb) return scholarship.name_ckb;
-    if (lang === 'kmr' && scholarship.name_kmr) return scholarship.name_kmr;
-    return scholarship.name_ar || scholarship.name;
-  };
+  const getLocalizedName = () =>
+    pickLocalized(lang, { ar: scholarship.name_ar, ckb: scholarship.name_ckb, kmr: scholarship.name_kmr, en: scholarship.name }) ?? scholarship.name;
 
-  const getLocalizedNotes = () => {
-    if (lang === 'ckb' && scholarship.notes_ckb) return scholarship.notes_ckb;
-    if (lang === 'kmr' && scholarship.notes_kmr) return scholarship.notes_kmr;
-    return scholarship.notes_ar;
+  const getLocalizedNotes = () =>
+    pickLocalized(lang, { ar: scholarship.notes_ar, ckb: scholarship.notes_ckb, kmr: scholarship.notes_kmr, en: scholarship.notes_en });
+
+  const formatReason = (r: MatchReason) => {
+    const tpl = t(REASON_KEY[r.code]);
+    return r.params ? fillTemplate(tpl, r.params) : tpl;
   };
 
   // Effective status: a listing marked open/upcoming whose deadline has passed shows as closed
   const status = getEffectiveStatus(scholarship);
-  const pick = <T,>(ar: T, ckb?: T, kmr?: T): T =>
-    (lang === 'ckb' && ckb) || (lang === 'kmr' && kmr) || ar;
-  const covers = pick(scholarship.covers, scholarship.covers_ckb, scholarship.covers_kmr) ?? [];
-  const deadlineNote = pick(scholarship.deadline_note, scholarship.deadline_note_ckb, scholarship.deadline_note_kmr);
+  const pick = <T,>(ar: T, ckb?: T, kmr?: T, en?: T): T | undefined => pickLocalized(lang, { ar, ckb, kmr, en });
+  const covers = pick(scholarship.covers, scholarship.covers_ckb, scholarship.covers_kmr, scholarship.covers_en) ?? [];
+  const deadlineNote = pick(scholarship.deadline_note, scholarship.deadline_note_ckb, scholarship.deadline_note_kmr, scholarship.deadline_note_en);
+  const acceptanceRate = pick(scholarship.acceptance_rate, undefined, undefined, scholarship.acceptance_rate_en);
   const hasDate = !!scholarship.deadline && /^\d{4}-\d{2}-\d{2}$/.test(scholarship.deadline);
 
   const isDiscontinued = status === 'discontinued';
@@ -64,14 +92,17 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
       location: scholarship.country,
       score: scholarship.eligibility.min_gpa,
       url: scholarship.application_url,
+      stage: 'saved',
       raw: scholarship,
       addedAt: Date.now()
     });
   };
 
+  const verdictClass = match ? `scholarship-card--verdict-${match.verdict.toLowerCase()}` : '';
+
   return (
     <article
-      class={`scholarship-card ${isDiscontinued ? 'scholarship-card--discontinued' : ''}`}
+      class={`scholarship-card ${isDiscontinued ? 'scholarship-card--discontinued' : ''} ${verdictClass}`}
       aria-labelledby={`sch-title-${scholarship.id}`}
     >
       <div class="scholarship-card__header">
@@ -86,6 +117,11 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
         </div>
 
         <div class="scholarship-card__actions-top">
+          {match && (
+            <span class={`verdict-pill verdict-pill--${match.verdict.toLowerCase()}`}>
+              {match.verdict === 'GO' ? `✓ ${t('verdictGo')}` : match.verdict === 'MAYBE' ? `? ${t('verdictMaybe')}` : `✕ ${t('verdictNoGo')}`}
+            </span>
+          )}
           <span class={`status-pill status-pill--${status}`}>
             {status === 'open' && t('scholarshipOpen')}
             {status === 'closed' && t('scholarshipClosed')}
@@ -107,10 +143,31 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
         </div>
       </div>
 
+      {/* Explainable eligibility reasons */}
+      {match && (match.failed.length > 0 || match.missing.length > 0 || match.passed.length > 0) && (
+        <div class="match-reasons" aria-label={t('scholarshipEligibility')}>
+          {match.failed.map((r, i) => (
+            <span key={`f-${i}`} class="match-reason match-reason--fail">
+              ✕ {formatReason(r)}
+            </span>
+          ))}
+          {match.missing.map((r, i) => (
+            <span key={`m-${i}`} class="match-reason match-reason--missing">
+              ? {formatReason(r)}
+            </span>
+          ))}
+          {match.passed.map((r, i) => (
+            <span key={`p-${i}`} class="match-reason match-reason--pass">
+              ✓ {formatReason(r)}
+            </span>
+          ))}
+        </div>
+      )}
+
       {daysRemaining != null && daysRemaining <= 30 && (
         <div class="scholarship-card__urgency-banner">
           <span class="urgency-pill">
-            ⏰ {daysRemaining <= 7 ? t('deadlineUrgent') : ''} ({t('daysRemaining').replace('{days}', String(daysRemaining))})
+            ⏰ {daysRemaining <= 7 ? t('deadlineUrgent') : ''} ({tf('daysRemaining', { days: daysRemaining })})
           </span>
         </div>
       )}
@@ -134,7 +191,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
           <span class="meta-item__label">{t('scholarshipDeadline')}</span>
           <span class="meta-item__value" style={{ color: isClosed ? 'var(--color-danger)' : 'var(--color-text-accent)' }}>
             {hasDate ? (
-              <bdi>{scholarship.deadline}</bdi>
+              <bdi>{formatDate(scholarship.deadline!, lang)}</bdi>
             ) : isDiscontinued ? t('scholarshipDiscontinued') : t('deadlineTBA')}
             {hasDate && scholarship.deadline_estimated && !deadlinePassed && (
               <span class="deadline-estimated"> ({t('deadlineExpected')})</span>
@@ -162,8 +219,16 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
         )}
       </div>
 
-      {/* Badges for refugee/survivor & exchange */}
+      {/* Badges for refugee/survivor & exchange & GPA match */}
       <div class="scholarship-card__covers">
+        {!match && studentGpa != null && scholarship.eligibility.min_gpa != null && (
+          <span class={`tag ${studentGpa >= scholarship.eligibility.min_gpa ? 'tag--official' : 'tag--unverified'}`}>
+            {fillTemplate(
+              t(studentGpa >= scholarship.eligibility.min_gpa ? 'scholarshipGpaMatch' : 'scholarshipGpaShort'),
+              { gpa: scholarship.eligibility.min_gpa }
+            )}
+          </span>
+        )}
         {scholarship.type === 'exchange' && (
           <span class="tag tag--verified">{t('scholarshipExchange')}</span>
         )}
@@ -173,9 +238,9 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
         {scholarship.eligibility.survivor_eligible && (
           <span class="tag tag--official">✨ {t('scholarshipSurvivorEligible')}</span>
         )}
-        {scholarship.acceptance_rate && (
+        {acceptanceRate && (
           <span class="tag">
-            {t('scholarshipAcceptanceRate')}: {scholarship.acceptance_rate}
+            {t('scholarshipAcceptanceRate')}: {acceptanceRate}
           </span>
         )}
       </div>
@@ -217,17 +282,35 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
         {isDiscontinued ? (
           <span class="apply-btn apply-btn--disabled">{t('scholarshipDiscontinued')}</span>
         ) : (
-          <a
-            href={scholarship.application_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class={`apply-btn ${isClosed ? 'apply-btn--secondary' : ''}`}
-          >
-            <span>{t('scholarshipApply')}</span>
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-            </svg>
-          </a>
+          <div class="scholarship-card__footer-actions">
+            {hasDate && !deadlinePassed && (
+              <button
+                type="button"
+                class="pill-btn calendar-reminder-btn"
+                onClick={() => downloadScholarshipIcs(scholarship, getLocalizedName(), getLocalizedNotes(), t('deadlineExpected'))}
+                title={t('scholarshipAddCalendar')}
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>{t('scholarshipAddCalendar')}</span>
+              </button>
+            )}
+            <a
+              href={scholarship.application_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class={`apply-btn ${isClosed ? 'apply-btn--secondary' : ''}`}
+            >
+              <span>{t('scholarshipApply')}</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+              </svg>
+            </a>
+          </div>
         )}
       </div>
     </article>
