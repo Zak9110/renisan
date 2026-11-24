@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { pickText, type Locale } from "@/i18n/config";
+import { Link } from "@/i18n/navigation";
 
 interface MatchReasonDto {
   field: string;
@@ -34,9 +35,15 @@ interface OpportunityItemDto {
   } | null;
 }
 
+interface SimpleListDto {
+  id: string;
+  name: string;
+}
+
 export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
   const t = useTranslations("Opportunities");
   const [items, setItems] = useState<OpportunityItemDto[]>([]);
+  const [userLists, setUserLists] = useState<SimpleListDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
@@ -46,6 +53,19 @@ export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
   const [guestBirthYear, setGuestBirthYear] = useState("");
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [notice, setNotice] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/lists")
+      .then((r) => (r.ok ? (r.json() as Promise<{ lists: SimpleListDto[] }>) : null))
+      .then((data) => {
+        if (active && data) setUserLists(data.lists);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -85,6 +105,20 @@ export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
     }
     if (res.ok) {
       setSavedIds((prev) => new Set([...prev, opportunityId]));
+    }
+  };
+
+  const handleAddToList = async (listId: string, opportunityId: string) => {
+    if (!listId) return;
+    setNotice(null);
+    const res = await fetch(`/api/lists/${listId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ opportunityId }),
+    });
+    if (res.ok) {
+      setSavedIds((prev) => new Set([...prev, opportunityId]));
+      setNotice(t("addedToList"));
     }
   };
 
@@ -201,19 +235,33 @@ export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
                     <h2 className="text-start text-lg font-bold">
-                      <bdi>{title}</bdi>
+                      <Link
+                        href={`/opportunities/${opportunity.id}`}
+                        className="hover:text-accent hover:underline"
+                      >
+                        <bdi>{title}</bdi>
+                      </Link>
                     </h2>
                     <p className="text-start text-sm text-muted">{opportunity.providerName}</p>
                   </div>
-                  {match && (
-                    <span className="rounded-full border border-accent px-3 py-1 text-xs font-semibold text-accent">
-                      {match.verdict === "GO"
-                        ? t("verdictGo")
-                        : match.verdict === "MAYBE"
-                          ? t("verdictMaybe")
-                          : t("verdictNoGo")}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full border border-border bg-bg px-3 py-1 text-xs">
+                      {opportunity.iraqiEligibility === "yes"
+                        ? `✓ ${t("iraqiYes")}`
+                        : opportunity.iraqiEligibility === "no"
+                          ? `✕ ${t("iraqiNo")}`
+                          : `? ${t("iraqiUnclear")}`}
                     </span>
-                  )}
+                    {match && (
+                      <span className="rounded-full border border-accent px-3 py-1 text-xs font-semibold text-accent">
+                        {match.verdict === "GO"
+                          ? t("verdictGo")
+                          : match.verdict === "MAYBE"
+                            ? t("verdictMaybe")
+                            : t("verdictNoGo")}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {summary && <p className="text-start text-sm text-muted">{summary}</p>}
@@ -236,7 +284,13 @@ export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
                   <span>
                     {t("deadlineLabel")}: <strong>{formattedDeadline}</strong>
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Link
+                      href={`/opportunities/${opportunity.id}`}
+                      className="inline-flex min-h-11 items-center rounded-lg border border-border bg-bg px-3 text-sm font-medium"
+                    >
+                      {t("viewDetails")}
+                    </Link>
                     <button
                       type="button"
                       onClick={() => void handleSave(opportunity.id)}
@@ -244,6 +298,25 @@ export function OpportunitiesFeedClient({ locale }: { locale: Locale }) {
                     >
                       {isSaved ? `★ ${t("savedLabel")}` : `☆ ${t("saveButton")}`}
                     </button>
+                    {userLists.length > 0 && (
+                      <select
+                        aria-label={t("addToList")}
+                        defaultValue=""
+                        onChange={(e) => {
+                          const listId = e.target.value;
+                          e.target.value = "";
+                          void handleAddToList(listId, opportunity.id);
+                        }}
+                        className="min-h-11 rounded-lg border border-border bg-bg px-3 text-xs"
+                      >
+                        <option value="">{t("addToList")}</option>
+                        {userLists.map((l) => (
+                          <option key={l.id} value={l.id}>
+                            {l.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                     <a
                       href={opportunity.applyUrl || opportunity.sourceUrl}
                       target="_blank"

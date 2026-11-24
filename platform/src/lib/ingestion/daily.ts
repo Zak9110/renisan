@@ -11,7 +11,7 @@ import { request as httpsRequest } from "node:https";
 import { eq } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import { ingestionRuns, ingestionSources, opportunities } from "@/db/schema";
-import { expirePassedOpportunities } from "@/lib/opportunities/service";
+import { expirePassedOpportunitiesDetailed } from "@/lib/opportunities/service";
 
 export interface RawFeedItem {
   title: string;
@@ -228,6 +228,7 @@ const defaultFetcher: SourceFetcher = async (url) => {
 
 export interface DailyIngestionSummary {
   expiredCount: number;
+  expiredIds: string[];
   sourcesChecked: number;
   itemsFetched: number;
   candidatesQueued: number;
@@ -243,7 +244,7 @@ export async function runDailyIngestion(
   fetcher: SourceFetcher = defaultFetcher,
   now: Date = new Date(),
 ): Promise<DailyIngestionSummary> {
-  const expiredCount = await expirePassedOpportunities(db, now);
+  const { count: expiredCount, expiredIds } = await expirePassedOpportunitiesDetailed(db, now);
 
   // Upsert default official sources so fixes to their URL/kind reach already-seeded databases.
   // `enabled` is left untouched so an editor can still switch a default source off.
@@ -357,6 +358,7 @@ export async function runDailyIngestion(
 
   return {
     expiredCount,
+    expiredIds,
     sourcesChecked: activeSources.length,
     itemsFetched,
     candidatesQueued,

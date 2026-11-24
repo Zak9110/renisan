@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Renisan">
+  <rect width="512" height="512" rx="96" fill="#0f6b5c" />
+  <path d="M256 112L406 188L256 264L106 188L256 112Z" fill="#fbfaf7" />
+  <path d="M154 224V316C154 348 200 374 256 374C312 374 358 348 358 316V224L256 276L154 224Z" fill="#d9f2ec" />
+  <rect x="384" y="198" width="22" height="118" rx="11" fill="#fbfaf7" />
+</svg>

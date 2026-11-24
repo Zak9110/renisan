@@ -20,7 +20,9 @@
     "e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --env-file-if-exists=.env.local src/db/migrate.ts",
-    "db:seed": "tsx --env-file-if-exists=.env.local src/db/seed.ts"
+    "db:seed": "tsx --env-file-if-exists=.env.local src/db/seed.ts",
+    "db:import-scholarships": "tsx --env-file-if-exists=.env.local src/db/import-scholarships.ts",
+    "db:import-cutoffs": "tsx --env-file-if-exists=.env.local src/db/import-cutoffs.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.16",

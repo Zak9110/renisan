@@ -12,7 +12,12 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/db/seed.ts", "src/db/migrate.ts"],
+    files: [
+      "src/db/seed.ts",
+      "src/db/migrate.ts",
+      "src/db/import-scholarships.ts",
+      "src/db/import-cutoffs.ts",
+    ],
     rules: { "no-console": "off" },
   },
   globalIgnores([
@@ -22,5 +27,6 @@ export default defineConfig([
     "playwright-report/**",
     "test-results/**",
     "next-env.d.ts",
+    "public/sw.js",
   ]),
 ]);

@@ -12,7 +12,7 @@ export default function AccountPage({ params }: { params: Promise<{ locale: stri
   return (
     <>
       <NavBar locale={locale} />
-      <main className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8">
+      <main id="main-content" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8">
         <div>
           <h1 className="text-start text-2xl font-bold text-accent">{t("title")}</h1>
           <p className="mt-1 text-start text-sm text-muted">{t("subtitle")}</p>

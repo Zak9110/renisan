@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { pickText, type Locale } from "@/i18n/config";
+import { Link } from "@/i18n/navigation";
 
 interface CustomListDto {
   id: string;
@@ -14,6 +15,11 @@ interface CustomListDto {
       providerName: string;
     };
   }[];
+}
+
+interface ChecklistEntry {
+  label: string;
+  done: boolean;
 }
 
 interface DeadlineDto {
@@ -28,6 +34,7 @@ interface DeadlineDto {
   daysLeft: number | null;
   urgency: string;
   privateNote: string | null;
+  checklist: ChecklistEntry[];
 }
 
 export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
@@ -37,6 +44,12 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
   const [deadlines, setDeadlines] = useState<DeadlineDto[]>([]);
   const [newListName, setNewListName] = useState("");
   const [calendarPath, setCalendarPath] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"timeline" | "calendar">("timeline");
+  const [calMonth, setCalMonth] = useState(() => {
+    const d = new Date();
+    return { year: d.getUTCFullYear(), month: d.getUTCMonth() };
+  });
+  const [draftChecklist, setDraftChecklist] = useState<Record<string, string>>({});
 
   const load = useCallback(async () => {
     const [lRes, dRes] = await Promise.all([fetch("/api/lists"), fetch("/api/deadlines")]);
@@ -99,17 +112,45 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
     if (res.ok) await load();
   };
 
+  const handleRemoveFromList = async (listId: string, opportunityId: string) => {
+    const res = await fetch(`/api/lists/${listId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ opportunityId }),
+    });
+    if (res.ok) await load();
+  };
+
   const handleUpdateTracker = async (
     opportunityId: string,
     state: DeadlineDto["state"],
-    privateNote?: string,
+    privateNote?: string | null,
+    checklist?: ChecklistEntry[],
   ) => {
     await fetch("/api/tracker", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ opportunityId, state, privateNote }),
+      body: JSON.stringify({
+        opportunityId,
+        state,
+        ...(privateNote !== undefined ? { privateNote } : {}),
+        ...(checklist !== undefined ? { checklist } : {}),
+      }),
     });
     await load();
+  };
+
+  const handleToggleChecklist = async (d: DeadlineDto, index: number) => {
+    const next = d.checklist.map((c, i) => (i === index ? { ...c, done: !c.done } : c));
+    await handleUpdateTracker(d.opportunityId, d.state, d.privateNote, next);
+  };
+
+  const handleAddChecklistItem = async (d: DeadlineDto) => {
+    const text = (draftChecklist[d.opportunityId] ?? "").trim();
+    if (!text) return;
+    const next = [...d.checklist, { label: text, done: false }];
+    setDraftChecklist((prev) => ({ ...prev, [d.opportunityId]: "" }));
+    await handleUpdateTracker(d.opportunityId, d.state, d.privateNote, next);
   };
 
   const handleGenerateCalendar = async () => {
@@ -120,6 +161,26 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
     }
   };
 
+  const shiftMonth = (delta: number) => {
+    setCalMonth((prev) => {
+      const dt = new Date(Date.UTC(prev.year, prev.month + delta, 1));
+      return { year: dt.getUTCFullYear(), month: dt.getUTCMonth() };
+    });
+  };
+
+  const calendarCells = useMemo(() => {
+    const firstDay = new Date(Date.UTC(calMonth.year, calMonth.month, 1)).getUTCDay();
+    const daysInMonth = new Date(Date.UTC(calMonth.year, calMonth.month + 1, 0)).getUTCDate();
+    const cells: { day: number | null; items: DeadlineDto[] }[] = [];
+    for (let i = 0; i < firstDay; i++) cells.push({ day: null, items: [] });
+    for (let day = 1; day <= daysInMonth; day++) {
+      const iso = `${calMonth.year}-${String(calMonth.month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const matched = deadlines.filter((d) => d.deadline && d.deadline.slice(0, 10) === iso);
+      cells.push({ day, items: matched });
+    }
+    return cells;
+  }, [calMonth, deadlines]);
+
   if (unauth) {
     return (
       <div className="rounded-xl border border-border bg-surface p-6 text-start text-sm text-muted">
@@ -127,6 +188,12 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
       </div>
     );
   }
+
+  const monthHeading = new Intl.DateTimeFormat(locale, {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(calMonth.year, calMonth.month, 1)));
 
   return (
     <div className="flex flex-col gap-6">
@@ -149,21 +216,41 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
         ) : (
           <div className="flex flex-col gap-3">
             {lists.map((list) => (
-              <div
-                key={list.id}
-                className="flex items-center justify-between gap-2 rounded-lg border border-border bg-bg px-4 py-3"
-              >
-                <div className="text-start">
-                  <strong>{list.name}</strong>
-                  <span className="ms-2 text-xs text-muted">({list.items.length})</span>
+              <div key={list.id} className="rounded-lg border border-border bg-bg p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-start">
+                    <strong>{list.name}</strong>
+                    <span className="ms-2 text-xs text-muted">({list.items.length})</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void handleDeleteList(list.id)}
+                    className="min-h-11 rounded-md border border-border px-3 text-xs"
+                  >
+                    {t("deleteList")}
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => void handleDeleteList(list.id)}
-                  className="min-h-11 rounded-md border border-border px-3 text-xs"
-                >
-                  {t("deleteList")}
-                </button>
+                {list.items.length > 0 && (
+                  <ul className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
+                    {list.items.map(({ opportunity }) => (
+                      <li key={opportunity.id} className="flex items-center justify-between gap-2 text-sm">
+                        <Link
+                          href={`/opportunities/${opportunity.id}`}
+                          className="text-start hover:text-accent hover:underline"
+                        >
+                          <bdi>{pickText(opportunity.title, locale)}</bdi>
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => void handleRemoveFromList(list.id, opportunity.id)}
+                          className="rounded-md border border-border px-2 py-1 text-xs text-muted"
+                        >
+                          {t("removeItem")}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>
@@ -173,13 +260,33 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
       <section className="rounded-xl border border-border bg-surface p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-start text-lg font-bold">{t("deadlinesTitle")}</h2>
-          <button
-            type="button"
-            onClick={() => void handleGenerateCalendar()}
-            className="min-h-11 rounded-lg border border-accent px-4 text-sm font-medium text-accent"
-          >
-            📅 {t("calendarSync")}
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setViewMode("timeline")}
+              className={`min-h-11 rounded-lg border px-3 text-xs font-medium ${
+                viewMode === "timeline" ? "border-accent bg-accent text-white" : "border-border bg-bg"
+              }`}
+            >
+              {t("viewTimeline")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("calendar")}
+              className={`min-h-11 rounded-lg border px-3 text-xs font-medium ${
+                viewMode === "calendar" ? "border-accent bg-accent text-white" : "border-border bg-bg"
+              }`}
+            >
+              📅 {t("viewCalendar")}
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleGenerateCalendar()}
+              className="min-h-11 rounded-lg border border-accent px-4 text-xs font-medium text-accent"
+            >
+              {t("calendarSync")}
+            </button>
+          </div>
         </div>
 
         {calendarPath && (
@@ -193,18 +300,64 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
 
         {deadlines.length === 0 ? (
           <p className="text-start text-sm text-muted">{t("emptyDeadlines")}</p>
+        ) : viewMode === "calendar" ? (
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => shiftMonth(-1)}
+                className="min-h-11 rounded-lg border border-border bg-bg px-3 text-xs"
+              >
+                {t("prevMonth")}
+              </button>
+              <strong className="text-sm">{monthHeading}</strong>
+              <button
+                type="button"
+                onClick={() => shiftMonth(1)}
+                className="min-h-11 rounded-lg border border-border bg-bg px-3 text-xs"
+              >
+                {t("nextMonth")}
+              </button>
+            </div>
+            <div className="grid grid-cols-7 gap-1 text-xs">
+              {calendarCells.map((cell, idx) => (
+                <div
+                  key={idx}
+                  className={`min-h-20 rounded-md border p-1.5 ${
+                    cell.items.length > 0 ? "border-accent bg-bg" : "border-border bg-surface"
+                  }`}
+                >
+                  {cell.day != null && <div className="font-semibold text-muted">{cell.day}</div>}
+                  <div className="mt-1 flex flex-col gap-1">
+                    {cell.items.map((item) => (
+                      <Link
+                        key={item.opportunityId}
+                        href={`/opportunities/${item.opportunityId}`}
+                        className="block truncate rounded bg-accent px-1 py-0.5 text-[11px] text-white"
+                      >
+                        <bdi>{pickText(item.title, locale)}</bdi>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ) : (
           <div className="flex flex-col gap-3">
             {deadlines.map((d) => (
               <div
                 key={d.opportunityId}
-                className="flex flex-col gap-2 rounded-lg border border-border bg-bg p-4"
+                className="flex flex-col gap-3 rounded-lg border border-border bg-bg p-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="text-start">
-                    <strong>
+                    <Link
+                      href={`/opportunities/${d.opportunityId}`}
+                      className="font-bold hover:text-accent hover:underline"
+                    >
                       <bdi>{pickText(d.title, locale)}</bdi>
-                    </strong>
+                    </Link>
                     <p className="text-xs text-muted">{d.providerName}</p>
                   </div>
                   <span className="rounded-full border border-border px-3 py-1 text-xs font-medium">
@@ -225,7 +378,8 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
                       void handleUpdateTracker(
                         d.opportunityId,
                         e.target.value as DeadlineDto["state"],
-                        d.privateNote ?? undefined,
+                        d.privateNote,
+                        d.checklist,
                       )
                     }
                     className="min-h-11 rounded-md border border-border bg-surface px-3 text-xs"
@@ -239,9 +393,48 @@ export function ListsAndDeadlinesClient({ locale }: { locale: Locale }) {
                     type="text"
                     defaultValue={d.privateNote ?? ""}
                     placeholder={t("notePlaceholder")}
-                    onBlur={(e) => void handleUpdateTracker(d.opportunityId, d.state, e.target.value)}
+                    onBlur={(e) =>
+                      void handleUpdateTracker(d.opportunityId, d.state, e.target.value, d.checklist)
+                    }
                     className="min-h-11 flex-1 rounded-md border border-border bg-surface px-3 text-xs"
                   />
+                </div>
+
+                {/* Per-item interactive document checklist */}
+                <div className="border-t border-border pt-2">
+                  <p className="mb-1 text-start text-xs font-medium text-muted">{t("checklistTitle")}</p>
+                  {d.checklist.length > 0 && (
+                    <ul className="mb-2 flex flex-col gap-1">
+                      {d.checklist.map((c, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-xs">
+                          <input
+                            type="checkbox"
+                            checked={c.done}
+                            onChange={() => void handleToggleChecklist(d, idx)}
+                          />
+                          <span className={c.done ? "line-through text-muted" : ""}>{c.label}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={draftChecklist[d.opportunityId] ?? ""}
+                      onChange={(e) =>
+                        setDraftChecklist((prev) => ({ ...prev, [d.opportunityId]: e.target.value }))
+                      }
+                      placeholder={t("checklistAddPlaceholder")}
+                      className="min-h-9 flex-1 rounded-md border border-border bg-surface px-2 text-xs"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => void handleAddChecklistItem(d)}
+                      className="min-h-9 rounded-md border border-border bg-surface px-3 text-xs"
+                    >
+                      {t("checklistAdd")}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

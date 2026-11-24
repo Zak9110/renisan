@@ -63,6 +63,27 @@ export const otpPurposeEnum = pgEnum("otp_purpose", ["login", "change_contact"])
 export const admissionSystemEnum = pgEnum("admission_system", ["federal", "krg", "private"]);
 export const confidenceEnum = pgEnum("confidence", ["high", "medium", "low"]);
 export const digestFrequencyEnum = pgEnum("digest_frequency", ["daily", "weekly", "off"]);
+export const orderStatusEnum = pgEnum("order_status", [
+  "created",
+  "paid_held",
+  "in_progress",
+  "delivered",
+  "confirmed",
+  "released",
+  "disputed",
+  "refunded",
+]);
+export const serviceCategoryEnum = pgEnum("service_category", [
+  "cv_feedback",
+  "essay_feedback",
+  "mock_interview",
+  "document_checklist",
+  "walkthrough",
+  "shortlisting",
+  "tutoring",
+]);
+export const qaStatusEnum = pgEnum("qa_status", ["pending_moderation", "approved", "answered", "hidden"]);
+export const introStatusEnum = pgEnum("intro_status", ["requested", "accepted", "declined"]);
 
 // ---------- Users and auth ----------
 export const users = pgTable(
@@ -459,6 +480,22 @@ export const digestRuns = pgTable(
   (t) => [index("digest_runs_kind_idx").on(t.kind, t.startedAt)],
 );
 
+// One row per alert sent, so cron retries and extra runs never message a user twice.
+export const alertDeliveries = pgTable(
+  "alert_deliveries",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    alertKey: varchar("alert_key", { length: 100 }).notNull(),
+    sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("alert_deliveries_uq").on(t.userId, t.alertKey),
+    index("alert_deliveries_sent_idx").on(t.sentAt),
+  ],
+);
+
 // ---------- Daily 24h Ingestion Sources & Audit Runs ----------
 export const ingestionSources = pgTable(
   "ingestion_sources",
@@ -508,3 +545,283 @@ export const auditLog = pgTable(
   },
   (t) => [index("audit_entity_idx").on(t.entity, t.entityId), index("audit_at_idx").on(t.at)],
 );
+
+// ---------- Phase 2 (M7): Verified Helpers, Coaching Services, Orders & Safeguarding ----------
+export const helperProfiles = pgTable(
+  "helper_profiles",
+  {
+    userId: uuid("user_id")
+      .primaryKey()
+      .references(() => users.id, { onDelete: "cascade" }),
+    bio: jsonb("bio").$type<I18nText>(),
+    languages: text("languages")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    subjects: text("subjects")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    outcomes: jsonb("outcomes")
+      .$type<{ program: string; year: number; country?: string }[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    verificationMethod: varchar("verification_method", { length: 40 }).notNull(),
+    // Private proof reference (never exposed publicly); auto-deleted 30 days after review
+    proofRef: text("proof_ref"),
+    proofDeleteAfter: timestamp("proof_delete_after", { withTimezone: true }),
+    verifiedBy: uuid("verified_by").references(() => users.id, { onDelete: "set null" }),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    bannedAt: timestamp("banned_at", { withTimezone: true }),
+    active: boolean("active").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("helpers_active_idx").on(t.active, t.verifiedAt)],
+);
+
+export const services = pgTable(
+  "services",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    helperId: uuid("helper_id")
+      .notNull()
+      .references(() => helperProfiles.userId, { onDelete: "cascade" }),
+    category: serviceCategoryEnum("category").notNull(),
+    title: jsonb("title").$type<I18nText>().notNull(),
+    scope: jsonb("scope").$type<I18nText>().notNull(),
+    deliverables: jsonb("deliverables").$type<I18nText>().notNull(),
+    priceIqd: integer("price_iqd").notNull(),
+    deliveryDays: integer("delivery_days").notNull(),
+    allowedForMinors: boolean("allowed_for_minors").notNull().default(false),
+    groupSession: boolean("group_session").notNull().default(false),
+    sessionLink: text("session_link"),
+    status: varchar("status", { length: 20 }).notNull().default("in_review"), // in_review | active | paused | rejected
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("services_helper_idx").on(t.helperId, t.status),
+    check("services_price_ck", sql`${t.priceIqd} > 0 AND ${t.priceIqd} <= 1000000`),
+    check("services_days_ck", sql`${t.deliveryDays} BETWEEN 1 AND 60`),
+  ],
+);
+
+export const guardianConsents = pgTable(
+  "guardian_consents",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    minorUserId: uuid("minor_user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    guardianName: varchar("guardian_name", { length: 120 }).notNull(),
+    // Salted HMAC of guardian phone/email — never store raw contact PII
+    guardianContactHash: varchar("guardian_contact_hash", { length: 64 }).notNull(),
+    consentLocale: localeEnum("consent_locale").notNull().default("ar"),
+    consentText: text("consent_text").notNull(),
+    recordedAt: timestamp("recorded_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("guardian_consents_minor_idx").on(t.minorUserId)],
+);
+
+export const orders = pgTable(
+  "orders",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    serviceId: uuid("service_id")
+      .notNull()
+      .references(() => services.id, { onDelete: "cascade" }),
+    buyerId: uuid("buyer_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    helperId: uuid("helper_id")
+      .notNull()
+      .references(() => helperProfiles.userId, { onDelete: "cascade" }),
+    status: orderStatusEnum("status").notNull().default("created"),
+    priceIqd: integer("price_iqd").notNull(),
+    platformFeeIqd: integer("platform_fee_iqd").notNull(),
+    scopeSnapshot: text("scope_snapshot").notNull(),
+    guardianConsentId: uuid("guardian_consent_id").references(() => guardianConsents.id, {
+      onDelete: "set null",
+    }),
+    paymentProvider: varchar("payment_provider", { length: 24 }).notNull().default("manual"),
+    paymentRef: varchar("payment_ref", { length: 120 }),
+    deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+    autoConfirmAt: timestamp("auto_confirm_at", { withTimezone: true }),
+    confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+    disputeReason: text("dispute_reason"),
+    disputeResolvedAt: timestamp("dispute_resolved_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("orders_buyer_idx").on(t.buyerId),
+    index("orders_helper_idx").on(t.helperId),
+    index("orders_status_idx").on(t.status),
+  ],
+);
+
+export const orderReviews = pgTable(
+  "order_reviews",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orderId: uuid("order_id")
+      .notNull()
+      .references(() => orders.id, { onDelete: "cascade" }),
+    buyerId: uuid("buyer_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    helperId: uuid("helper_id")
+      .notNull()
+      .references(() => helperProfiles.userId, { onDelete: "cascade" }),
+    rating: integer("rating").notNull(),
+    comment: text("comment"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("order_reviews_order_uq").on(t.orderId),
+    index("order_reviews_helper_idx").on(t.helperId),
+    check("order_reviews_rating_ck", sql`${t.rating} BETWEEN 1 AND 5`),
+  ],
+);
+
+// ---------- Phase 2 (M8): Sponsors (strictly separate from match order) ----------
+export const sponsors = pgTable("sponsors", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 160 }).notNull(),
+  websiteUrl: text("website_url").notNull(),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const sponsorPlacements = pgTable(
+  "sponsor_placements",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    sponsorId: uuid("sponsor_id")
+      .notNull()
+      .references(() => sponsors.id, { onDelete: "cascade" }),
+    slot: varchar("slot", { length: 40 }).notNull().default("opportunities_banner"),
+    title: jsonb("title").$type<I18nText>().notNull(),
+    summary: jsonb("summary").$type<I18nText>(),
+    targetUrl: text("target_url").notNull(),
+    startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
+    endsAt: timestamp("ends_at", { withTimezone: true }).notNull(),
+    active: boolean("active").notNull().default(true),
+    // Strictly anonymous aggregate counters (never store user IDs or tracking cookies)
+    impressionCount: integer("impression_count").notNull().default(0),
+    clickCount: integer("click_count").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("sponsor_placements_slot_idx").on(t.slot, t.active, t.startsAt, t.endsAt)],
+);
+
+// ---------- Phase 3 (M9): Ambassadors, Moderated Q&A, Events & Clubs ----------
+export const ambassadors = pgTable(
+  "ambassadors",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    university: varchar("university", { length: 160 }).notNull(),
+    country: varchar("country", { length: 60 }).notNull(),
+    field: varchar("field", { length: 120 }).notNull(),
+    howFunded: jsonb("how_funded").$type<I18nText>(),
+    bio: jsonb("bio").$type<I18nText>(),
+    verificationMethod: varchar("verification_method", { length: 40 }).notNull(),
+    proofRef: text("proof_ref"),
+    proofDeleteAfter: timestamp("proof_delete_after", { withTimezone: true }),
+    verifiedBy: uuid("verified_by").references(() => users.id, { onDelete: "set null" }),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    publicQaEnabled: boolean("public_qa_enabled").notNull().default(true),
+    active: boolean("active").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("ambassadors_user_uq").on(t.userId),
+    index("ambassadors_country_idx").on(t.country, t.active),
+  ],
+);
+
+export const ambassadorQuestions = pgTable(
+  "ambassador_questions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    ambassadorId: uuid("ambassador_id")
+      .notNull()
+      .references(() => ambassadors.id, { onDelete: "cascade" }),
+    askerId: uuid("asker_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    askerPseudonym: varchar("asker_pseudonym", { length: 80 }).notNull(),
+    questionText: text("question_text").notNull(),
+    answerText: text("answer_text"),
+    status: qaStatusEnum("status").notNull().default("pending_moderation"),
+    answeredAt: timestamp("answered_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("amb_questions_amb_idx").on(t.ambassadorId, t.status)],
+);
+
+// Adult-to-adult double-opt-in introductions only (never open DMs, never minors)
+export const ambassadorIntros = pgTable(
+  "ambassador_intros",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    ambassadorId: uuid("ambassador_id")
+      .notNull()
+      .references(() => ambassadors.id, { onDelete: "cascade" }),
+    requesterId: uuid("requester_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    note: text("note").notNull(),
+    status: introStatusEnum("status").notNull().default("requested"),
+    contactChannel: varchar("contact_channel", { length: 120 }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("amb_intros_amb_idx").on(t.ambassadorId, t.status)],
+);
+
+export const communityEvents = pgTable(
+  "community_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    title: jsonb("title").$type<I18nText>().notNull(),
+    description: jsonb("description").$type<I18nText>(),
+    hostName: varchar("host_name", { length: 160 }).notNull(),
+    ambassadorId: uuid("ambassador_id").references(() => ambassadors.id, { onDelete: "set null" }),
+    startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
+    externalUrl: text("external_url").notNull(),
+    replayUrl: text("replay_url"),
+    groupFormat: boolean("group_format").notNull().default(true),
+    status: varchar("status", { length: 20 }).notNull().default("published"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("events_starts_idx").on(t.startsAt, t.status)],
+);
+
+export const eventRegistrations = pgTable(
+  "event_registrations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => communityEvents.id, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    registeredAt: timestamp("registered_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("event_regs_event_user_uq").on(t.eventId, t.userId)],
+);
+
+export const communityClubs = pgTable("community_clubs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: jsonb("name").$type<I18nText>().notNull(),
+  description: jsonb("description").$type<I18nText>(),
+  topic: varchar("topic", { length: 80 }).notNull(),
+  externalUrl: text("external_url").notNull(),
+  codeOfConductUrl: text("code_of_conduct_url"),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});

@@ -13,17 +13,23 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   return (
     <>
       <NavBar locale={locale} />
-      <main className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-10">
+      <main id="main-content" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-10">
         <h1 className="text-start text-3xl font-bold text-accent">{t("title")}</h1>
         <p className="text-start text-lg">{t("tagline")}</p>
         <p className="text-start text-muted">{t("status")}</p>
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <Link
             href="/opportunities"
             className="flex min-h-14 items-center justify-center rounded-xl bg-accent px-4 py-3 text-center text-sm font-semibold text-white"
           >
             {t("ctaOpportunities")}
+          </Link>
+          <Link
+            href="/admissions"
+            className="flex min-h-14 items-center justify-center rounded-xl border border-accent bg-surface px-4 py-3 text-center text-sm font-semibold text-accent"
+          >
+            {t("ctaAdmissions")}
           </Link>
           <Link
             href="/lists"

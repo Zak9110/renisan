@@ -1,9 +1,10 @@
 import { timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { env } from "@/lib/env";
+import { runDailyJobs } from "@/lib/jobs/daily";
 import { getDb } from "@/lib/db-singleton";
-import { runDailyIngestion } from "@/lib/ingestion/daily";
-import { pruneRateLimits } from "@/lib/auth/rate-limit";
+
+export const maxDuration = 300;
 
 function authorized(req: NextRequest): boolean {
   const expected = Buffer.from(`Bearer ${env().CRON_SECRET}`);
@@ -16,10 +17,8 @@ async function handle(req: NextRequest) {
   if (!authorized(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const db = await getDb();
-  const summary = await runDailyIngestion(db);
-  await pruneRateLimits(db, 24 * 60 * 60 * 1000);
-  return NextResponse.json({ ok: true, summary });
+  const result = await runDailyJobs(await getDb());
+  return NextResponse.json(result, { status: result.ok ? 200 : 500 });
 }
 
 // Vercel Cron invokes GET; manual / external orchestrators (Inngest, GitHub Actions) invoke POST.

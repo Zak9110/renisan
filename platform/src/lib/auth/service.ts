@@ -2,6 +2,16 @@ import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import {
+  alertDeliveries,
+  ambassadorIntros,
+  ambassadorQuestions,
+  ambassadors,
+  eventRegistrations,
+  guardianConsents,
+  helperProfiles,
+  orderReviews,
+  orders,
+  services,
   notificationPrefs,
   otpCodes,
   profiles,
@@ -301,6 +311,10 @@ export async function exportUserData(db: Db, userId: string) {
       ? await db.select().from(userListItems).where(inArray(userListItems.listId, listIds))
       : [];
 
+  const [prefs] = await db.select().from(notificationPrefs).where(eq(notificationPrefs.userId, userId));
+  const [helper] = await db.select().from(helperProfiles).where(eq(helperProfiles.userId, userId));
+  const [ambassador] = await db.select().from(ambassadors).where(eq(ambassadors.userId, userId));
+
   return {
     exportedAt: new Date().toISOString(),
     account: {
@@ -319,6 +333,27 @@ export async function exportUserData(db: Db, userId: string) {
       opportunityIds: ownedItems.filter((i) => i.listId === l.id).map((i) => i.opportunityId),
     })),
     trackedOpportunities: tracked,
+    notificationPrefs: prefs ?? null,
+    helperProfile: helper ?? null,
+    ambassadorProfile: ambassador ?? null,
+    ordersAsBuyer: await db.select().from(orders).where(eq(orders.buyerId, userId)),
+    ordersAsHelper: await db
+      .select({
+        id: orders.id,
+        status: orders.status,
+        priceIqd: orders.priceIqd,
+        createdAt: orders.createdAt,
+      })
+      .from(orders)
+      .where(eq(orders.helperId, userId)),
+    questions: await db
+      .select({ text: ambassadorQuestions.questionText, pseudonym: ambassadorQuestions.askerPseudonym })
+      .from(ambassadorQuestions)
+      .where(eq(ambassadorQuestions.askerId, userId)),
+    eventRegistrations: await db
+      .select()
+      .from(eventRegistrations)
+      .where(eq(eventRegistrations.userId, userId)),
   };
 }
 
@@ -331,6 +366,41 @@ export async function deleteUserAccount(db: Db, userId: string): Promise<void> {
   await db.delete(notificationPrefs).where(eq(notificationPrefs.userId, userId));
   await db.delete(userLists).where(eq(userLists.userId, userId)); // cascades to user_list_items
   await db.delete(userOpportunity).where(eq(userOpportunity.userId, userId));
+  await db.delete(guardianConsents).where(eq(guardianConsents.minorUserId, userId));
+  await db.delete(eventRegistrations).where(eq(eventRegistrations.userId, userId));
+  await db.delete(ambassadorIntros).where(eq(ambassadorIntros.requesterId, userId));
+  await db
+    .update(helperProfiles)
+    .set({
+      active: false,
+      bio: null,
+      outcomes: [],
+      languages: [],
+      subjects: [],
+      proofRef: null,
+      proofDeleteAfter: null,
+    })
+    .where(eq(helperProfiles.userId, userId));
+  await db.update(services).set({ status: "paused", sessionLink: null }).where(eq(services.helperId, userId));
+  // Order rows stay as financial records; the free text the user wrote about them does not.
+  await db.update(orderReviews).set({ comment: null }).where(eq(orderReviews.buyerId, userId));
+  await db.delete(alertDeliveries).where(eq(alertDeliveries.userId, userId));
+  await db
+    .delete(ambassadorQuestions)
+    .where(and(eq(ambassadorQuestions.askerId, userId), isNull(ambassadorQuestions.answerText)));
+  await db
+    .update(ambassadorQuestions)
+    .set({ askerPseudonym: "Student" })
+    .where(eq(ambassadorQuestions.askerId, userId));
+  const ownAmbassador = db
+    .select({ id: ambassadors.id })
+    .from(ambassadors)
+    .where(eq(ambassadors.userId, userId));
+  await db.delete(ambassadorIntros).where(inArray(ambassadorIntros.ambassadorId, ownAmbassador));
+  await db
+    .update(ambassadors)
+    .set({ active: false, bio: null, howFunded: null, proofRef: null, proofDeleteAfter: null })
+    .where(eq(ambassadors.userId, userId));
   await db.delete(profiles).where(eq(profiles.userId, userId));
   await db
     .update(users)

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { profiles, users } from "@/db/schema";
 import { getCurrentSessionUser } from "@/lib/auth/session";
+import { isMinorFromBirthYear } from "@/lib/auth/crypto";
 import { getDb } from "@/lib/db-singleton";
 
 const profileSchema = z.object({
@@ -45,6 +46,10 @@ export async function PUT(req: NextRequest) {
   const { birthYear, ...rest } = parsed.data;
   const now = new Date();
 
+  // A minor account cannot self-declare adulthood to bypass guardian consent; support corrects typos.
+  if (birthYear !== undefined && user.isMinor && !isMinorFromBirthYear(birthYear, now)) {
+    return NextResponse.json({ error: "birth_year_locked" }, { status: 409 });
+  }
   if (birthYear !== undefined) {
     await db.update(users).set({ birthYear }).where(eq(users.id, user.id));
   }

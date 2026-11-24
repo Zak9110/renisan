@@ -14,7 +14,7 @@ export async function getAuthDeps(): Promise<AuthDeps> {
     db,
     secret: cfg.SESSION_SECRET,
     sms: createSmsProvider(cfg.SMS_PROVIDER, cfg.OTPIQ_API_KEY),
-    email: createEmailProvider(),
+    email: createEmailProvider(cfg.EMAIL_PROVIDER, cfg.EMAIL_API_KEY, cfg.EMAIL_FROM),
   };
 }
 

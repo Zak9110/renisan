@@ -20,10 +20,11 @@ export const envSchema = z
     CRON_SECRET: z.string().min(16, "must be at least 16 characters"),
     SMS_PROVIDER: z.enum(["console", "otpiq"]).default("console"),
     OTPIQ_API_KEY: z.string().optional(),
-    EMAIL_PROVIDER: z.enum(["console"]).default("console"),
+    EMAIL_PROVIDER: z.enum(["console", "resend"]).default("console"),
     EMAIL_FROM: z.email().default("no-reply@example.org"),
     EMAIL_API_KEY: z.string().optional(),
     TELEGRAM_BOT_TOKEN: z.string().optional(),
+    TELEGRAM_BOT_USERNAME: z.string().optional(),
     TELEGRAM_WEBHOOK_SECRET: z.string().optional(),
     TELEGRAM_CHATID_ENCRYPTION_KEY: z.string().optional(),
     PAYMENT_PROVIDER: z.enum(["manual", "zaincash", "fastpay"]).default("manual"),
@@ -32,6 +33,13 @@ export const envSchema = z
   .superRefine((env, ctx) => {
     if (env.SMS_PROVIDER === "otpiq" && !env.OTPIQ_API_KEY) {
       ctx.addIssue({ code: "custom", path: ["OTPIQ_API_KEY"], message: "required when SMS_PROVIDER=otpiq" });
+    }
+    if (env.EMAIL_PROVIDER === "resend" && !env.EMAIL_API_KEY) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["EMAIL_API_KEY"],
+        message: "required when EMAIL_PROVIDER=resend",
+      });
     }
     if (env.NODE_ENV === "production" && !env.APP_ENV) {
       ctx.addIssue({
@@ -56,6 +64,21 @@ export const envSchema = z
         code: "custom",
         path: ["SMS_PROVIDER"],
         message: "console SMS provider is not allowed in production",
+      });
+    }
+    if (env.EMAIL_PROVIDER === "console") {
+      ctx.addIssue({
+        code: "custom",
+        path: ["EMAIL_PROVIDER"],
+        message: "console email provider is not allowed in production",
+      });
+    }
+    if (env.TELEGRAM_BOT_TOKEN && (!env.TELEGRAM_WEBHOOK_SECRET || !env.TELEGRAM_CHATID_ENCRYPTION_KEY)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["TELEGRAM_WEBHOOK_SECRET"],
+        message:
+          "TELEGRAM_WEBHOOK_SECRET and TELEGRAM_CHATID_ENCRYPTION_KEY are required when TELEGRAM_BOT_TOKEN is set in production",
       });
     }
     if (env.DATABASE_URL.startsWith("pglite://")) {

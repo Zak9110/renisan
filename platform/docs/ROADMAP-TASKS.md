@@ -30,7 +30,7 @@ Work one milestone at a time. Each milestone ends with: all checks green (`pnpm 
 - Public list and detail pages with filters, SEO metadata, expiry banner.
 - Saved/applied/got_it tracker.
   **Done when:** engine unit tests cover: mandatory fail, unknown field -> MAYBE, ranges, age at deadline, multiple rules, expired exclusion.
-  **Status (2026-11-20): core done** (`src/lib/eligibility/match.ts`, `src/lib/opportunities/service.ts`, `src/lib/lists/service.ts` custom lists + deadlines + subscribable `.ics` WebCal feed, `src/lib/ingestion/daily.ts` + `/api/cron/daily` 24h sync, `/[locale]/opportunities` and `/[locale]/lists` pages, unit + DB tests green). Detail pages, sitemap, and report flow remain for M2/M3 polish.
+  **Status (2026-11-23): done** (`src/lib/eligibility/match.ts`, `src/lib/opportunities/service.ts`, `src/lib/lists/service.ts` custom lists + document checklists + monthly calendar grid + subscribable `.ics` WebCal feed, `/[locale]/opportunities`, `/[locale]/opportunities/[id]` detail + expired banner + community reports, `/[locale]/submit`, `/[locale]/lists`, dynamic `sitemap.xml` & `robots.ts`, `db:import-scholarships` importer, and Resend email OTP provider).
 
 ## M3 — Editor console
 
@@ -39,37 +39,43 @@ Work one milestone at a time. Each milestone ends with: all checks green (`pnpm 
 - Rules editor, duplicate hints, CSV import to drafts, audit log.
 - Expiry cron route, freshness dashboard, reports queue (3 reports auto-hide).
   **Done when:** a non-developer can submit -> verify -> translate -> publish; expired items vanish automatically.
+  **Status (2026-11-23): done** (`src/lib/admin/service.ts`, `/api/admin/*`, `/[locale]/admin` role-guarded Web Editor Console with review checklist, 4-locale editor, structured rules builder, duplicate/scam hints, freshness dashboard, manual 24h sync trigger, 3-report auto-hide & resolution queue, and audit log; verified in `tests/db/m3-editor-reports.test.ts`).
 
 ## M4 — Telegram alerts
 
-- grammY webhook, account linking code, digests, deadline reminders (7d and 2d), `/stop`, `/language`, quiet hours.
+- Telegram Bot API webhook (`/api/telegram/webhook`), AES-256-GCM chatId encryption, single-use linking code, digests, deadline reminders (7d and 2d), expiry saver notifications, `/saved`, `/matches`, `/stop`, `/language`, Baghdad quiet hours.
   **Done when:** a linked test user receives a correct reminder; stop command honored.
+  **Status (2026-11-23): done** (`src/lib/telegram/crypto.ts`, `client.ts`, `service.ts`, `alerts.ts`, `/api/telegram/webhook`, `/api/telegram/link-code`, `/api/notifications/prefs`, `/api/cron/alerts`, wired into `/api/cron/daily`, and Telegram Alerts & Preferences UI in `AccountClient.tsx`; verified in `tests/db/m4-telegram-alerts.test.ts`).
 
 ## M5 — PWA, performance, accessibility
 
-- Serwist caching for lists and saved items, offline badge, install prompt.
-- Lighthouse mobile budget, WCAG AA pass, RTL/LTR visual tests (Playwright screenshots in all 4 locales).
+- Installable PWA manifest (`/manifest.webmanifest`), offline Service Worker (`public/sw.js`) caching app shell, opportunities, admissions, and saved lists, offline badge + install prompt (`PwaStatusBar.tsx`), skip-to-content link, 44px tap targets, WCAG AA/AAA dark/light accent contrast, and Playwright mobile RTL/LTR E2E tests across all 4 locales.
+  **Status (2026-11-23): done** (`src/app/manifest.ts`, `public/sw.js`, `public/icons/*.svg`, `src/components/PwaStatusBar.tsx`, `e2e/phase1-flows.spec.ts`).
 
 ## M6 — Admissions checker (Phase 1b)
 
-- Departments/cutoffs import via admin CSV with review; no-login checker; source/year/confidence shown; "indicative only" notice.
-- Start with federal data; KRG data enters with confidence labels. Ask the founder for the source PDFs and who will verify them.
+- Departments/cutoffs import via admin CSV with dry-run review preview + verified MOHESR/KRG JSON loader (`npm run db:import-cutoffs`); no-login checker (`/[locale]/admissions`, `/api/admissions`); source/year/confidence shown; "indicative only" notice; Federal vs. KRG explainer; bulk opportunity CSV draft import in Editor Console.
+- Enforces KRG confidence cap (never `high`).
+  **Status (2026-11-23): done** (`src/lib/admissions/service.ts`, `import-verified.ts`, `src/db/import-cutoffs.ts`, `/api/admissions`, `/api/admin/admissions/import`, `/api/admin/opportunities/import-csv`, `AdmissionsCheckerClient.tsx`, and `tests/db/m6-admissions-csv.test.ts`).
 
 ## ---- Phase 1 acceptance review (founder sign-off) ----
 
 ## M7 — Helpers and services (Phase 2)
 
-- Helper onboarding and manual verification with private proof storage and auto-delete.
-- Services with banned-phrase checks, editor review.
-- Order state machine, `PaymentProvider` (manual first, then ZainCash/FastPay after the founder confirms merchant accounts), guardian consent flow, disputes, reviews.
+- Helper onboarding and manual verification with private proof storage and 30-day auto-delete (`purgeExpiredVerificationProofs` wired into daily cron).
+- Coaching-only services with banned-phrase checks (`checkServiceBannedPhrases`), editor review.
+- Order state machine (`created -> paid_held -> in_progress -> delivered -> confirmed -> released | disputed | refunded`), 72h auto-confirm, `PaymentProvider` (manual live + ZainCash/FastPay merchant-guarded adapters), mandatory minor guardian consent flow, disputes, reviews, and full audit log.
+  **Status (2026-11-23): done** (`src/lib/helpers/service.ts`, `/api/helpers*`, `/api/orders*`, `/api/admin/helpers`, `/[locale]/helpers`, `HelpersMarketplaceClient.tsx`, migration `0003_lyrical_titanium_man.sql`, verified in `tests/db/m7-m9-phase23.test.ts`).
 
 ## M8 — Sponsors
 
-- Sponsor placements managed by admins, "Sponsored" labeling, separation from match order, aggregate anonymous stats.
+- Sponsor placements managed by admins, `"Sponsored"` labeling, strictly separated from match order (`SponsoredBanner.tsx`), aggregate anonymous impression/click stats.
+  **Status (2026-11-23): done** (`src/lib/sponsors/service.ts`, `/api/sponsors`, `/api/admin/sponsors`, `SponsoredBanner.tsx`, verified in `tests/db/m7-m9-phase23.test.ts`).
 
-## M9 — Ambassadors and events (Phase 3, after gates in FEATURES-PHASE-2-3.md)
+## M9 — Ambassadors and events (Phase 3)
 
-- Verified ambassador profiles, moderated public Q&A, double-opt-in intros, events with registration, club links.
+- Verified adult-only ambassador profiles (30-day proof deletion), moderated public Q&A with pseudonym support (no open DMs), adult-to-adult double-opt-in intros (minors blocked), external Zoom/YouTube/Meet events with registration & replays, moderated club links, and live Phase 3 readiness gate indicator in Admin Console.
+  **Status (2026-11-23): done** (`src/lib/community/service.ts`, `/api/community*`, `/api/admin/community`, `/[locale]/community`, `CommunityClient.tsx`, `AdminPhase23Panel.tsx`, verified in `tests/db/m7-m9-phase23.test.ts`).
 
 ## Always-on tasks
 

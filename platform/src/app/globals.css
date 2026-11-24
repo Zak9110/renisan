@@ -46,3 +46,10 @@ html[dir="ltr"] body {
 :lang(ckb) {
   font-family: var(--font-arabic);
 }
+
+/* Preserve WCAG AA/AAA contrast on solid accent buttons when dark mode shifts --color-accent lighter. */
+@media (prefers-color-scheme: dark) {
+  .bg-accent {
+    color: #0b1613;
+  }
+}

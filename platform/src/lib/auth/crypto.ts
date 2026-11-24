@@ -30,6 +30,15 @@ export function isMinorFromBirthYear(birthYear: number | null | undefined, now: 
   return now.getUTCFullYear() - birthYear <= 18;
 }
 
+/** Age-gated features fail closed: an unknown birth year never counts as adult. */
+export function adultGateError(
+  birthYear: number | null | undefined,
+  now: Date = new Date(),
+): "birth_year_required" | "adults_only" | null {
+  if (birthYear == null) return "birth_year_required";
+  return isMinorFromBirthYear(birthYear, now) ? "adults_only" : null;
+}
+
 /** Normalizes Iraqi phone numbers into E.164 (+9647XXXXXXXXX) or validates generic E.164. */
 export function normalizePhoneE164(raw: string): string | null {
   const cleaned = raw.replace(/[\s\-()]/g, "");

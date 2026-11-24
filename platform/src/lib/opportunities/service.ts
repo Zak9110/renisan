@@ -1,6 +1,14 @@
-import { and, asc, eq, isNull, lte, or, sql } from "drizzle-orm";
+import { and, asc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
 import type { Db } from "@/db/client";
-import { auditLog, digestRuns, eligibilityRules, opportunities, type I18nText } from "@/db/schema";
+import {
+  auditLog,
+  digestRuns,
+  eligibilityRules,
+  opportunities,
+  opportunityReports,
+  type I18nText,
+} from "@/db/schema";
+import { checkScamRedFlags } from "@/lib/ingestion/daily";
 import {
   isOpportunityExpired,
   matchOpportunity,
@@ -189,7 +197,10 @@ export async function createOpportunityDraft(
  * Automated daily expiry sweep (Hard rule 2): flips every published listing whose
  * confirmed deadline has passed to status = "expired" and logs the sweep.
  */
-export async function expirePassedOpportunities(db: Db, now: Date = new Date()): Promise<number> {
+export async function expirePassedOpportunitiesDetailed(
+  db: Db,
+  now: Date = new Date(),
+): Promise<{ count: number; expiredIds: string[] }> {
   const expired = await db
     .update(opportunities)
     .set({ status: "expired", updatedAt: now })
@@ -203,12 +214,14 @@ export async function expirePassedOpportunities(db: Db, now: Date = new Date()):
     )
     .returning({ id: opportunities.id });
 
-  if (expired.length > 0) {
+  const expiredIds = expired.map((e) => e.id);
+
+  if (expiredIds.length > 0) {
     await db.insert(auditLog).values({
       action: "opportunity.auto_expire",
       entity: "opportunity",
-      entityId: expired.map((e) => e.id).join(","),
-      after: { count: expired.length },
+      entityId: expiredIds.join(","),
+      after: { count: expiredIds.length },
       at: now,
     });
   }
@@ -217,9 +230,208 @@ export async function expirePassedOpportunities(db: Db, now: Date = new Date()):
     kind: "expiry",
     startedAt: now,
     finishedAt: new Date(),
-    sentCount: expired.length,
+    sentCount: expiredIds.length,
     errorCount: 0,
   });
 
-  return expired.length;
+  return { count: expiredIds.length, expiredIds };
+}
+
+export async function expirePassedOpportunities(db: Db, now: Date = new Date()): Promise<number> {
+  const { count } = await expirePassedOpportunitiesDetailed(db, now);
+  return count;
+}
+
+export async function getOpportunityDetail(
+  db: Db,
+  id: string,
+  profile?: MatchProfile | null,
+  now: Date = new Date(),
+) {
+  const [opp] = await db.select().from(opportunities).where(eq(opportunities.id, id)).limit(1);
+  if (!opp || opp.status === "removed" || opp.status === "rejected" || opp.status === "draft") {
+    return null;
+  }
+  // Hidden or in_review listings are not publicly viewable
+  if (opp.hiddenAt || opp.status === "in_review") {
+    return null;
+  }
+
+  const rules = await db.select().from(eligibilityRules).where(eq(eligibilityRules.opportunityId, id));
+  const expired = isOpportunityExpired(opp, now);
+
+  const hasProfile = Boolean(
+    profile &&
+    (profile.educationLevel ||
+      profile.gpaPercent != null ||
+      profile.birthYear != null ||
+      profile.englishScore != null ||
+      profile.workExperienceYears != null ||
+      profile.fieldOfStudy ||
+      profile.currentCountry ||
+      profile.idpSelfDeclared != null),
+  );
+
+  const match = hasProfile
+    ? matchOpportunity(
+        profile,
+        opp,
+        rules.map<MatchRule>((r) => ({
+          field: r.field,
+          operator: r.operator,
+          value: r.value,
+          mandatory: r.mandatory,
+          explanation: r.explanation,
+        })),
+        now,
+      )
+    : null;
+
+  // When expired, fetch up to 4 similar open listings of the same type (per F1)
+  let similar: (typeof opportunities.$inferSelect)[] = [];
+  if (expired) {
+    const candidates = await db
+      .select()
+      .from(opportunities)
+      .where(
+        and(
+          eq(opportunities.status, "published"),
+          isNull(opportunities.hiddenAt),
+          eq(opportunities.type, opp.type),
+          ne(opportunities.id, opp.id),
+        ),
+      )
+      .orderBy(asc(opportunities.deadline))
+      .limit(10);
+    similar = candidates.filter((c) => !isOpportunityExpired(c, now)).slice(0, 4);
+  }
+
+  return { opportunity: opp, rules, match, expired, similar };
+}
+
+const AUTO_HIDE_REPORT_THRESHOLD = 3;
+
+export type ReportResult =
+  | { ok: true; autoHidden: boolean; openReportCount: number }
+  | { ok: false; error: "not_found" | "already_reported" };
+
+/**
+ * Records a community report (scam/expired/wrong_info/other). Enforces one report per user
+ * or per anonymous salted fingerprint, and auto-hides the listing after 3 independent reports (F6).
+ */
+export async function reportOpportunity(
+  db: Db,
+  input: {
+    opportunityId: string;
+    userId?: string | null;
+    reporterFingerprint: string;
+    reason: "scam" | "expired" | "wrong_info" | "other";
+    note?: string | null;
+    now?: Date;
+  },
+): Promise<ReportResult> {
+  const now = input.now ?? new Date();
+  const [opp] = await db
+    .select({ id: opportunities.id, hiddenAt: opportunities.hiddenAt })
+    .from(opportunities)
+    .where(eq(opportunities.id, input.opportunityId))
+    .limit(1);
+  if (!opp) return { ok: false, error: "not_found" };
+
+  try {
+    await db.insert(opportunityReports).values({
+      opportunityId: input.opportunityId,
+      userId: input.userId ?? null,
+      reporterFingerprint: input.reporterFingerprint,
+      reason: input.reason,
+      note: input.note?.trim().slice(0, 500) || null,
+    });
+  } catch (err) {
+    const text = `${String(err)} ${String((err as { cause?: unknown }).cause ?? "")}`;
+    if (
+      text.includes("reports_opp_user_uq") ||
+      text.includes("reports_opp_fp_uq") ||
+      text.includes("unique")
+    ) {
+      return { ok: false, error: "already_reported" };
+    }
+    throw err;
+  }
+
+  const openReports = await db
+    .select({ id: opportunityReports.id })
+    .from(opportunityReports)
+    .where(
+      and(eq(opportunityReports.opportunityId, input.opportunityId), isNull(opportunityReports.resolvedAt)),
+    );
+
+  const count = openReports.length;
+  let autoHidden = false;
+
+  if (count >= AUTO_HIDE_REPORT_THRESHOLD && !opp.hiddenAt) {
+    autoHidden = true;
+    await db
+      .update(opportunities)
+      .set({ hiddenAt: now, hiddenReason: "community_reports", updatedAt: now })
+      .where(eq(opportunities.id, input.opportunityId));
+
+    await db.insert(auditLog).values({
+      actorId: input.userId ?? null,
+      action: "opportunity.auto_hide_reports",
+      entity: "opportunity",
+      entityId: input.opportunityId,
+      after: { openReports: count, reason: "community_reports" },
+      at: now,
+    });
+  }
+
+  return { ok: true, autoHidden, openReportCount: count };
+}
+
+/** Public user/community submission: always enters status = "in_review" (never published directly). */
+export async function submitPublicOpportunity(
+  db: Db,
+  input: {
+    type: typeof opportunities.$inferInsert.type;
+    title: string;
+    summary?: string | null;
+    providerName: string;
+    sourceUrl: string;
+    deadline?: Date | null;
+    rolling?: boolean;
+    locale: "ar" | "ckb" | "kmr" | "en";
+    submittedBy?: string | null;
+  },
+) {
+  const scam = checkScamRedFlags(`${input.title} ${input.summary ?? ""}`);
+  if (scam.flagged) {
+    return { ok: false as const, error: "scam_flagged" as const, reasons: scam.reasons };
+  }
+
+  const title: I18nText = { [input.locale]: input.title.trim() };
+  const summary: I18nText | undefined = input.summary?.trim()
+    ? { [input.locale]: input.summary.trim() }
+    : undefined;
+  const needsReview = (["ar", "ckb", "kmr", "en"] as const).filter((l) => l !== input.locale);
+
+  const [created] = await db
+    .insert(opportunities)
+    .values({
+      type: input.type,
+      title,
+      summary: summary ?? null,
+      providerName: input.providerName.trim().slice(0, 200),
+      sourceUrl: input.sourceUrl.trim(),
+      applyUrl: input.sourceUrl.trim(),
+      deadline: input.deadline ?? null,
+      deadlineStatus: input.deadline ? "estimated" : "unknown",
+      rolling: input.rolling ?? false,
+      status: "in_review",
+      iraqiEligibility: "unclear",
+      needsReview: [...needsReview],
+      createdBy: input.submittedBy ?? null,
+    })
+    .returning();
+
+  return { ok: true as const, opportunity: created! };
 }
