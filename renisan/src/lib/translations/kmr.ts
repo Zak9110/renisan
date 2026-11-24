@@ -109,6 +109,19 @@ export const kmr: TranslationKeys = {
   footerDataSource: 'Çavkaniya daneyan: Wezareta Xwendina Bilind a Iraqê (kêmtirîn nîmreyên wergirtina navendî {year}) û Zankoline (Herêma Kurdistanê, {krgYear}).',
   footerBuiltBy: 'Hatiye çêkirin bo rêberî û alîkariya xwendekarên Iraq û Herêma Kurdistanê.',
 
+  // Brand, hero and footer
+  brandDescriptor: "Rêbera wergirtin û bursan",
+  heroEyebrow: "Daneyên fermî yên wergirtinê {year}",
+  heroTitle: "Bibîne navîna te dikare te bigihîne kîjan kolêjan",
+  heroSubtitle: "Navîna xwe carekê binivîse. Renisan wê bi sînorên fermî yên Federal û Herêma Kurdistanê û bi bursên ji te re vekirî re berhev dike.",
+  statCutoffs: "sînorên fermî",
+  statScholarships: "burs",
+  statLanguages: "ziman",
+  footerExplore: "Bigere",
+  footerSources: "Çavkaniyên fermî",
+  footerUpdated: "Dane herî dawî hatin kontrolkirin: {date}",
+  footerIndependent: "Ne girêdayî Wezareta Xwendina Bilind a Federal an ya Herêma Kurdistanê ye.",
+
   // General
   loading: 'Tê barkirin...',
   error: 'Di dema barkirina daneyan de çewtî derket',

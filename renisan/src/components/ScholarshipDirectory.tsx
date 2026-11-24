@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
+import { Icon } from './Icon';
 import { useI18n } from '../hooks/useI18n';
 import type { Scholarship, ScholarshipFilters } from '../lib/types';
 import { filterScholarships, getUniqueCountries } from '../lib/search';
@@ -247,7 +248,7 @@ export function ScholarshipDirectory({ scholarships, initialStudentScore }: Scho
       <section class="eligibility-profile-card" aria-label={t('eligibilityProfileTitle')}>
         <div class="eligibility-profile-card__head">
           <div>
-            <h3 class="eligibility-profile-card__title">🎯 {t('eligibilityProfileTitle')}</h3>
+            <h3 class="eligibility-profile-card__title"><Icon name="target" size={18} class="inline-icon inline-icon--accent" /> {t('eligibilityProfileTitle')}</h3>
             <p class="eligibility-profile-card__hint">{t('eligibilityProfileHint')}</p>
           </div>
 
@@ -264,7 +265,7 @@ export function ScholarshipDirectory({ scholarships, initialStudentScore }: Scho
               class={`pill-btn ${viewMode === 'deadlines' ? 'pill-btn--active' : ''}`}
               onClick={() => setViewMode('deadlines')}
             >
-              📅 {t('viewDeadlines')}
+              <Icon name="calendar" size={14} class="inline-icon" /> {t('viewDeadlines')}
             </button>
           </div>
         </div>
@@ -464,14 +465,14 @@ export function ScholarshipDirectory({ scholarships, initialStudentScore }: Scho
         </div>
         {viewMode === 'deadlines' && exportableCount > 0 && (
           <button type="button" class="pill-btn pill-btn--active" onClick={handleExportAllDeadlines}>
-            📅 {t('deadlinesExportAll')} ({exportableCount})
+            <Icon name="calendar" size={14} class="inline-icon" /> {t('deadlinesExportAll')} ({exportableCount})
           </button>
         )}
       </div>
 
       {visibleEntries.length === 0 ? (
         <div class="empty-state">
-          <span class="empty-state__icon" aria-hidden="true">🎓</span>
+          <span class="empty-state__icon"><Icon name="cap" size={28} /></span>
           <h3 class="empty-state__title">{t('scholarshipsEmpty')}</h3>
           <p class="empty-state__hint">{t('scholarshipsEmptyHint')}</p>
           {hasActiveFilters && (
@@ -557,8 +558,9 @@ export function ScholarshipDirectory({ scholarships, initialStudentScore }: Scho
                             class="pill-btn calendar-reminder-btn"
                             onClick={() => downloadScholarshipIcs(scholarship, title, localizedNotes(scholarship), t('deadlineExpected'))}
                             title={t('scholarshipAddCalendar')}
+                            aria-label={t('scholarshipAddCalendar')}
                           >
-                            📅
+                            <Icon name="calendar" size={16} />
                           </button>
                         )}
                         <a

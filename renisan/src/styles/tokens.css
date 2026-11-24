@@ -1,21 +1,22 @@
 /**
  * Renisan Design System — Design Tokens
- * Premium, modern dark-navy palette with warm gold/amber accents
+ * Brand: ink navy ground, one gold accent used flat (no glows, no gradients on
+ * type), Vazirmatn for Arabic script and Lexend for Latin display.
  */
 
 :root {
   /* ============================================
    * 1. Color Palette (Dark Mode Primary)
    * ============================================ */
-  --color-bg-primary: #0a0f1e;        /* Deep navy, almost black */
-  --color-bg-secondary: #111827;      /* Dark slate */
+  --color-bg-primary: #0a1020;        /* Deep navy, almost black */
+  --color-bg-secondary: #0f172a;      /* Dark slate */
   --color-bg-tertiary: #1e293b;       /* Medium slate */
-  --color-bg-card: #162032;           /* Card background with slight blue tint */
-  --color-bg-card-hover: #1c2a42;     /* Card hover */
-  --color-bg-input: #0f1729;          /* Input field background */
+  --color-bg-card: #121b2f;           /* Card background with slight blue tint */
+  --color-bg-card-hover: #17223a;     /* Card hover */
+  --color-bg-input: #0c1426;          /* Input field background */
   --color-surface-glass: rgba(255, 255, 255, 0.05); /* Glassmorphism surface */
-  --color-border: rgba(255, 255, 255, 0.08);        /* Subtle border */
-  --color-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-border: rgba(148, 163, 196, 0.16);        /* Subtle border */
+  --color-border-subtle: rgba(148, 163, 196, 0.08);
   --color-border-focus: rgba(245, 158, 11, 0.5);    /* Focus state outline/border */
   --color-border-hover: rgba(245, 158, 11, 0.25);
 
@@ -25,9 +26,9 @@
   --color-accent: #f59e0b;            /* Gold / amber — aspiration, warmth */
   --color-accent-light: #fbbf24;
   --color-accent-dark: #d97706;
-  --color-accent-glow: rgba(245, 158, 11, 0.15);
+  --color-accent-glow: rgba(245, 158, 11, 0.12);
   --color-accent-glow-strong: rgba(245, 158, 11, 0.35);
-  --color-accent-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  --color-accent-gradient: linear-gradient(#f59e0b, #f59e0b);  /* flat: kept as a token so old rules stay valid */
 
   /* ============================================
    * 3. Text Colors
@@ -62,6 +63,8 @@
    * ============================================ */
   --font-arabic: 'Vazirmatn', system-ui, sans-serif;
   --font-latin: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Display face for headings and the wordmark; RTL pages switch it to Vazirmatn (fonts.css) */
+  --font-display: 'Lexend', 'Vazirmatn', system-ui, sans-serif;
 
   /* Font sizes (modular scale) */
   --text-2xs: 0.6875rem;              /* 11px */
@@ -73,6 +76,7 @@
   --text-2xl: 1.5rem;                 /* 24px */
   --text-3xl: 1.875rem;               /* 30px */
   --text-4xl: 2.25rem;                /* 36px */
+  --text-5xl: 2.75rem;                /* 44px */
 
   /* Font weights */
   --font-normal: 400;
@@ -115,8 +119,8 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(245, 158, 11, 0.25);
-  --shadow-glow-lg: 0 0 35px rgba(245, 158, 11, 0.35);
+  --shadow-glow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-glow-lg: 0 4px 12px rgba(0, 0, 0, 0.35);
 
   /* ============================================
    * 8. Transitions
@@ -136,10 +140,8 @@
   --bp-desktop: 1024px;
 
   /* Page background and sticky bars (re-mapped by the light theme) */
-  --bg-page-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(245, 158, 11, 0.08), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(59, 130, 246, 0.05), transparent);
-  --bg-sticky-bar: rgba(17, 24, 39, 0.92);
+  --bg-page-image: radial-gradient(ellipse 70% 40% at 50% -10%, rgba(59, 99, 186, 0.12), transparent 70%);
+  --bg-sticky-bar: rgba(10, 16, 32, 0.9);
 }
 
 /* ============================================
@@ -148,14 +150,14 @@
  * or OS preference in "system" mode). Dark stays the default.
  * ============================================ */
 :root[data-theme="light"] {
-  --color-bg-primary: #f6f7fb;
+  --color-bg-primary: #f5f6f9;
   --color-bg-secondary: #ffffff;
-  --color-bg-tertiary: #eef1f6;
+  --color-bg-tertiary: #eceff5;
   --color-bg-card: #ffffff;
   --color-bg-card-hover: #f8fafc;
   --color-bg-input: #ffffff;
   --color-surface-glass: rgba(15, 23, 42, 0.04);
-  --color-border: rgba(15, 23, 42, 0.12);
+  --color-border: rgba(15, 26, 46, 0.12);
   --color-border-subtle: rgba(15, 23, 42, 0.06);
   --color-border-focus: rgba(180, 83, 9, 0.55);
   --color-border-hover: rgba(180, 83, 9, 0.3);
@@ -165,9 +167,9 @@
   --color-accent-dark: #92400e;
   --color-accent-glow: rgba(217, 119, 6, 0.14);
   --color-accent-glow-strong: rgba(217, 119, 6, 0.3);
-  --color-accent-gradient: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
+  --color-accent-gradient: linear-gradient(#b45309, #b45309);
 
-  --color-text-primary: #0f172a;
+  --color-text-primary: #0f1a2e;
   --color-text-secondary: #475569;
   --color-text-tertiary: #526178;
   --color-text-accent: #9a3412;
@@ -190,13 +192,11 @@
   --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
   --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
-  --shadow-glow: 0 0 20px rgba(217, 119, 6, 0.18);
-  --shadow-glow-lg: 0 0 35px rgba(217, 119, 6, 0.25);
+  --shadow-glow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-glow-lg: 0 4px 12px rgba(15, 23, 42, 0.1);
 
-  --bg-page-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(217, 119, 6, 0.10), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(29, 78, 216, 0.06), transparent);
-  --bg-sticky-bar: rgba(255, 255, 255, 0.92);
+  --bg-page-image: none;
+  --bg-sticky-bar: rgba(245, 246, 249, 0.92);
 }
 
 

@@ -180,6 +180,19 @@ export interface TranslationKeys {
   footerDataSource: string;
   footerBuiltBy: string;
 
+  // Brand, hero and footer
+  brandDescriptor: string;
+  heroEyebrow: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  statCutoffs: string;
+  statScholarships: string;
+  statLanguages: string;
+  footerExplore: string;
+  footerSources: string;
+  footerUpdated: string;
+  footerIndependent: string;
+
   // General
   loading: string;
   error: string;

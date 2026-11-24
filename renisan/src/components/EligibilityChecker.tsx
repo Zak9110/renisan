@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
+import { Icon } from './Icon';
 import { useI18n } from '../hooks/useI18n';
 import type { AdmissionSystem, FederalCutoff, KRGCutoff, CheckerFilters, DatasetMeta, Gender, ProgramLevel, FederalRules, Scholarship } from '../lib/types';
 import { normalizeDigits, validateScore, computeKRGComposite, computeFederalScore, detectFederalTotalScore, MAX_SCORE_FEDERAL, MAX_SCORE_KRG } from '../lib/normalizer';
@@ -408,8 +409,8 @@ export function EligibilityChecker({
       <SystemSelector selected={system} onSelect={setSystem} />
 
       {info && (
-        <p class={`data-note ${system === 'krg' ? 'data-note--warning' : ''}`} role="note">
-          <span aria-hidden="true">{system === 'federal' ? '📄' : '⚠️'}</span>
+        <p class={`data-note ${system === 'krg' ? 'data-note--warning' : 'data-note--caption'}`} role="note">
+          <Icon name={system === 'federal' ? 'document' : 'alert'} class="inline-icon" />
           <span>
             {fillTemplate(t(system === 'federal' ? 'federalDataNote' : 'krgDataNote'), { year: yearLabel })}
             {' '}
@@ -494,7 +495,7 @@ export function EligibilityChecker({
             )}
             {profileSaved && (
               <span class="form-hint profile-note">
-                🔒 {t('profileSaved')}{' '}
+                <Icon name="lock" size={14} class="inline-icon" /> {t('profileSaved')}{' '}
                 <button type="button" class="link-btn" onClick={forgetProfile}>{t('profileForget')}</button>
               </span>
             )}
@@ -763,7 +764,7 @@ export function EligibilityChecker({
             {showCompositeCalc && (
               <div id="composite-panel" class="fade-in composite-box__panel">
                 <p class="composite-note-banner composite-note-banner--warning" role="note">
-                  <span aria-hidden="true">⚠️ </span>{t('compositeEstimateNote')}
+                  <Icon name="alert" size={14} class="inline-icon" /> {t('compositeEstimateNote')}
                 </p>
                 <div class="composite-box__grid">
                   {([
@@ -880,7 +881,7 @@ export function EligibilityChecker({
       {score !== null && matchingScholarshipsCount > 0 && onOpenScholarshipsWithScore && (
         <div class="scholarship-match-callout fade-in">
           <div class="scholarship-match-callout__text">
-            <span aria-hidden="true">🎓</span>
+            <Icon name="cap" size={20} class="inline-icon" />
             <span>{fillTemplate(t('scholarshipMatchBanner'), { score: score.toFixed(1), count: matchingScholarshipsCount })}</span>
           </div>
           <button
@@ -930,7 +931,7 @@ export function EligibilityChecker({
       )}
       {score === null ? (
         <div class="empty-state">
-          <span class="empty-state__icon" aria-hidden="true">✍️</span>
+          <span class="empty-state__icon"><Icon name="pen" size={28} /></span>
           <h3 class="empty-state__title">{t('enterScorePrompt')}</h3>
           <p class="empty-state__hint">{fillTemplate(t('enterScoreHint'), { max: maxScore })}</p>
         </div>

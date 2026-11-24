@@ -22,3 +22,6 @@ html[dir="ltr"],
 body[dir="ltr"] {
   font-family: var(--font-latin);
 }
+
+/* Display face: Lexend for Latin script, Vazirmatn's heavier cuts for Arabic script */
+:root[dir="rtl"] { --font-display: 'Vazirmatn', system-ui, sans-serif; }

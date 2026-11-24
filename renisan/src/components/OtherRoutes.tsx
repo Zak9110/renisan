@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'preact/hooks';
+import { Icon } from './Icon';
 import { useI18n } from '../hooks/useI18n';
 import type { FederalRules, RouteMinimum, RouteStream } from '../lib/types';
 import { fillTemplate, formatAverage } from '../lib/format';
@@ -129,11 +130,11 @@ export function OtherRoutes({ rules, score, stream, yearLabel }: OtherRoutesProp
                   </tbody>
                 </table>
               </div>
-              <p class="composite-note-banner">⚠️ {t('routesMedicalNote')}</p>
+              <p class="composite-note-banner"><Icon name="alert" size={14} class="inline-icon" /> {t('routesMedicalNote')}</p>
             </>
           )}
 
-          <p class="composite-note-banner">ℹ️ {t('routesMartyrsNote')}</p>
+          <p class="composite-note-banner"><Icon name="info" size={14} class="inline-icon" /> {t('routesMartyrsNote')}</p>
           <p class="routes-box__source">
             <a href={rules.source_url} target="_blank" rel="noopener noreferrer">{t('officialSourceLink')}</a>
             {' · '}{rules.published}

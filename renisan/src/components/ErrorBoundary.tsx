@@ -1,4 +1,5 @@
 import { Component, type ComponentChildren } from 'preact';
+import { Icon } from './Icon';
 import { getLanguage } from '../lib/i18n';
 
 // Hardcoded on purpose: this must render even if translations failed to load.
@@ -31,7 +32,7 @@ export class ErrorBoundary extends Component<{ children: ComponentChildren }, St
     return (
       <div class="app-container">
         <div class="empty-state" role="alert" style={{ marginTop: 'var(--space-10)' }}>
-          <span class="empty-state__icon" aria-hidden="true">⚠️</span>
+          <span class="empty-state__icon"><Icon name="alert" size={28} /></span>
           <h1 class="empty-state__title">{msg.title}</h1>
           <button type="button" class="pill-btn empty-state__action" onClick={() => window.location.reload()}>
             {msg.action}

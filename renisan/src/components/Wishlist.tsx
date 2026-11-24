@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'preact/hooks';
+import { Icon } from './Icon';
 import { useI18n } from '../hooks/useI18n';
 import {
   getWishlist,
@@ -218,7 +219,7 @@ export function Wishlist({ onGoToChecker, studentScore, meta }: WishlistProps) {
 
             {datedScholarships.length > 0 && (
               <button type="button" class="pill-btn" onClick={handleExportSavedDeadlines}>
-                📅 {t('deadlinesExportAll')} ({datedScholarships.length})
+                <Icon name="calendar" size={14} class="inline-icon" /> {t('deadlinesExportAll')} ({datedScholarships.length})
               </button>
             )}
 
@@ -277,7 +278,7 @@ export function Wishlist({ onGoToChecker, studentScore, meta }: WishlistProps) {
 
       {items.length === 0 ? (
         <div class="empty-state">
-          <span class="empty-state__icon" aria-hidden="true">⭐</span>
+          <span class="empty-state__icon"><Icon name="star" size={28} /></span>
           <h3 class="empty-state__title">{t('wishlistEmpty')}</h3>
           <p class="empty-state__hint">{t('wishlistEmptyHint')}</p>
           <button
@@ -342,7 +343,7 @@ export function Wishlist({ onGoToChecker, studentScore, meta }: WishlistProps) {
                   <p class="wishlist-advisor__msg">📝 {t('formNeedStream')}</p>
                 )
               )}
-              {form.mixedSystems && <p class="wishlist-advisor__msg wishlist-advisor__msg--warn">⚠️ {t('formMixedSystems')}</p>}
+              {form.mixedSystems && <p class="wishlist-advisor__msg wishlist-advisor__msg--warn"><Icon name="alert" size={14} class="inline-icon" /> {t('formMixedSystems')}</p>}
               {form.wrongStream.length > 0 && (
                 <p class="wishlist-advisor__msg wishlist-advisor__msg--warn">⛔ {fillTemplate(t('formWrongStream'), { list: form.wrongStream.join(', #') })}</p>
               )}
@@ -350,7 +351,7 @@ export function Wishlist({ onGoToChecker, studentScore, meta }: WishlistProps) {
                 <p class="wishlist-advisor__msg wishlist-advisor__msg--warn">⛔ {fillTemplate(t('formWrongGender'), { list: form.wrongGender.join(', #') })}</p>
               )}
               {form.wrongChannel.length > 0 && (
-                <p class="wishlist-advisor__msg wishlist-advisor__msg--warn">⚠️ {fillTemplate(t('formWrongChannel'), { list: form.wrongChannel.join(', #') })}</p>
+                <p class="wishlist-advisor__msg wishlist-advisor__msg--warn"><Icon name="alert" size={14} class="inline-icon" /> {fillTemplate(t('formWrongChannel'), { list: form.wrongChannel.join(', #') })}</p>
               )}
               {hasFederal && formRules && (
                 <a class="form-check__source" href={formRules.source_url} target="_blank" rel="noopener noreferrer">
@@ -378,7 +379,7 @@ export function Wishlist({ onGoToChecker, studentScore, meta }: WishlistProps) {
 
               {analysis.inversions.length > 0 ? (
                 <p class="wishlist-advisor__msg wishlist-advisor__msg--warn">
-                  ⚠️{' '}
+                  <Icon name="alert" size={14} class="inline-icon" />{' '}
                   {fillTemplate(t('wishlistInversionWarning'), {
                     first: analysis.inversions[0].higherPriorityIndex + 1,
                     firstScore: (analysis.inversions[0].higherPriorityItem.score ?? 0).toFixed(1),
@@ -394,7 +395,7 @@ export function Wishlist({ onGoToChecker, studentScore, meta }: WishlistProps) {
 
               {analysis.needsSafetyNet && (
                 <p class="wishlist-advisor__msg wishlist-advisor__msg--warn">
-                  🛡️ {t('wishlistSafetyWarning')}
+                  <Icon name="shield" size={14} class="inline-icon" /> {t('wishlistSafetyWarning')}
                 </p>
               )}
             </div>
@@ -501,7 +502,7 @@ export function Wishlist({ onGoToChecker, studentScore, meta }: WishlistProps) {
                           <div class="wishlist-sch-tracker__row">
                             {hasDate && (
                               <span class={`deadline-countdown deadline-countdown--${bucket}`}>
-                                📅 <bdi>{formatDate(sch.deadline!, lang)}</bdi>
+                                <Icon name="calendar" size={12} class="inline-icon" /> <bdi>{formatDate(sch.deadline!, lang)}</bdi>
                                 {days != null && !sch.deadline_estimated ? ` · ${tf('daysRemaining', { days })}` : sch.deadline_estimated ? ` (${t('deadlineExpected')})` : ''}
                               </span>
                             )}

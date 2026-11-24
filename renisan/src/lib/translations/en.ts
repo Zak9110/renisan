@@ -109,6 +109,19 @@ export const en: TranslationKeys = {
   footerDataSource: 'Data sources: Iraqi Ministry of Higher Education (Central Admission Minimums {year}) and KRG Zankoline ({krgYear}).',
   footerBuiltBy: 'Built to guide and support students across Iraq and the Kurdistan Region toward their university future.',
 
+  // Brand, hero and footer
+  brandDescriptor: "Admission & scholarship guide",
+  heroEyebrow: "Official {year} admission data",
+  heroTitle: "See which colleges your average can get you into",
+  heroSubtitle: "Enter your average once. Renisan checks it against the official Federal and Kurdistan Region cutoffs and the scholarships open to you.",
+  statCutoffs: "official cutoffs",
+  statScholarships: "scholarships",
+  statLanguages: "languages",
+  footerExplore: "Explore",
+  footerSources: "Official sources",
+  footerUpdated: "Data last checked {date}",
+  footerIndependent: "Not affiliated with the Federal or Kurdistan Region Ministry of Higher Education.",
+
   // General
   loading: 'Loading...',
   error: 'An error occurred while loading data',

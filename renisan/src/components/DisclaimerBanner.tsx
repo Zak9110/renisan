@@ -1,22 +1,30 @@
 import { useState } from 'preact/hooks';
+import { Icon } from './Icon';
 import { useI18n } from '../hooks/useI18n';
 import type { DatasetMeta } from '../lib/types';
 import { fillTemplate } from '../lib/format';
 
 const STORAGE_KEY = 'renisan_disclaimer_collapsed';
 
+function isPhone(): boolean {
+  return typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+}
+
 function readCollapsed(): boolean {
   try {
-    return localStorage.getItem(STORAGE_KEY) === '1';
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === '1' || saved === '0') return saved === '1';
   } catch {
-    return false;
+    // Storage blocked: fall through to the screen-size default
   }
+  // No saved choice: phones start with the one-line version so the score field is in view
+  return isPhone();
 }
 
 /**
  * The "previous-year data" warning. Returning visitors can shrink it to one line to
- * save screen space on phones, but it never disappears — students must always know
- * the cutoffs are last year's.
+ * save screen space, and phones start that way, but it never disappears — students must
+ * always know which year the cutoffs are from.
  */
 export function DisclaimerBanner({ meta }: { meta: DatasetMeta | null }) {
   const { t, lang } = useI18n();
@@ -35,7 +43,7 @@ export function DisclaimerBanner({ meta }: { meta: DatasetMeta | null }) {
 
   return (
     <div class={`disclaimer ${collapsed ? 'disclaimer--collapsed' : ''}`} role="note">
-      <span class="disclaimer__icon" aria-hidden="true">⚠️</span>
+      <span class="disclaimer__icon"><Icon name="alert" size={20} /></span>
       <p class="disclaimer__text">{fillTemplate(collapsed ? t('disclaimerShort') : t('disclaimerText'), { year })}</p>
       <button
         type="button"

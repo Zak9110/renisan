@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import { useI18n } from '../hooks/useI18n';
 import { useTheme } from '../hooks/useTheme';
+import { BrandMark } from './BrandMark';
 import type { Language } from '../lib/i18n';
 import { LANG_CONFIG, LANGUAGES } from '../lib/i18n';
 
@@ -48,25 +49,13 @@ export function Header({ isOfflineReady }: HeaderProps) {
   return (
     <header class="header" role="banner">
       <div class="header__inner">
-        <div class="header__brand">
-          <div class="header__logo" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
-              <circle cx="16" cy="16" r="14" stroke="url(#logo-grad)" stroke-width="2.5" />
-              <path d="M6.5 13.5 16 9l9.5 4.5L16 18z" fill="url(#logo-grad)" />
-              <path d="M10.5 15.8v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M25.5 13.5v5" stroke="url(#logo-grad)" stroke-width="1.8" stroke-linecap="round" />
-              <defs>
-                <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32">
-                  <stop offset="0%" stop-color="#f59e0b" />
-                  <stop offset="100%" stop-color="#f97316" />
-                </linearGradient>
-              </defs>
-            </svg>
+        <a class="header__brand" href="/" aria-label={t('appName')}>
+          <span class="header__logo"><BrandMark size={34} /></span>
+          <div class="header__lockup">
+            <h1 class="header__title">{t('appName')}</h1>
+            <span class="header__descriptor">{t('brandDescriptor')}</span>
           </div>
-          <h1 class="header__title">
-            <span class="text-gradient">{t('appName')}</span>
-          </h1>
-        </div>
+        </a>
 
         <div class="header__controls">
           {installPrompt && (
@@ -112,7 +101,7 @@ export function Header({ isOfflineReady }: HeaderProps) {
                 </svg>
               )}
             </span>
-            <span>{themeName}</span>
+            <span class="theme-toggle__label">{themeName}</span>
           </button>
 
           <div class="lang-switcher" role="radiogroup" aria-label={t('languageLabel')}>
@@ -129,6 +118,18 @@ export function Header({ isOfflineReady }: HeaderProps) {
               </button>
             ))}
           </div>
+
+          <select
+            id="lang-select"
+            class="lang-select"
+            value={lang}
+            aria-label={t('languageLabel')}
+            onChange={(e) => switchLanguage((e.currentTarget as HTMLSelectElement).value as Language)}
+          >
+            {languages.map((l) => (
+              <option key={l} value={l}>{LANG_CONFIG[l].label}</option>
+            ))}
+          </select>
         </div>
       </div>
     </header>

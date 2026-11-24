@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'preact/hooks';
+import { Icon } from './Icon';
 import { useI18n } from '../hooks/useI18n';
 import type { Scholarship } from '../lib/types';
 import { getEffectiveStatus, isDeadlinePassed } from '../lib/status';
@@ -233,7 +234,7 @@ export function ScholarshipCard({ scholarship, studentGpa, match }: ScholarshipC
           <span class="tag tag--verified">{t('scholarshipExchange')}</span>
         )}
         {scholarship.eligibility.refugee_idp_eligible && (
-          <span class="tag tag--official">🛡️ {t('scholarshipRefugeeEligible')}</span>
+          <span class="tag tag--official"><Icon name="shield" size={12} class="inline-icon" /> {t('scholarshipRefugeeEligible')}</span>
         )}
         {scholarship.eligibility.survivor_eligible && (
           <span class="tag tag--official">✨ {t('scholarshipSurvivorEligible')}</span>
@@ -268,7 +269,7 @@ export function ScholarshipCard({ scholarship, studentGpa, match }: ScholarshipC
             backgroundColor: isDiscontinued ? 'var(--color-danger-bg)' : undefined
           }}
         >
-          <span aria-hidden="true">{isDiscontinued ? '⚠️' : 'ℹ️'}</span>{' '}
+          <Icon name={isDiscontinued ? 'alert' : 'info'} size={14} class="inline-icon" />{' '}
           <bdi>{getLocalizedNotes()}</bdi>
         </div>
       )}

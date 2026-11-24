@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'preact/hooks';
+import { Icon } from './Icon';
 import { useI18n } from '../hooks/useI18n';
 import type { FederalCutoff, KRGCutoff } from '../lib/types';
 import { localizePlace } from '../lib/places';
@@ -292,7 +293,7 @@ export function ResultCard({ item, type, studentScore, yearLabel, trend, sibling
 
       {notes && (
         <div class="result-card__notes" dir="auto">
-          <span aria-hidden="true">ℹ️</span> <bdi>{notes}</bdi>
+          <Icon name="info" size={14} class="inline-icon" /> <bdi>{notes}</bdi>
         </div>
       )}
     </article>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'preact/hooks';
+import { Icon } from './Icon';
 import { useI18n } from '../hooks/useI18n';
 import { Header } from './Header';
 import { EligibilityChecker } from './EligibilityChecker';
@@ -6,6 +7,7 @@ import { ScholarshipDirectory } from './ScholarshipDirectory';
 import { Wishlist } from './Wishlist';
 import { DisclaimerBanner } from './DisclaimerBanner';
 import { Footer } from './Footer';
+import { Hero } from './Hero';
 import type { ComponentChildren } from 'preact';
 import type { FederalCutoff, KRGCutoff, Scholarship, DatasetMeta } from '../lib/types';
 import { loadMeta, loadFederalCutoffs, loadKRGCutoffs, loadScholarships, clearDataCache } from '../lib/data-loader';
@@ -126,7 +128,7 @@ export function App() {
     if (loadError) {
       return (
         <div class="empty-state" role="alert">
-          <span class="empty-state__icon" aria-hidden="true">⚠️</span>
+          <span class="empty-state__icon"><Icon name="alert" size={28} /></span>
           <h3 class="empty-state__title">{t('error')}</h3>
           <button type="button" class="pill-btn empty-state__action" onClick={loadData}>
             {t('retry')}
@@ -148,7 +150,6 @@ export function App() {
   return (
     <div class="app-container">
       <Header isOfflineReady={isOfflineReady} />
-      <DisclaimerBanner meta={meta} />
 
       <nav class="tab-nav" role="tablist">
         <button
@@ -196,9 +197,14 @@ export function App() {
         </button>
       </nav>
 
+      <DisclaimerBanner meta={meta} />
+
       <main>
         {activeTab === 'checker' && (
           <div id="panel-checker" role="tabpanel" aria-labelledby="tab-checker" class="fade-in">
+            {dataLoaded && !loadError && (
+              <Hero meta={meta} cutoffCount={federalData.length + krgData.length} scholarshipCount={scholarships.length} />
+            )}
             {renderPanel(
               <EligibilityChecker
                 federalData={federalData}
@@ -227,7 +233,7 @@ export function App() {
         )}
       </main>
 
-      <Footer meta={meta} />
+      <Footer meta={meta} onNavigate={setActiveTab} />
 
       {/* Floating Back to Top button */}
       {showScrollTop && (
